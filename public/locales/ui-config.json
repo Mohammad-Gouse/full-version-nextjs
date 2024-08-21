@@ -1,0 +1,88 @@
+{
+    "elements": [
+        {
+            "type": "text",
+            "placeholder": "Viral",
+            "styles": {
+                "margin": "10px",
+                "padding": "10px",
+                "color": "black",
+                "backgroundColor": "orange",
+                "border": "1px solid #ccc",
+                "borderRadius": "10px",
+                "height": "40px",
+                "width": "200px"
+            }
+        },
+        {
+            "type": "text",
+            "placeholder": "Enter your Text",
+            "styles": {
+                "margin": "10px",
+                "padding": "10px",
+                "color": "black",
+                "backgroundColor": "red",
+                "border": "1px solid #ccc",
+                "borderRadius": "10px",
+                "height": "40px",
+                "width": "150px"
+            }
+        },
+        {
+            "type": "text",
+            "placeholder": "Enter your name",
+            "styles": {
+                "margin": "10px",
+                "padding": "10px",
+                "color": "black",
+                "backgroundColor": "white",
+                "border": "1px solid #ccc",
+                "borderRadius": "10px",
+                "height": "40px",
+                "width": "150px"
+            }
+        },
+        {
+            "type": "password",
+            "placeholder": "Enter your password",
+            "styles": {
+                "margin": "10px",
+                "padding": "10px",
+                "color": "black",
+                "backgroundColor": "white",
+                "border": "1px solid #ccc",
+                "borderRadius": "10px",
+                "height": "40px",
+                "width": "200px"
+            }
+        },
+        {
+            "type": "number",
+            "placeholder": "number",
+            "styles": {
+                "margin": "10px",
+                "padding": "10px",
+                "color": "black",
+                "backgroundColor": "white",
+                "border": "1px solid #ccc",
+                "borderRadius": "10px",
+                "height": "40px",
+                "width": "100px"
+            }
+        },
+        {
+            "type": "button",
+            "text": "Submit",
+            "styles": {
+                "margin": "10px",
+                "padding": "10px",
+                "color": "black",
+                "backgroundColor": "blue",
+                "border": "1px solid #ccc",
+                "borderRadius": "10px",
+                "height": "40px",
+                "width": "200px"
+            }
+        }
+    ]
+}
