@@ -123,6 +123,8 @@ import { DemoContext } from 'src/context/DemoContext';
 import { useDemo } from 'src/hooks/DemoHook';
 import DemoForm from './components/DemoForm';
 import EmailForm from './components/EmailForm';
+import { Button } from '@mui/material';
+import moment from 'moment';
 
 const Demo = () => {
     const methods = useForm({
@@ -137,10 +139,32 @@ const Demo = () => {
 
     const { data, loading, error, fetchData } = useDemo();
 
+    const payload = {
+        "FinancialYear": "2024",
+        "Segment": "Equity",
+        "Exchange": "All",
+        "StartDate": "30-JUL-2024",
+        "EndDate": "30-JUL-2024",
+        "ClientCode": "e100002",
+        "OrderPlacedBy": "BEYOND",
+        "Branch": "HO",
+        "Role": "11"
+    }
+
     const onSubmit = (formData) => {
-        console.log('Form data', formData);
+        console.log('Form data', formData, moment(formData.birthdate).format('DD-MMM-YYYY'));
+        payload["Segment"] = formData.segment  ?? payload["Segment"]
+        payload["Exchange"] = formData.exchange ?? payload["Exchange"]
+        payload["StartDate"] = moment(formData.fromDate).format('DD-MMM-YYYY')
+        payload["EndDate"] = moment(formData.toDate).format('DD-MMM-YYYY')
+        payload["ClientCode"] = formData.clientCode ?? payload["ClientCode"]
+        payload["OrderPlacedBy"] = formData.orderPlacedBy ?? payload["OrderPlacedBy"]
+
+        fetchData(payload)
         console.log('Fetched data', data);
     };
+
+
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
@@ -149,7 +173,10 @@ const Demo = () => {
         <FormProvider {...methods}>
             <Box sx={{ padding: 2 }}>
                 <form onSubmit={methods.handleSubmit(onSubmit)}>
-                    <DemoForm/>
+                    <DemoForm data={data} />
+                    <Button type="submit" variant="contained" color="primary">
+                        Submit
+                    </Button>
                 </form>
             </Box>
         </FormProvider>
