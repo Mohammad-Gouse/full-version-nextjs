@@ -498,24 +498,315 @@
 
 
 
+// import { DataGrid } from '@mui/x-data-grid';
+// import React, { useState } from 'react';
+// import { Controller, useFormContext } from 'react-hook-form';
+// import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button } from '@mui/material';
+// import DatePicker from 'react-datepicker';
+// import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
+// import { CustomTimeInput } from 'src/components/CustomTimeInput';
+// import moment from 'moment'
+
+// const Container1 = (data) => {
+//     const { control, formState: { errors } } = useFormContext();
+
+//     console.log(data)
+    
+
+//     const columns = [
+//         { field: 'Exchange', headerName: 'Exchange', width: 150 },
+//         { field: 'ClientCode', headerName: 'ClientCode', width: 150 }
+//     ];
+    
+
+//     return (
+//         <Box id="DemoForm" style={{  }}>
+//             <Grid container spacing={5}>
+                
+                    
+//     <Grid item lg={4} md={6} sm={12} >
+//     <Controller
+//                 name="FinancialYear"
+//                 control={control}
+//                 render={({ field }) => (
+
+//               <Select
+//               {...field}
+//                 label={'Financial Year'}
+//                 defaultValue="2024-2025"
+//                 disabled={true}
+//                 id='FinancialYear'
+//                 size="small"
+//                 fullWidth
+//               >
+//                 <MenuItem value="2024-2025">2024-2025</MenuItem>
+//               </Select>
+
+//                 )}
+//             />
+//             </Grid>
+    
+                
+        
+
+                    
+//     <Grid item lg={4} md={6} sm={12} >
+//     <Controller
+//                 name="segment"
+//                 control={control}
+//                 render={({ field }) => (
+
+//               <Select
+//               {...field}
+//                 label={'Segment'}
+//                 defaultValue="Equity"
+//                 disabled={false}
+//                 id='segment'
+//                 size="small"
+//                 fullWidth
+//               >
+//                 <MenuItem value="Equity">Equity</MenuItem><MenuItem value="Commudity">Commudity</MenuItem>
+//               </Select>
+
+//                 )}
+//             />
+//             </Grid>
+    
+                
+        
+
+                    
+//     <Grid item lg={4} md={6} sm={12} >
+//     <Controller
+//                 name="exchange"
+//                 control={control}
+//                 render={({ field }) => (
+
+//               <Select
+//               {...field}
+//                 label={'Exchange'}
+//                 defaultValue="ALL"
+//                 disabled={false}
+//                 id='exchange'
+//                 size="small"
+//                 fullWidth
+//               >
+//                 <MenuItem value="ALL">ALL</MenuItem><MenuItem value="BSE">BSE</MenuItem>
+//               </Select>
+
+//                 )}
+//             />
+//             </Grid>
+    
+                
+        
+
+                    
+//     <Grid item lg={4} md={6} sm={12} >
+//      <Controller
+//                 name="clientCode"
+//                 control={control}
+//                 render={({ field }) => (
+
+//                     <TextField
+//                       {...field}
+//                       label={'Client Code'}
+//                       id='clientCode'
+//                       size="small"
+//                       fullWidth
+//                       error={!!errors?.clientCode }
+//                       helperText={errors?.clientCode?.message}
+//                     />
+
+//                 )}
+//             />
+//              </Grid>
+     
+    
+                
+        
+
+                    
+//     <Grid item lg={4} md={6} sm={12} >
+//     <Controller
+//                 name="orderPlacedBy"
+//                 control={control}
+//                 render={({ field }) => (
+
+//               <Select
+//               {...field}
+//                 label={'Order Placed By'}
+//                 defaultValue="Dealer"
+//                 disabled={false}
+//                 id='orderPlacedBy'
+//                 size="small"
+//                 fullWidth
+//               >
+//                 <MenuItem value="Dealer">Dealer</MenuItem><MenuItem value="Beyond">Beyond</MenuItem>
+//               </Select>
+
+//                 )}
+//             />
+//             </Grid>
+    
+                
+        
+
+                    
+//  <Grid item lg={4} md={6} sm={12} >
+//         <Controller
+//                 name="fromDate"
+//                 control={control}
+//                 render={({ field }) => (
+
+//       <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
+//         <DatePicker
+//           {...field}
+//           dateFormat="MM/dd/yyyy"
+//           selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
+//           placeholderText="Select From Date"
+//           customInput={<CustomTimeInput label='From Date' />}
+//         />
+//       </DatePickerWrapper>
+
+//                     )}
+//             />
+//           </Grid>    
+    
+                
+        
+
+                    
+//  <Grid item lg={4} md={6} sm={12} >
+//         <Controller
+//                 name="toDate"
+//                 control={control}
+//                 render={({ field }) => (
+
+//       <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
+//         <DatePicker
+//           {...field}
+//           dateFormat="MM/dd/yyyy"
+//           selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
+//           placeholderText="Select To Date"
+//           customInput={<CustomTimeInput label='To Date' />}
+//         />
+//       </DatePickerWrapper>
+
+//                     )}
+//             />
+//           </Grid>   
+
+//           <Grid item lg={4} md={6} sm={12}>
+//                     <Button  type="submit" variant="contained" color="primary">
+//                         Submit
+//                     </Button> 
+//             </Grid>
+    
+                
+        
+//           <Grid item lg={12} md={12} sm={12}>
+//         <Box marginTop="20px" padding="10px">
+//             <DataGrid
+//                 rows={data.data??[]}
+//                 getRowId={() => Math.random()}
+//                 pageSize={100}
+                
+//                 columns={columns}
+//                 rowsPerPageOptions={[5, 10, 20]}
+//                 disableSelectionOnClick
+//                 style={{height:'450px', overflow: 'scroll'}}
+//             />
+//         </Box>
+//         </Grid>
+                    
+//         {/* <Grid item lg={12} md={12} sm={12}>
+//         <Box marginTop="20px" padding="10px">
+//             <DataGrid
+//                 rows={data.data??[]}
+//                 getRowId={() => Math.random()}
+//                 pageSize={100}
+//                 columns={columns}
+//                 rowsPerPageOptions={[5, 10, 20]}
+//                 disableSelectionOnClick
+//                 style={{height:'450px', overflow: 'scroll'}}
+//             />
+//         </Box>
+//         </Grid> */}
+        
+                
+        
+//             </Grid>
+//         </Box>
+//     );
+// }
+
+// export default Container1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
+import { useDemo } from 'src/hooks/DemoHook';
 
-const Container1 = (data) => {
+const Container1 = () => {
     const { control, formState: { errors } } = useFormContext();
+     const { data, loading, error, fetchData } = useDemo();
 
-    console.log(data)
+     console.log(data, data?.data)
+
     
 
     const columns = [
+        { field: 'BuySell', headerName: 'BuySell', width: 150 },
         { field: 'Exchange', headerName: 'Exchange', width: 150 },
-        { field: 'ClientCode', headerName: 'ClientCode', width: 150 }
+        { field: 'ClientCode', headerName: ' ClientCode', width: 150 },
+        { field: 'GrossAmount', headerName: 'GrossAmount', width: 150 },
+        { field: 'MarketPrice', headerName: 'MarketPrice', width: 150 },
+        { field: 'NetAmount', headerName: 'NetAmount', width: 150 },
+        { field: 'OpeningDate', headerName: 'OpeningDate', width: 150 },
+        { field: 'OrderPlacedBy', headerName: 'OrderPlacedBy', width: 150 },
+        { field: 'Scrip', headerName: 'Scrip', width: 150 },
+        { field: 'Quantity', headerName: 'Quantity', width: 150 }
     ];
     
 
@@ -701,16 +992,30 @@ const Container1 = (data) => {
         
 
                     
+<Grid item lg={4} md={6} sm={12}>
+    <Button type="submit" variant="contained" color="primary">
+        submit
+    </Button> 
+</Grid>
+
+                
+        
+
+                    
         <Grid item lg={12} md={12} sm={12}>
         <Box marginTop="20px" padding="10px">
             <DataGrid
-                rows={data.data??[]}
-                getRowId={(row) => row.ClientCode}
+                rows={data??[]}
+                getRowId={() => Math.random()}
                 pageSize={100}
+                
                 columns={columns}
                 rowsPerPageOptions={[5, 10, 20]}
                 disableSelectionOnClick
                 style={{height:'450px', overflow: 'scroll'}}
+
+                loading={loading}
+              
             />
         </Box>
         </Grid>

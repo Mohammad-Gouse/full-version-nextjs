@@ -166,17 +166,14 @@ const Demo = () => {
 
 
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    // if (loading) return <div>Loading...</div>;
+    // if (error) return <div>Error: {error.message}</div>;
 
     return (
         <FormProvider {...methods}>
             <Box sx={{ padding: 2 }}>
                 <form onSubmit={methods.handleSubmit(onSubmit)}>
                     <DemoForm data={data} />
-                    <Button type="submit" variant="contained" color="primary">
-                        Submit
-                    </Button>
                 </form>
             </Box>
         </FormProvider>
