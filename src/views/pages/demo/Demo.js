@@ -114,9 +114,9 @@
 
 
 
-import React, { useContext,useState } from 'react';
+import React, { useContext,useEffect,useState } from 'react';
 import Box from '@mui/material/Box';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import DemoSchema from './schema/DemoSchema';
 import { DemoContext } from 'src/context/DemoContext';
@@ -126,16 +126,31 @@ import EmailForm from './components/EmailForm';
 import { Button } from '@mui/material';
 import moment from 'moment';
 
-const Demo = () => {
+const Demo = ({sendDataToParent}) => {
     const methods = useForm({
         resolver: yupResolver(DemoSchema),
     });
 
-     const [formValues, setFormValues] = useState({});
-     const handleInputChange = (event) => {
-         const { id, value } = event.target;
-        setFormValues({ ...formValues, [id]: value });
-    };
+    //  const [formValues, setFormValues] = useState({});
+    //  const handleInputChange = (event) => {
+    //      const { id, value } = event.target;
+    //     setFormValues({ ...formValues, [id]: value });
+    // };
+
+    const { watch } = methods;
+
+    // Watch all form values
+    const formValues = useWatch({
+        control: methods.control,
+    });
+
+    useEffect(()=>{
+        console.log("data send")
+        sendDataToParent(formValues)
+    },[formValues])
+    // sendDataToParent(formValues)
+
+
 
     const { data, loading, error, fetchData } = useDemo();
 
@@ -160,6 +175,7 @@ const Demo = () => {
         payload["ClientCode"] = formData.clientCode ?? payload["ClientCode"]
         payload["OrderPlacedBy"] = formData.orderPlacedBy ?? payload["OrderPlacedBy"]
 
+        sendDataToParent(payload)
         fetchData(payload)
         console.log('Fetched data', data);
     };
