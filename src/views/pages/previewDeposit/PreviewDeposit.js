@@ -1,9 +1,11 @@
 import React from 'react';
+import { useDataSharing } from 'src/context/DataSharingProvider';
 
 const PreviewDeposit = ({ payload }) => {
+  const { sharedData } = useDataSharing();
   return (
     <div style={{ padding: '20px', minHeight:'70vh' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto auto auto', gap: '8px' }}>
+      {/* <div style={{ display: 'grid', gridTemplateColumns: 'auto auto auto', gap: '8px' }}>
         {Object.entries(payload).map(([key, value]) => (
           value !== undefined && (
             <React.Fragment key={key}>
@@ -13,7 +15,8 @@ const PreviewDeposit = ({ payload }) => {
             </React.Fragment>
           )
         ))}
-      </div>
+      </div> */}
+       <pre>{JSON.stringify(sharedData, null, 2)}</pre>
     </div>
   );
 }

@@ -125,8 +125,11 @@ import DemoForm from './components/DemoForm';
 import EmailForm from './components/EmailForm';
 import { Button } from '@mui/material';
 import moment from 'moment';
+import { useDataSharing } from 'src/context/DataSharingProvider';
 
 const Demo = ({sendDataToParent}) => {
+
+    const { setSharedData } = useDataSharing();
     const methods = useForm({
         resolver: yupResolver(DemoSchema),
     });
@@ -146,7 +149,8 @@ const Demo = ({sendDataToParent}) => {
 
     useEffect(()=>{
         console.log("data send")
-        sendDataToParent(formValues)
+        // sendDataToParent(formValues)
+        setSharedData(formValues)
     },[formValues])
     // sendDataToParent(formValues)
 
