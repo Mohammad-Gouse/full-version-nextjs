@@ -29,16 +29,17 @@
 
 import React from 'react';
 import Demo from '../demoSide1';
-import PreviewDeposit from '../demoSide2';
 // import { DataSharingProvider } from 'src/context/DataSharingProvider';
 import { DataSharingProvider } from 'src/context/DataSharingProvider';
+import Index from '../checkdepositdetails';
+import PreviewDeposit from 'src/views/pages/previewDeposit/PreviewDeposit';
 
 const PageSplitter = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', minHeight: '50vh' }}>
       <DataSharingProvider>
         <div style={{ width: '50%' }}>
-          <Demo />
+          <Index />
         </div>
         <div style={{
           width: '50%'

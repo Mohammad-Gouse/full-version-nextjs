@@ -3,17 +3,17 @@
     import Box from '@mui/material/Box';
     import { useForm, FormProvider } from 'react-hook-form';
     import { yupResolver } from '@hookform/resolvers/yup';
-    import { TransactionReportSchema, defaultValues }  from './schema/TransactionReportSchema';
-    import { TransactionReportContext } from 'src/context/TransactionReportContext';
-    import { useTransactionReport } from 'src/hooks/TransactionReportHook';
+    import { LedgerReportSchema, defaultValues }  from './schema/LedgerReportSchema';
+    import { LedgerReportContext } from 'src/context/LedgerReportContext';
+    import { useLedgerReport } from 'src/hooks/LedgerReportHook';
     import { Button } from '@mui/material';
     import moment from 'moment';
-    import TransactionReportForm from './components/TransactionReportForm';
+    import LedgerReportForm from './components/LedgerReportForm';
 
-    const TransactionReport = () => {
+    const LedgerReport = () => {
         const methods = useForm({
             defaultValues:defaultValues,
-            resolver: yupResolver(TransactionReportSchema),
+            resolver: yupResolver(LedgerReportSchema),
         });
 
          const [formValues, setFormValues] = useState({});
@@ -22,7 +22,7 @@
             setFormValues({ ...formValues, [id]: value });
         };
 
-        const { data, loading, error, fetchData } = useTransactionReport();
+        const { data, loading, error, fetchData } = useLedgerReport();
 
         const onSubmit = (formData) => {
             for (const key in formData) {
@@ -40,12 +40,12 @@
             <FormProvider {...methods}>
                 <Box sx={{ padding: 2 }}>
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        <TransactionReportForm formValues={formValues} handleInputChange={handleInputChange} />
+                        <LedgerReportForm formValues={formValues} handleInputChange={handleInputChange} />
                     </form>
                 </Box>
             </FormProvider>
         );
     }
 
-    export default TransactionReport;
+    export default LedgerReport;
     

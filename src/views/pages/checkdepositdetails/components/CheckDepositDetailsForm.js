@@ -1,71 +1,50 @@
 
-import { DataGrid } from '@mui/x-data-grid';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useTransactionReport } from 'src/hooks/TransactionReportHook';
+import { useCheckDepositDetails } from 'src/hooks/CheckDepositDetailsHook';
 
 const Container1 = () => {
-    const { control, formState: { errors } } = useFormContext();
-     const { data, loading, error, fetchData } = useTransactionReport();
+    const { control, setValue, watch, formState: { errors } } = useFormContext();
+     const { data, loading, error, fetchData } = useCheckDepositDetails();
 
     
+    const [imagePreviewUrl, setImagePreviewUrl] = useState('');
 
-    const columns = [
-        { field: 'BuySell', headerName: 'BuySell', width: 150 },
-        { field: 'Exchange', headerName: 'Exchange', width: 150 },
-        { field: 'ClientCode', headerName: ' ClientCode', width: 150 },
-        { field: 'GrossAmount', headerName: 'GrossAmount', width: 150 },
-        { field: 'MarketPrice', headerName: 'MarketPrice', width: 150 },
-        { field: 'NetAmount', headerName: 'NetAmount', width: 150 },
-        { field: 'OpeningDate', headerName: 'OpeningDate', width: 150 },
-        { field: 'OrderPlacedBy', headerName: 'OrderPlacedBy', width: 150 },
-        { field: 'Scrip', headerName: 'Scrip', width: 150 },
-        { field: 'Quantity', headerName: 'Quantity', width: 150 }
-    ];
+    const handleFileChange = (event, onChange) => {
+        const file = event.target.files[0];
+        if (file) {
+            onChange(file); // Update form state with the selected file
+            const imageUrl = URL.createObjectURL(file);
+            setImagePreviewUrl(imageUrl);
+        } else {
+            onChange(null); // Clear the file from form state if no file is selected
+            setImagePreviewUrl('');
+        }
+    };
+
+    const IconComponent = CloudUploadIcon;
     
 
     return (
-        <Box id="TransactionReportForm" style={{  }}>
+        <Box id="CheckDepositDetailsForm" style={{  }}>
             <Grid container spacing={5}>
                 
                     
-    <Grid item lg={4} md={6} sm={12} >
-    <InputLabel
-          error={Boolean(errors.FinancialYear)}
-        >
-      Financial Year
-    </InputLabel>
-    <Controller
-                name="FinancialYear"
-                control={control}
-                render={({ field }) => (
-
-              <Select
-              {...field}
-                label={'Financial Year'}
-                defaultValue="2024"
-                disabled={true}
-                id='FinancialYear'
-                size="small"
-                fullWidth
-                 error={!!errors.FinancialYear}
-              >
-                <MenuItem value="2024">2024-2025</MenuItem>
-              </Select>
-
-                )}
-            />
-              {errors.FinancialYear && (
-              <FormHelperText sx={{ color: 'error.main' }}>
-                {errors.FinancialYear.message}
-              </FormHelperText>
-            )}
-            </Grid>
+    <Grid item lg={12} md={12} sm={12} >
+        <Typography component="div">
+            <Box sx={{ 'font-size': '20px', 'font-weight': 'bold' }}>
+            Check Deposit Details
+            </Box>
+        </Typography>
+    
+    </Grid>
+     
     
                 
         
@@ -85,7 +64,7 @@ const Container1 = () => {
               <Select
               {...field}
                 label={'Segment'}
-                defaultValue="Equity"
+                defaultValue=""
                 disabled={false}
                 id='Segment'
                 size="small"
@@ -122,7 +101,7 @@ const Container1 = () => {
               <Select
               {...field}
                 label={'Exchange'}
-                defaultValue="ALL"
+                defaultValue=""
                 disabled={false}
                 id='Exchange'
                 size="small"
@@ -188,7 +167,7 @@ const Container1 = () => {
               <Select
               {...field}
                 label={'Order Placed By'}
-                defaultValue="Dealer"
+                defaultValue=""
                 disabled={false}
                 id='OrderPlacedBy'
                 size="small"
@@ -269,33 +248,49 @@ const Container1 = () => {
         
 
                     
-<Grid item lg={4} md={6} sm={12}>
-    <Button style={{marginTop:'24px'}} type="submit" variant="contained" color="primary">
-        search
-    </Button> 
-</Grid>
-
+        <Grid item lg={6} md={12} sm={12}>
+            <Controller
+                name="fileUpload"
+                control={control}
+                defaultValue={null}
+                render={({ field }) => (
+                    <Box style={{ 'background-color': '#ffffff', 'padding': '20px', 'border': '1px solid #ddd', 'border-radius': '5px', 'text-align': 'center' }}>
+                        <Button
+                            component="label"
+                            variant="contained"
+                            startIcon={<IconComponent />}
+                            style={{ marginRight: '10px', marginBottom: '10px' }}
+                        >
+                            Upload File
+                            <input
+                                type="file"
+                                accept=".jpg,.png,.pdf,.csv" multiple="false"
+                                onChange={(e) => handleFileChange(e, field.onChange)}
+                                style={{ display: 'none' }}
+                            />
+                        </Button>
+                        <Typography variant="body2" color="textSecondary">
+                            {field.value ? field.value.name : 'No file selected'}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary" style={{ marginLeft: '10px' }}>
+                            'Supported formats: JPG, PNG, PDF and .CSV Max file size: 5MB.'
+                        </Typography>
+                        {imagePreviewUrl && <img src={imagePreviewUrl} alt="Preview" style={{ maxWidth: '100%', height: 'auto' }} />}
+                    </Box>
+                )}
+            />
+        </Grid>
+        
                 
         
 
                     
-        <Grid item lg={12} md={12} sm={12}>
-        <Box marginTop="20px" padding="10px">
-            <DataGrid
-                rows={data??[]}
-                getRowId={() => Math.random()}
-                pageSize={100}
-                
-                columns={columns}
-                loading={loading}
-                
-                rowsPerPageOptions={[5, 10, 20]}
-                disableSelectionOnClick
-                style={{height:'450px', overflow: 'scroll'}}
-            />
-        </Box>
-        </Grid>
-        
+<Grid item lg={4} md={6} sm={12}>
+    <Button style={{marginTop:'24px'}} type="submit" variant="contained" color="primary">
+        SAVE
+    </Button> 
+</Grid>
+
                 
         
             </Grid>

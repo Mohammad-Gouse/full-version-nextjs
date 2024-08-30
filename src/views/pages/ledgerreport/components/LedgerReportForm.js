@@ -2,35 +2,31 @@
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useTransactionReport } from 'src/hooks/TransactionReportHook';
+import { useLedgerReport } from 'src/hooks/LedgerReportHook';
 
 const Container1 = () => {
-    const { control, formState: { errors } } = useFormContext();
-     const { data, loading, error, fetchData } = useTransactionReport();
+    const { control, setValue, watch, formState: { errors } } = useFormContext();
+     const { data, loading, error, fetchData } = useLedgerReport();
 
     
 
     const columns = [
-        { field: 'BuySell', headerName: 'BuySell', width: 150 },
-        { field: 'Exchange', headerName: 'Exchange', width: 150 },
-        { field: 'ClientCode', headerName: ' ClientCode', width: 150 },
-        { field: 'GrossAmount', headerName: 'GrossAmount', width: 150 },
-        { field: 'MarketPrice', headerName: 'MarketPrice', width: 150 },
-        { field: 'NetAmount', headerName: 'NetAmount', width: 150 },
-        { field: 'OpeningDate', headerName: 'OpeningDate', width: 150 },
-        { field: 'OrderPlacedBy', headerName: 'OrderPlacedBy', width: 150 },
-        { field: 'Scrip', headerName: 'Scrip', width: 150 },
-        { field: 'Quantity', headerName: 'Quantity', width: 150 }
+        { field: 'TransactionDate', headerName: 'TransactionDate', width: 150 },
+        { field: 'Voucher', headerName: 'Voucher', width: 150 },
+        { field: 'Narration', headerName: ' Narration', width: 150 },
+        { field: 'DebitAmount', headerName: 'DebitAmount', width: 150 },
+        { field: 'CreditAmount', headerName: 'CreditAmount', width: 150 },
+        { field: 'Balance', headerName: 'Balance', width: 150 }
     ];
     
 
     return (
-        <Box id="TransactionReportForm" style={{  }}>
+        <Box id="LedgerReportForm" style={{  }}>
             <Grid container spacing={5}>
                 
                     
@@ -48,14 +44,14 @@ const Container1 = () => {
               <Select
               {...field}
                 label={'Financial Year'}
-                defaultValue="2024"
+                defaultValue="2024-2025"
                 disabled={true}
                 id='FinancialYear'
                 size="small"
                 fullWidth
                  error={!!errors.FinancialYear}
               >
-                <MenuItem value="2024">2024-2025</MenuItem>
+                <MenuItem value="2024-2025">2024-2025</MenuItem>
               </Select>
 
                 )}
@@ -169,43 +165,6 @@ const Container1 = () => {
             />
              </Grid>
      
-    
-                
-        
-
-                    
-    <Grid item lg={4} md={6} sm={12} >
-    <InputLabel
-          error={Boolean(errors.OrderPlacedBy)}
-        >
-      Order Placed By
-    </InputLabel>
-    <Controller
-                name="OrderPlacedBy"
-                control={control}
-                render={({ field }) => (
-
-              <Select
-              {...field}
-                label={'Order Placed By'}
-                defaultValue="Dealer"
-                disabled={false}
-                id='OrderPlacedBy'
-                size="small"
-                fullWidth
-                 error={!!errors.OrderPlacedBy}
-              >
-                <MenuItem value="Dealer">Dealer</MenuItem><MenuItem value="Beyond">Beyond</MenuItem>
-              </Select>
-
-                )}
-            />
-              {errors.OrderPlacedBy && (
-              <FormHelperText sx={{ color: 'error.main' }}>
-                {errors.OrderPlacedBy.message}
-              </FormHelperText>
-            )}
-            </Grid>
     
                 
         
