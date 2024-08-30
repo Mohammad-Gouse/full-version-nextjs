@@ -38,7 +38,7 @@ const Container1 = () => {
     <InputLabel
           error={Boolean(errors.FinancialYear)}
         >
-      FinancialYear <span style={{ color: 'red' }}>*</span>
+      Financial Year <span style={{ color: 'red' }}>*</span>
     </InputLabel>
     <Controller
                 name="FinancialYear"
@@ -73,12 +73,12 @@ const Container1 = () => {
                     
     <Grid item lg={4} md={6} sm={12} >
     <InputLabel
-          error={Boolean(errors.segment)}
+          error={Boolean(errors.Segment)}
         >
-      segment <span style={{ color: 'red' }}>*</span>
+      Segment <span style={{ color: 'red' }}>*</span>
     </InputLabel>
     <Controller
-                name="segment"
+                name="Segment"
                 control={control}
                 render={({ field }) => (
 
@@ -87,19 +87,19 @@ const Container1 = () => {
                 label={'Segment'}
                 defaultValue="Equity"
                 disabled={false}
-                id='segment'
+                id='Segment'
                 size="small"
                 fullWidth
-                 error={!!errors.segment}
+                 error={!!errors.Segment}
               >
                 <MenuItem value="Equity">Equity</MenuItem><MenuItem value="Commudity">Commudity</MenuItem>
               </Select>
 
                 )}
             />
-              {errors.segment && (
+              {errors.Segment && (
               <FormHelperText sx={{ color: 'error.main' }}>
-                {errors.segment.message}
+                {errors.Segment.message}
               </FormHelperText>
             )}
             </Grid>
@@ -110,12 +110,12 @@ const Container1 = () => {
                     
     <Grid item lg={4} md={6} sm={12} >
     <InputLabel
-          error={Boolean(errors.exchange)}
+          error={Boolean(errors.Exchange)}
         >
-      exchange <span style={{ color: 'red' }}>*</span>
+      Exchange <span style={{ color: 'red' }}>*</span>
     </InputLabel>
     <Controller
-                name="exchange"
+                name="Exchange"
                 control={control}
                 render={({ field }) => (
 
@@ -124,19 +124,19 @@ const Container1 = () => {
                 label={'Exchange'}
                 defaultValue="ALL"
                 disabled={false}
-                id='exchange'
+                id='Exchange'
                 size="small"
                 fullWidth
-                 error={!!errors.exchange}
+                 error={!!errors.Exchange}
               >
                 <MenuItem value="ALL">ALL</MenuItem><MenuItem value="BSE">BSE</MenuItem>
               </Select>
 
                 )}
             />
-              {errors.exchange && (
+              {errors.Exchange && (
               <FormHelperText sx={{ color: 'error.main' }}>
-                {errors.exchange.message}
+                {errors.Exchange.message}
               </FormHelperText>
             )}
             </Grid>
@@ -147,22 +147,22 @@ const Container1 = () => {
                     
     <Grid item lg={4} md={6} sm={12} >
         <InputLabel
-          error={Boolean(errors.clientCode)}
+          error={Boolean(errors.ClientCode)}
         >
-      clientCode <span style={{ color: 'red' }}>*</span>
+      Client Code <span style={{ color: 'red' }}>*</span>
     </InputLabel>
      <Controller
-                name="clientCode"
+                name="ClientCode"
                 control={control}
                 render={({ field }) => (
 
                     <TextField
                       {...field}
-                      id='clientCode'
+                      id='ClientCode'
                       size="small"
                       fullWidth
-                      error={!!errors?.clientCode }
-                      helperText={errors?.clientCode?.message}
+                      error={!!errors?.ClientCode }
+                      helperText={errors?.ClientCode?.message}
                     />
 
                 )}
@@ -176,12 +176,12 @@ const Container1 = () => {
                     
     <Grid item lg={4} md={6} sm={12} >
     <InputLabel
-          error={Boolean(errors.orderPlacedBy)}
+          error={Boolean(errors.OrderPlacedBy)}
         >
-      orderPlacedBy <span style={{ color: 'red' }}>*</span>
+      Order Placed By <span style={{ color: 'red' }}>*</span>
     </InputLabel>
     <Controller
-                name="orderPlacedBy"
+                name="OrderPlacedBy"
                 control={control}
                 render={({ field }) => (
 
@@ -190,19 +190,19 @@ const Container1 = () => {
                 label={'Order Placed By'}
                 defaultValue="Dealer"
                 disabled={false}
-                id='orderPlacedBy'
+                id='OrderPlacedBy'
                 size="small"
                 fullWidth
-                 error={!!errors.orderPlacedBy}
+                 error={!!errors.OrderPlacedBy}
               >
                 <MenuItem value="Dealer">Dealer</MenuItem><MenuItem value="Beyond">Beyond</MenuItem>
               </Select>
 
                 )}
             />
-              {errors.orderPlacedBy && (
+              {errors.OrderPlacedBy && (
               <FormHelperText sx={{ color: 'error.main' }}>
-                {errors.orderPlacedBy.message}
+                {errors.OrderPlacedBy.message}
               </FormHelperText>
             )}
             </Grid>
@@ -213,12 +213,12 @@ const Container1 = () => {
                     
  <Grid item lg={4} md={6} sm={12} >
          <InputLabel
-          error={Boolean(errors.fromDate)}
+          error={Boolean(errors.StartDate)}
         >
-      fromDate <span style={{ color: 'red' }}>*</span>
+      From Date <span style={{ color: 'red' }}>*</span>
     </InputLabel>
         <Controller
-                name="fromDate"
+                name="StartDate"
                 control={control}
                 render={({ field }) => (
 
@@ -242,12 +242,12 @@ const Container1 = () => {
                     
  <Grid item lg={4} md={6} sm={12} >
          <InputLabel
-          error={Boolean(errors.toDate)}
+          error={Boolean(errors.EndDate)}
         >
-      toDate <span style={{ color: 'red' }}>*</span>
+      To Date <span style={{ color: 'red' }}>*</span>
     </InputLabel>
         <Controller
-                name="toDate"
+                name="EndDate"
                 control={control}
                 render={({ field }) => (
 

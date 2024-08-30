@@ -1,6 +1,7 @@
 
 import React, { createContext, useState, useEffect } from 'react';
 import createAxiosInstance from 'src/configs/axiosConfig';
+import moment from 'moment';
 
 const TransactionReportContext = createContext();
 
@@ -12,11 +13,33 @@ const TransactionReportProvider = ({ children }) => {
   // Create Axios instance
   const axiosInstance = createAxiosInstance();
 
+  const objA = {
+    "FinancialYear": "2024",
+    "Segment": "Equity",
+    "Exchange": "All",
+    "StartDate": "30-JUL-2024",
+    "EndDate": "30-JUL-2024",
+    "ClientCode": "e100002",
+    "OrderPlacedBy": "BEYOND",
+    "Branch": "HO",
+    "Role": "11"
+}
+
+  var objB = {
+    ...objA,
+    StartDate: moment(objA.fromDate).format('DD-MMM-YYYY'),
+    EndDate: moment(objA.EndDate).format('DD-MMM-YYYY')
+};
+
+console.log(objB);
+
+
   const fetchData = async (payload) => {
+
       console.log("Fetching data...");
       setLoading(true);
       try {
-          const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/reports/transaction-statement', payload);
+          const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/reports/transaction-statement', objB);
           console.log(response);
           setData(response.data.data);
       } catch (error) {
