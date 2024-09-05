@@ -1,5 +1,5 @@
 
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio } from '@mui/material';
@@ -7,31 +7,39 @@ import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useLedgerReport } from 'src/hooks/LedgerReportHook';
-import CustomDateRangePicker from './CustomDateRangePicker';
+import { useBrokerageReport } from 'src/hooks/BrokerageReportHook';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, loading, error, fetchData } = useLedgerReport();
+     const { data, loading, error, fetchData } = useBrokerageReport();
+
+    function CustomToolbar() {
+      return (
+        <GridToolbarContainer>
+          <GridToolbarExport />
+        </GridToolbarContainer>
+      );
+    }
 
     
 
     const columns = [
-        { field: 'TransactionDate', headerName: 'TransactionDate', width: 150 },
-        { field: 'Voucher', headerName: 'Voucher', width: 150 },
-        { field: 'Narration', headerName: ' Narration', width: 150 },
-        { field: 'DebitAmount', headerName: 'DebitAmount', width: 150 },
-        { field: 'CreditAmount', headerName: 'CreditAmount', width: 150 },
-        { field: 'Balance', headerName: 'Balance', width: 150 }
+        { field: 'ClientCode', headerName: 'Client Code', width: 150, headerClassName: 'theme--header' },
+        { field: 'Exchange', headerName: 'Exchange', width: 150 },
+        { field: 'BuyValue', headerName: 'Buy Value', width: 150 },
+        { field: 'SellValue', headerName: 'Sell Value', width: 150 },
+        { field: 'Turnover', headerName: 'Turnover', width: 150 },
+        { field: 'Brokerage', headerName: 'Brokerage', width: 150 },
+        { field: 'TransactionDate', headerName: 'TransactionDate', width: 150 }
     ];
     
 
     return (
-        <Box id="LedgerReportForm" style={{  }}>
+        <Box id="BrokerageReportForm" style={{  }}>
             <Grid container spacing={5}>
                 
                     
-    <Grid item lg={4} md={6} sm={12} >
+    <Grid item lg={3} md={6} sm={12} >
       <FormControl fullWidth>
         <InputLabel id="FinancialYear">Financial Year</InputLabel>
         <Controller
@@ -42,14 +50,14 @@ const Container1 = () => {
           {...field}
             labelId = "FinancialYear"
             label='Financial Year'
-            defaultValue="2024-2025"
+            defaultValue="2024"
             disabled={true}
             id='FinancialYear'
             size="small"
             fullWidth
             error={!!errors.FinancialYear}
           >
-          <MenuItem value="2024-2025">2024-2025</MenuItem>
+          <MenuItem value="2024">2024-2025</MenuItem>
           </Select>
             )}
           />
@@ -65,7 +73,7 @@ const Container1 = () => {
         
 
                     
-    <Grid item lg={4} md={6} sm={12} >
+    <Grid item lg={3} md={6} sm={12} >
       <FormControl fullWidth>
         <InputLabel id="Segment">Segment</InputLabel>
         <Controller
@@ -99,7 +107,7 @@ const Container1 = () => {
         
 
                     
-    <Grid item lg={4} md={6} sm={12} >
+    <Grid item lg={3} md={6} sm={12} >
       <FormControl fullWidth>
         <InputLabel id="Exchange">Exchange</InputLabel>
         <Controller
@@ -133,7 +141,7 @@ const Container1 = () => {
         
 
                     
-    <Grid item lg={4} md={6} sm={12} >
+    <Grid item lg={3} md={6} sm={12} >
       <FormControl fullWidth>
         <Controller
                   name="ClientCode"
@@ -158,7 +166,7 @@ const Container1 = () => {
         
 
                     
- <Grid item lg={4} md={6} sm={12} >
+ <Grid item lg={3} md={6} sm={12} >
     <FormControl fullWidth>
       <Controller
         name="StartDate"
@@ -182,7 +190,7 @@ const Container1 = () => {
         
 
                     
- <Grid item lg={4} md={6} sm={12} >
+ <Grid item lg={3} md={6} sm={12} >
     <FormControl fullWidth>
       <Controller
         name="EndDate"
@@ -201,22 +209,13 @@ const Container1 = () => {
         />
     </FormControl>
   </Grid>    
-
-  {/* <CustomDateRangePicker
-                  field={field}
-                  setSelectedValue={setSelectedValue}
-                  hoveredItemIndex={hoveredItemIndex}
-                  handleClearValues={handleClearValues}
-                  index={index}
-                  popperPlacement='bottom-start' // or other placement
-                /> */}
     
                 
         
 
                     
-<Grid item lg={4} md={6} sm={12}>
-    <Button style={{marginTop:'24px'}} type="submit" variant="contained" color="primary">
+<Grid item lg={2} md={6} sm={12}>
+    <Button type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
@@ -231,10 +230,11 @@ const Container1 = () => {
                 rows={data??[]}
                 getRowId={() => Math.random()}
                 pageSize={100}
-                
+                components={{
+                  Toolbar: CustomToolbar,
+                }}
                 columns={columns}
                 loading={loading}
-                
                 rowsPerPageOptions={[5, 10, 20]}
                 disableSelectionOnClick
                 style={{height:'450px', overflow: 'scroll'}}

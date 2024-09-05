@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import moment from 'moment';
 
 
-const LedgerReportSchema = Yup.object().shape({
+const NetpositionReportSchema = Yup.object().shape({
                 FinancialYear: Yup.string(),
                 Segment: Yup.string().required('Segment is required'),
                 Exchange: Yup.string().required('Exchange is required'),
@@ -14,12 +14,12 @@ const LedgerReportSchema = Yup.object().shape({
 });
 
 const defaultValues = {
-                FinancialYear: "2024-2025",
+                FinancialYear: "2024",
                 Segment: "Equity",
                 Exchange: "ALL",
-                ClientCode: "",
+                ClientCode: undefined,
                 StartDate: new Date(moment(moment().subtract(1, 'days').toDate(),'dd-MMM-yyyy')),
                 EndDate: new Date(moment(moment().toDate(),'dd-MMM-yyyy')),
 };
 
-export { LedgerReportSchema, defaultValues };
+export { NetpositionReportSchema, defaultValues };

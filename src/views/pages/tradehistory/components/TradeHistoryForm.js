@@ -7,27 +7,39 @@ import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useLedgerReport } from 'src/hooks/LedgerReportHook';
-import CustomDateRangePicker from './CustomDateRangePicker';
+import { useTradeHistory } from 'src/hooks/TradeHistoryHook';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, loading, error, fetchData } = useLedgerReport();
+     const { data, loading, error, fetchData } = useTradeHistory();
 
     
 
     const columns = [
-        { field: 'TransactionDate', headerName: 'TransactionDate', width: 150 },
-        { field: 'Voucher', headerName: 'Voucher', width: 150 },
-        { field: 'Narration', headerName: ' Narration', width: 150 },
-        { field: 'DebitAmount', headerName: 'DebitAmount', width: 150 },
-        { field: 'CreditAmount', headerName: 'CreditAmount', width: 150 },
-        { field: 'Balance', headerName: 'Balance', width: 150 }
+        { field: 'ClientCode', headerName: 'Client Code', width: 150 },
+        { field: 'ClientName', headerName: 'Client Name', width: 150 },
+        { field: 'Exchange', headerName: 'Exchange', width: 150 },
+        { field: 'ScripName', headerName: 'Scrip Name', width: 150 },
+        { field: 'Expiry', headerName: 'Expiry Date', width: 150 },
+        { field: 'AvgBuyQty', headerName: 'Average Buy Quantity', width: 150 },
+        { field: 'AvgBuyPrice', headerName: 'Average Buy Price', width: 150 },
+        { field: 'AvgSellQty', headerName: 'Average Sell Quantity', width: 150 },
+        { field: 'AvgSellPrice', headerName: 'Average Sell Price', width: 150 },
+        { field: 'NetQTY', headerName: 'Net Quantity', width: 150 },
+        { field: 'OrderPlacedBy', headerName: 'Order Placed By', width: 150 },
+        { field: 'Status', headerName: 'Status', width: 150 },
+        { field: 'Remark', headerName: 'Remark', width: 150 },
+        { field: 'ConformationDate', headerName: 'Confirmation Date', width: 150 },
+        { field: 'ConfirmBy', headerName: 'Confirmed By', width: 150 },
+        { field: 'TradeDate', headerName: 'Trade Date', width: 150 },
+        { field: 'CallType', headerName: 'Call Type', width: 150 },
+        { field: 'BranchCode', headerName: 'Branch Code', width: 150 },
+        { field: 'ReginalCode', headerName: 'Regional Code', width: 150 }
     ];
     
 
     return (
-        <Box id="LedgerReportForm" style={{  }}>
+        <Box id="TradeHistoryForm" style={{  }}>
             <Grid container spacing={5}>
                 
                     
@@ -42,14 +54,14 @@ const Container1 = () => {
           {...field}
             labelId = "FinancialYear"
             label='Financial Year'
-            defaultValue="2024-2025"
+            defaultValue="2024"
             disabled={true}
             id='FinancialYear'
             size="small"
             fullWidth
             error={!!errors.FinancialYear}
           >
-          <MenuItem value="2024-2025">2024-2025</MenuItem>
+          <MenuItem value="2024">2024-2025</MenuItem>
           </Select>
             )}
           />
@@ -90,40 +102,6 @@ const Container1 = () => {
             {errors.Segment && (
             <FormHelperText sx={{ color: 'error.main' }}>
               {errors.Segment.message}
-            </FormHelperText>
-          )}
-        </FormControl>
-      </Grid>
-    
-                
-        
-
-                    
-    <Grid item lg={4} md={6} sm={12} >
-      <FormControl fullWidth>
-        <InputLabel id="Exchange">Exchange</InputLabel>
-        <Controller
-          name="Exchange"
-          control={control}
-          render={({ field }) => (
-          <Select
-          {...field}
-            labelId = "Exchange"
-            label='Exchange'
-            defaultValue="ALL"
-            disabled={false}
-            id='Exchange'
-            size="small"
-            fullWidth
-            error={!!errors.Exchange}
-          >
-          <MenuItem value="ALL">ALL</MenuItem><MenuItem value="BSE">BSE</MenuItem>
-          </Select>
-            )}
-          />
-            {errors.Exchange && (
-            <FormHelperText sx={{ color: 'error.main' }}>
-              {errors.Exchange.message}
             </FormHelperText>
           )}
         </FormControl>
@@ -201,22 +179,13 @@ const Container1 = () => {
         />
     </FormControl>
   </Grid>    
-
-  {/* <CustomDateRangePicker
-                  field={field}
-                  setSelectedValue={setSelectedValue}
-                  hoveredItemIndex={hoveredItemIndex}
-                  handleClearValues={handleClearValues}
-                  index={index}
-                  popperPlacement='bottom-start' // or other placement
-                /> */}
     
                 
         
 
                     
 <Grid item lg={4} md={6} sm={12}>
-    <Button style={{marginTop:'24px'}} type="submit" variant="contained" color="primary">
+    <Button  type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>

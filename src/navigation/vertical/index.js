@@ -6,8 +6,58 @@ const navigation = () => {
       path: '/home'
     },
     {
+      title: 'Reports',
+      icon: 'ph:gift-fill',
+      badgeContent: 'new',
+      badgeColor: 'error',
+      children: [
+        {
+          title: 'Client Ledger',
+          path: '/ledgerreport'
+        },
+        {
+          title: 'Client Brokerage',
+          path: '/brokeragereport'
+        },
+        {
+          title: 'Holding Report',
+          path: '/holdingreport'
+        },
+        {
+          title: 'Net Position',
+          path: '/netpositionreport'
+        },
+        {
+          title: 'Client Wise Financilal Statement',
+          path: '/financialreport'
+        },
+        {
+          title: 'Portfolio',
+          path: '/reportportfolio'
+        },
+
+      ]
+    },
+    {
+      title: 'Trade Confirmation',
+      icon: 'ph:gift-fill',
+      badgeContent: 'new',
+      badgeColor: 'error',
+      children: [
+        {
+          title: 'Status Report History',
+          path: '/tradehistory'
+        },
+        {
+          title: 'Block Data',
+          path: '/tradeblockdata'
+        },
+
+      ]
+    },
+    {
       title: 'menu1',
-      icon: 'mdi:message-outline',
+      icon: 'mdi:contact-outline',
       path: '/menu1'
     },
     {

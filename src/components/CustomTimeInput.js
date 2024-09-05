@@ -13,7 +13,7 @@ export const CustomTimeInput = forwardRef(({ ...props }, ref) => {
         fullWidth
         {...props}
         inputRef={ref}
-        label={label || ''}
+        label={label || 'Date'}
         {...(readOnly && { inputProps: { readOnly: true } })}
         InputProps={{
           readOnly: true,
