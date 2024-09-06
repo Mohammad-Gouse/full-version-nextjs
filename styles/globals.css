@@ -22,3 +22,44 @@ code:not([class*='language-']):after {
 code[class*='language-'] {
   padding: 0;
 }
+
+/* CSS for styling selected items */
+/* .custom-multiselect .p-multiselect-token-label {
+  background-color: #e0f7fa; 
+  color: #00796b; 
+  padding: 4px 8px; 
+  border-radius: 4px; 
+} */
+
+/* CSS for styling placeholder */
+.custom-multiselect .p-multiselect-label {
+  color: #888;
+  padding: 4px;
+}
+
+.custom-dropdown .p-dropdown-label {
+  color: #888;
+  padding: 4px;
+  font-size: 10px;
+}
+
+.header-row .p-column-filter-row{
+  height: 21px;
+
+}
+
+.p-multiselect-header{
+ font-size: 10px;
+ height: 20px;
+}
+
+.p-checkbox{
+  transform: scale(0.8);
+  display: inline-block
+}
+
+.p-multiselect-item{
+  padding: 2px 20px;
+  font-size: 10px;
+}
+

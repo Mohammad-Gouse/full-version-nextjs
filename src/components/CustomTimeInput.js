@@ -16,8 +16,16 @@ export const CustomTimeInput = forwardRef(({ ...props }, ref) => {
         label={label || 'Date'}
         {...(readOnly && { inputProps: { readOnly: true } })}
         InputProps={{
+          style: {
+            fontSize: '10px',
+          },
           readOnly: true,
           endAdornment: <IconifyIcon icon='mdi-calendar' style={{ cursor: 'pointer' }} />
+        }}
+        InputLabelProps={{
+          style: {
+            fontSize: '10px',
+          },
         }}
       />
     )

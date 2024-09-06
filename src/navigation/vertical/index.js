@@ -8,8 +8,6 @@ const navigation = () => {
     {
       title: 'Reports',
       icon: 'ph:gift-fill',
-      badgeContent: 'new',
-      badgeColor: 'error',
       children: [
         {
           title: 'Client Ledger',
@@ -41,8 +39,6 @@ const navigation = () => {
     {
       title: 'Trade Confirmation',
       icon: 'ph:gift-fill',
-      badgeContent: 'new',
-      badgeColor: 'error',
       children: [
         {
           title: 'Status Report History',
@@ -55,31 +51,31 @@ const navigation = () => {
 
       ]
     },
-    {
-      title: 'menu1',
-      icon: 'mdi:contact-outline',
-      path: '/menu1'
-    },
-    {
-      title: 'menu2',
-      icon: 'mdi:contact-outline',
-      path: '/menu2'
-    },
-    {
-      title: 'menu3',
-      icon: 'mdi:contact-outline',
-      path: '/menu3'
-    },
-    {
-      title: 'create task',
-      icon: 'mdi:email-outline',
-      path: '/createtask'
-    },
-    {
-      title: 'User Info',
-      icon: 'mdi:email-outline',
-      path: '/userinfo'
-    },
+    // {
+    //   title: 'menu1',
+    //   icon: 'mdi:contact-outline',
+    //   path: '/menu1'
+    // },
+    // {
+    //   title: 'menu2',
+    //   icon: 'mdi:contact-outline',
+    //   path: '/menu2'
+    // },
+    // {
+    //   title: 'menu3',
+    //   icon: 'mdi:contact-outline',
+    //   path: '/menu3'
+    // },
+    // {
+    //   title: 'create task',
+    //   icon: 'mdi:email-outline',
+    //   path: '/createtask'
+    // },
+    // {
+    //   title: 'User Info',
+    //   icon: 'mdi:email-outline',
+    //   path: '/userinfo'
+    // },
   
   ]
 }
