@@ -13,10 +13,12 @@ import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
   import * as XLSX from 'xlsx';
+import { Skeleton } from 'primereact/skeleton';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, loading, error, fetchData } = useLedgerReport();
+     const { data, total, loading, error, fetchData } = useLedgerReport();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -77,12 +79,34 @@ const Container1 = () => {
         };
         
 
+    const emptyMessage= <div
+       style={{
+         display: 'flex',
+         justifyContent: 'start',
+         alignItems: 'center',
+         paddingLeft: '400px',
+         minHeight:'60vh'
+       }}
+     >
+       <div className='w-[100%] text-center font-bold'>
+         <img
+           src='/images/datagrid/nodata.gif'
+           alt='No data found'
+           style={{
+             width: '200px',
+             height: '200px'
+           }}
+         />
+         
+       </div>
+     </div>
+
     return (
-        <Card id="LedgerReportForm" sx={{padding:'20px 10px', minHeight:'80vh'}}>
+        <Card id="LedgerReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
                     
-    <Grid item lg={1.5} md={6} sm={12} >
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
         <InputLabel sx={{ 'font-size': '10px' }} id="FinancialYear">Financial Year</InputLabel>
         <Controller
@@ -117,7 +141,7 @@ const Container1 = () => {
         
 
                     
-    <Grid item lg={1.5} md={6} sm={12} >
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
         <InputLabel sx={{ 'font-size': '10px' }} id="Segment">Segment</InputLabel>
         <Controller
@@ -152,7 +176,7 @@ const Container1 = () => {
         
 
                     
-    <Grid item lg={1.5} md={6} sm={12} >
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
         <InputLabel sx={{ 'font-size': '10px' }} id="Exchange">Exchange</InputLabel>
         <Controller
@@ -187,7 +211,7 @@ const Container1 = () => {
         
 
                     
-    <Grid item lg={1.5} md={6} sm={12} >
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
         <Controller
                   name="ClientCode"
@@ -222,7 +246,7 @@ const Container1 = () => {
         
 
                     
- <Grid item lg={1.5} md={6} sm={12} >
+ <Grid item lg={1.5} md={6} sm={12} xs={12} >
     <FormControl fullWidth>
       <Controller
         name="StartDate"
@@ -246,7 +270,7 @@ const Container1 = () => {
         
 
                     
- <Grid item lg={1.5} md={6} sm={12} >
+ <Grid item lg={1.5} md={6} sm={12} xs={12} >
     <FormControl fullWidth>
       <Controller
         name="EndDate"
@@ -271,7 +295,7 @@ const Container1 = () => {
 
                     
 <Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px"}} type="submit" variant="contained" color="primary">
+    <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
@@ -294,29 +318,32 @@ const Container1 = () => {
     </Button> 
 </Grid>
 
-
-<Grid item lg={12} md={12} sm={12} style={{paddingTop:"10px"}}>  
-<Box sx={{display:'flex',flexDirection:"row", fontSize:"10px"}}>
-    <Card sx={{padding:"10px", marginRight:"5px", fontWeight:"900"}}>Client Name: John Doe</Card>
-    <Card sx={{padding:"10px", marginRight:"5px", fontWeight:"900"}}>Total Buy: 12345</Card>
-    <Card sx={{padding:"10px", marginRight:"5px", fontWeight:"900"}}>Total Buy: 12345</Card>
-    <Card sx={{padding:"10px", marginRight:"5px", fontWeight:"900"}}>Total Buy: 12345</Card>
-    <Card sx={{padding:"10px",  marginRight:"5px", fontWeight:"900"}}>Total Buy: 12345</Card>
-</Box>
-</Grid>
                 
         
 
                     
-        <Grid item lg={12} md={12} sm={12} style={{paddingTop:"10px"}} >      
-        <Box sx={{ minHeight:"60vh" }}>
+        <Grid item lg={12} md={12} sm={12} style={{paddingTop:"10px"}}>      
+        {loading && (
+                <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 1
+                }}>
+                     <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="5"  animationDuration=".5s" />
+                </div>
+            )}
             <DataTable 
                 size='small' 
                 value={data ?? []} 
                 rows={10} 
                 filters={filters} 
                 filterDisplay="row"
-                sx={{minHeight:"50vh", padding:"0px" }}
+                emptyMessage={emptyMessage}
+                scrollable={true}
+                scrollHeight='390px'
+                
             >
                 <Column 
             field="TransactionDate" 
@@ -326,6 +353,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'TransactionDate')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="Voucher" 
@@ -335,6 +363,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'Voucher')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="Narration" 
@@ -344,6 +373,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'Narration')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="DebitAmount" 
@@ -353,6 +383,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'DebitAmount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="CreditAmount" 
@@ -362,6 +393,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'CreditAmount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="Balance" 
@@ -371,9 +403,9 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'Balance')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
             </DataTable>
-        </Box>
         </Grid>
         
                 

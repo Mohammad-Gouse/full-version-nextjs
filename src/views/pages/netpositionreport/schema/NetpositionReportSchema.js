@@ -17,7 +17,7 @@ const defaultValues = {
                 FinancialYear: "2024",
                 Segment: "Equity",
                 Exchange: "ALL",
-                ClientCode: undefined,
+                ClientCode: "",
                 StartDate: new Date(moment(moment().subtract(1, 'days').toDate(),'dd-MMM-yyyy')),
                 EndDate: new Date(moment(moment().toDate(),'dd-MMM-yyyy')),
 };

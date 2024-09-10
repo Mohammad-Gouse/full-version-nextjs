@@ -1,51 +1,50 @@
 
-    import React, { useContext,useState } from 'react';
-    import Box from '@mui/material/Box';
-    import { useForm, FormProvider } from 'react-hook-form';
-    import { yupResolver } from '@hookform/resolvers/yup';
-    import { HoldingReportSchema, defaultValues }  from './schema/HoldingReportSchema';
-    import { HoldingReportContext } from 'src/context/HoldingReportContext';
-    import { useHoldingReport } from 'src/hooks/HoldingReportHook';
-    import { Button } from '@mui/material';
-    import moment from 'moment';
-    import HodingReportForm from './components/HodingReportForm';
+import React, { useContext,useState } from 'react';
+import Box from '@mui/material/Box';
+import { useForm, FormProvider } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { HoldingReportSchema, defaultValues }  from './schema/HoldingReportSchema';
+import { HoldingReportContext } from 'src/context/HoldingReportContext';
+import { useHoldingReport } from 'src/hooks/HoldingReportHook';
+import { Button } from '@mui/material';
+import moment from 'moment';
+import HodingReportForm from './components/HodingReportForm';
 
-    const HoldingReport = () => {
-        const methods = useForm({
-            defaultValues:defaultValues,
-            resolver: yupResolver(HoldingReportSchema),
-        });
+const HoldingReport = () => {
+    const methods = useForm({
+        defaultValues:defaultValues,
+        resolver: yupResolver(HoldingReportSchema),
+    });
 
-         const [formValues, setFormValues] = useState({});
-         const handleInputChange = (event) => {
-             const { id, value } = event.target;
-            setFormValues({ ...formValues, [id]: value });
-        };
+     const [formValues, setFormValues] = useState({});
+     const handleInputChange = (event) => {
+         const { id, value } = event.target;
+        setFormValues({ ...formValues, [id]: value });
+    };
 
-        const { data, loading, error, fetchData } = useHoldingReport();
+    const { data, total, loading, error, fetchData } = useHoldingReport();
 
-        const onSubmit = (formData) => {
-            for (const key in formData) {
-                if (key.toLowerCase().includes('date')) {
-                    formData[key] = moment(formData[key]).format('DD-MMM-YYYY');
-                }
+    const onSubmit = (formData) => {
+        for (const key in formData) {
+            if (key.toLowerCase().includes('date')) {
+                formData[key] = moment(formData[key]).format('DD-MMM-YYYY');
             }
-            formData.Branch = "HO"
-            formData.Role = "11"
+        }
+        formData.Branch = "HO"
+        formData.Role = "11"
 
-            fetchData(formData)
-        };
+        fetchData(formData)
+    };
 
-        return (
-            <FormProvider {...methods}>
-                <Box sx={{ padding: 2 }}>
-                    <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        <HodingReportForm formValues={formValues} handleInputChange={handleInputChange} />
-                    </form>
-                </Box>
-            </FormProvider>
-        );
-    }
+    return (
+        <FormProvider {...methods}>
+            <Box sx={{ padding: 2 }}>
+                <form onSubmit={methods.handleSubmit(onSubmit)}>
+                    <HodingReportForm formValues={formValues} handleInputChange={handleInputChange} />
+                </form>
+            </Box>
+        </FormProvider>
+    );
+}
 
-    export default HoldingReport;
-    
+export default HoldingReport;

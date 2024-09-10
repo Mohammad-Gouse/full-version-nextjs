@@ -1,5 +1,6 @@
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
+import Marquee from './Marquee';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card } from '@mui/material';
@@ -16,7 +17,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, loading, error, fetchData } = useHoldingReport();
+     const { data, total, loading, error, fetchData } = useHoldingReport();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -71,14 +72,38 @@ const Container1 = () => {
         };
 
         const rowStyle = {
-            padding: '0px 4px',
+            padding: '5px 4px',
             fontSize: '10px',
             height: '4vh !important'
         };
         
 
+    const emptyMessage= <div
+       style={{
+         display: 'flex',
+         justifyContent: 'start',
+         alignItems: 'center',
+         paddingLeft: '400px',
+         minHeight: '50vh'
+       }}
+     >
+       <div className='w-[100%] text-center font-bold'>
+         <img
+           src='/images/datagrid/nodata.gif'
+           alt='No data found'
+           style={{
+             width: '200px',
+             height: '200px'
+           }}
+         />
+         <div style={{
+             textAlign:"center"
+           }} className='w-[100%] text-center  font-bold'>No data found</div>
+       </div>
+     </div>
+
     return (
-        <Card id="HodingReportForm" sx={{padding:'30px 20px'}}>
+        <Card id="HodingReportForm" sx={{padding:'20px 10px', minHeight:'80vh'}}>
             <Grid container spacing={5}>
                 
                     
@@ -127,14 +152,35 @@ const Container1 = () => {
         
 
                     
-        <Grid item lg={12} md={12} sm={12}>      
-        <Box sx={{ marginTop:"20px", padding:"10px" }}>
+        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "10px" }}>
+      <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
+        {total && Object.keys(total).length > 0 && (
+          Object.entries(total).map(([key, value]) => (
+            <Card key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900" }}>
+              {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
+            </Card>
+          ))
+        ) }
+      </Box>
+    </Grid>
+        
+                
+        
+
+                    
+        <Grid item lg={12} md={12} sm={12} style={{paddingTop:"10px"}}>      
+        <Box sx={{ padding:"10px" }}>
             <DataTable 
                 size='small' 
                 value={data ?? []} 
                 rows={10} 
                 filters={filters} 
                 filterDisplay="row"
+                sx={{ padding:"0px" }}
+                loading={loading}
+                emptyMessage={emptyMessage}
+                scrollable={true}
+                scrollHeight='390px'
             >
                 <Column 
             field="ClientCode" 
@@ -257,6 +303,12 @@ const Container1 = () => {
         </Box>
         </Grid>
         
+                
+        
+
+                    
+     <Marquee />
+    
                 
         
             </Grid>

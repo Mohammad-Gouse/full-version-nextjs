@@ -22,7 +22,7 @@
             setFormValues({ ...formValues, [id]: value });
         };
 
-        const { data, loading, error, fetchData } = useBrokerageReport();
+        const { data, total, loading, error, fetchData } = useBrokerageReport();
 
         const onSubmit = (formData) => {
             for (const key in formData) {

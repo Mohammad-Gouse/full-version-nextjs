@@ -6,6 +6,7 @@ const HoldingReportContext = createContext();
 
 const HoldingReportProvider = ({ children }) => {
   const [data, setData] = useState(null);
+  const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -19,6 +20,7 @@ const HoldingReportProvider = ({ children }) => {
           const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/reports/holding-report', payload);
           console.log(response);
           setData(response.data.data);
+          setTotal(response.data.total)
       } catch (error) {
           console.log("Error fetching data...");
           setError(error);
@@ -27,7 +29,7 @@ const HoldingReportProvider = ({ children }) => {
       }
   };
 
-  const values = { data, loading, error, fetchData };
+  const values = { data, total, loading, error, fetchData };
 
   return (
       <HoldingReportContext.Provider value={values}>

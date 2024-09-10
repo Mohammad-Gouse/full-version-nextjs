@@ -1,13 +1,13 @@
 const navigation = () => {
   return [
       {
-      title: 'home',
+      title: 'Home',
       icon: 'mdi:home-outline',
       path: '/home'
     },
     {
       title: 'Reports',
-      icon: 'ph:gift-fill',
+      icon: 'fluent:gift-16-regular',
       children: [
         {
           title: 'Client Ledger',
@@ -38,7 +38,7 @@ const navigation = () => {
     },
     {
       title: 'Trade Confirmation',
-      icon: 'ph:gift-fill',
+      icon: 'fluent:gift-16-regular',
       children: [
         {
           title: 'Status Report History',

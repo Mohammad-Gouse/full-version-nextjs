@@ -103,7 +103,7 @@ code[class*='language-'] {
 .p-datatable > .p-datatable-wrapper {
   overflow: auto;
   scrollbar-width: thin;
-  min-height: 50vh;
+  min-height: 77vh;
 }
 
 /* WebKit browsers */
@@ -138,3 +138,9 @@ code[class*='language-'] {
 .css-1m0b7cl .react-datepicker .react-datepicker__current-month {
   font-size: 10px;
 }
+
+/* helper text */
+.css-16mxzv4-MuiFormHelperText-root.Mui-error {
+  font-size: 8px;
+}
+
