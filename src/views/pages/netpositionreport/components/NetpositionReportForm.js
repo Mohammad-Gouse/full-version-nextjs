@@ -3,7 +3,7 @@ import Marquee from './Marquee';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -14,6 +14,8 @@ import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
   import * as XLSX from 'xlsx';
+import { Skeleton } from 'primereact/skeleton';
+import { CustomLoader } from 'src/components/CustomLoader';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -30,7 +32,7 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'data.xlsx');
+      XLSX.writeFile(workbook, 'NetpositionReport.xlsx');
     };
 
     
@@ -67,7 +69,7 @@ const Container1 = () => {
 
         const headerStyle = {
             padding: '3px 6px',
-            fontSize: '10px',
+            fontSize: '9px',
             height: '9px'
         };
 
@@ -84,7 +86,7 @@ const Container1 = () => {
          justifyContent: 'start',
          alignItems: 'center',
          paddingLeft: '400px',
-         minHeight: '50vh'
+         minHeight:'60vh'
        }}
      >
        <div className='w-[100%] text-center font-bold'>
@@ -103,13 +105,13 @@ const Container1 = () => {
      </div>
 
     return (
-        <Card id="NetpositionReportForm" sx={{padding:'20px 10px', minHeight:'80vh'}}>
+        <Card id="NetpositionReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
                     
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px' }} id="FinancialYear">Financial Year</InputLabel>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} id="FinancialYear">Financial Year</InputLabel>
         <Controller
           name="FinancialYear"
           control={control}
@@ -126,7 +128,7 @@ const Container1 = () => {
             fullWidth
             error={!!errors.FinancialYear}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="2024">2024-2025</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="2024">2024-2025</MenuItem>
           </Select>
             )}
           />
@@ -144,7 +146,7 @@ const Container1 = () => {
                     
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px' }} id="Segment">Segment</InputLabel>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} id="Segment">Segment</InputLabel>
         <Controller
           name="Segment"
           control={control}
@@ -161,7 +163,7 @@ const Container1 = () => {
             fullWidth
             error={!!errors.Segment}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commudity">Commudity</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="Commudity">Commudity</MenuItem>
           </Select>
             )}
           />
@@ -179,7 +181,7 @@ const Container1 = () => {
                     
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px' }} id="Exchange">Exchange</InputLabel>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} id="Exchange">Exchange</InputLabel>
         <Controller
           name="Exchange"
           control={control}
@@ -196,7 +198,7 @@ const Container1 = () => {
             fullWidth
             error={!!errors.Exchange}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="BSE">BSE</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="ALL">ALL</MenuItem><MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="BSE">BSE</MenuItem>
           </Select>
             )}
           />
@@ -233,7 +235,7 @@ const Container1 = () => {
                         }}
                         InputLabelProps={{
                           style: 
-                            { 'font-size': '10px' }
+                            { 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }
                           ,
                         }}
                       />
@@ -259,7 +261,7 @@ const Container1 = () => {
             dateFormat="dd-MMM-yyyy"
             selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
             placeholderText="Select From Date"
-            customInput={<CustomTimeInput label='From Date' />}
+            customInput={<CustomTimeInput label='From Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }, }}  />}
           />
         </DatePickerWrapper>
         )}
@@ -283,7 +285,7 @@ const Container1 = () => {
             dateFormat="dd-MMM-yyyy"
             selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
             placeholderText="Select To Date"
-            customInput={<CustomTimeInput label='To Date' />}
+            customInput={<CustomTimeInput label='To Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }, }}  />}
           />
         </DatePickerWrapper>
         )}
@@ -296,7 +298,7 @@ const Container1 = () => {
 
                     
 <Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px"}} type="submit" variant="contained" color="primary">
+    <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
@@ -311,16 +313,28 @@ const Container1 = () => {
         
 
                     
-        <Grid item lg={12} md={12} sm={12} style={{paddingTop:"10px"}}>      
-        <Box sx={{ padding:"10px" }}>
+        <Grid item lg={12} md={12} sm={12} style={{paddingTop:"5px"}}>      
+        <Box>
+         {loading && (
+                <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 1
+                }}>
+
+                <CircularProgress />
+
+                     
+                </div>
+            )}
             <DataTable 
                 size='small' 
                 value={data ?? []} 
                 rows={10} 
                 filters={filters} 
                 filterDisplay="row"
-                sx={{ padding:"0px" }}
-                loading={loading}
                 emptyMessage={emptyMessage}
                 scrollable={true}
                 scrollHeight='390px'
@@ -333,6 +347,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'ClientCode')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="Scrip" 
@@ -342,6 +357,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'Scrip')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="BuyQty" 
@@ -351,6 +367,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'BuyQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="AvgBuyPrice" 
@@ -360,6 +377,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'AvgBuyPrice')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="BuyAmount" 
@@ -369,6 +387,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'BuyAmount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="SellQty" 
@@ -378,6 +397,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'SellQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="AvgSellPrice" 
@@ -387,6 +407,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'AvgSellPrice')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="SellAmount" 
@@ -396,6 +417,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'SellAmount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="NetAmount" 
@@ -405,6 +427,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'NetAmount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="OpenQty" 
@@ -414,6 +437,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'OpenQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="BPL" 
@@ -423,6 +447,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'BPL')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="MTM" 
@@ -432,6 +457,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'MTM')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="ClosingPrice" 
@@ -441,6 +467,7 @@ const Container1 = () => {
             filterElement={(options) => multiSelectFilterTemplate(options, 'ClosingPrice')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
             </DataTable>
         </Box>

@@ -3,17 +3,17 @@
     import Box from '@mui/material/Box';
     import { useForm, FormProvider } from 'react-hook-form';
     import { yupResolver } from '@hookform/resolvers/yup';
-    import { FinancialReportSchema, defaultValues }  from './schema/FinancialReportSchema';
-    import { FinancialReportContext } from 'src/context/FinancialReportContext';
-    import { useFinancialReport } from 'src/hooks/FinancialReportHook';
+    import { TransactionReportSchema, defaultValues }  from './schema/TransactionReportSchema';
+    import { TransactionReportContext } from 'src/context/TransactionReportContext';
+    import { useTransactionReport } from 'src/hooks/TransactionReportHook';
     import { Button } from '@mui/material';
     import moment from 'moment';
-    import FinanciaReportForm from './components/FinanciaReportForm';
+    import TransactionReportForm from './components/TransactionReportForm';
 
-    const FinancialReport = () => {
+    const TransactionReport = () => {
         const methods = useForm({
             defaultValues:defaultValues,
-            resolver: yupResolver(FinancialReportSchema),
+            resolver: yupResolver(TransactionReportSchema),
         });
 
          const [formValues, setFormValues] = useState({});
@@ -22,7 +22,7 @@
             setFormValues({ ...formValues, [id]: value });
         };
 
-        const { data, total, loading, error, fetchData } = useFinancialReport();
+        const { data, total, loading, error, fetchData } = useTransactionReport();
 
         const onSubmit = (formData) => {
             for (const key in formData) {
@@ -40,12 +40,12 @@
             <FormProvider {...methods}>
                 <Box sx={{ padding: 2 }}>
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        <FinanciaReportForm formValues={formValues} handleInputChange={handleInputChange} />
+                        <TransactionReportForm formValues={formValues} handleInputChange={handleInputChange} />
                     </form>
                 </Box>
             </FormProvider>
         );
     }
 
-    export default FinancialReport;
+    export default TransactionReport;
     

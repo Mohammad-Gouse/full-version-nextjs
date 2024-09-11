@@ -1,8 +1,9 @@
 
+import Marquee from './Marquee';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -14,7 +15,7 @@ import { MultiSelect } from 'primereact/multiselect';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
   import * as XLSX from 'xlsx';
 import { Skeleton } from 'primereact/skeleton';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import { CustomLoader } from 'src/components/CustomLoader';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -31,7 +32,7 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'data.xlsx');
+      XLSX.writeFile(workbook, 'LedgerReport.xlsx');
     };
 
     
@@ -68,7 +69,7 @@ const Container1 = () => {
 
         const headerStyle = {
             padding: '3px 6px',
-            fontSize: '10px',
+            fontSize: '9px',
             height: '9px'
         };
 
@@ -97,7 +98,9 @@ const Container1 = () => {
              height: '200px'
            }}
          />
-         
+         <div style={{
+             textAlign:"center"
+           }} className='w-[100%] text-center  font-bold'>No data found</div>
        </div>
      </div>
 
@@ -108,7 +111,7 @@ const Container1 = () => {
                     
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px' }} id="FinancialYear">Financial Year</InputLabel>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="FinancialYear">Financial Year</InputLabel>
         <Controller
           name="FinancialYear"
           control={control}
@@ -119,13 +122,13 @@ const Container1 = () => {
             labelId = "FinancialYear"
             label='Financial Year'
             defaultValue="2024-2025"
-            disabled={true}
+            disabled={false}
             id='FinancialYear'
             size="small"
             fullWidth
             error={!!errors.FinancialYear}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="2024-2025">2024-2025</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="2024-2025">2024-25</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="2023-2024">2023-24</MenuItem>
           </Select>
             )}
           />
@@ -143,7 +146,7 @@ const Container1 = () => {
                     
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px' }} id="Segment">Segment</InputLabel>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Segment">Segment</InputLabel>
         <Controller
           name="Segment"
           control={control}
@@ -160,7 +163,7 @@ const Container1 = () => {
             fullWidth
             error={!!errors.Segment}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commudity">Commudity</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="NBFC">NBFC</MenuItem>
           </Select>
             )}
           />
@@ -178,7 +181,7 @@ const Container1 = () => {
                     
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px' }} id="Exchange">Exchange</InputLabel>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Exchange">Exchange</InputLabel>
         <Controller
           name="Exchange"
           control={control}
@@ -232,7 +235,7 @@ const Container1 = () => {
                         }}
                         InputLabelProps={{
                           style: 
-                            { 'font-size': '10px' }
+                            { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }
                           ,
                         }}
                       />
@@ -258,7 +261,7 @@ const Container1 = () => {
             dateFormat="dd-MMM-yyyy"
             selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
             placeholderText="Select From Date"
-            customInput={<CustomTimeInput label='From Date' />}
+            customInput={<CustomTimeInput label='From Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
           />
         </DatePickerWrapper>
         )}
@@ -282,7 +285,7 @@ const Container1 = () => {
             dateFormat="dd-MMM-yyyy"
             selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
             placeholderText="Select To Date"
-            customInput={<CustomTimeInput label='To Date' />}
+            customInput={<CustomTimeInput label='To Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
           />
         </DatePickerWrapper>
         )}
@@ -322,8 +325,31 @@ const Container1 = () => {
         
 
                     
-        <Grid item lg={12} md={12} sm={12} style={{paddingTop:"10px"}}>      
-        {loading && (
+        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
+      <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
+        {total && Object.keys(total).length > 0 && (
+          Object.entries(total).map(([key, value]) => (
+            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
+              {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
+            </Card>
+          ))
+        ) }
+      </Box>
+    </Grid>
+        
+                
+        
+
+                    
+     <Marquee />
+    
+                
+        
+
+                    
+        <Grid item lg={12} md={12} sm={12} style={{paddingTop:"5px"}}>      
+        <Box>
+         {loading && (
                 <div style={{
                     position: 'absolute',
                     top: '50%',
@@ -331,7 +357,10 @@ const Container1 = () => {
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1
                 }}>
-                     <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="5"  animationDuration=".5s" />
+
+                <CircularProgress />
+
+                     
                 </div>
             )}
             <DataTable 
@@ -343,11 +372,10 @@ const Container1 = () => {
                 emptyMessage={emptyMessage}
                 scrollable={true}
                 scrollHeight='390px'
-                
             >
                 <Column 
             field="TransactionDate" 
-            header="TransactionDate" 
+            header="Date" 
             filter 
             showFilterMenu={false} 
             filterElement={(options) => multiSelectFilterTemplate(options, 'TransactionDate')}
@@ -377,7 +405,7 @@ const Container1 = () => {
         />
 <Column 
             field="DebitAmount" 
-            header="DebitAmount" 
+            header="Debit Amount" 
             filter 
             showFilterMenu={false} 
             filterElement={(options) => multiSelectFilterTemplate(options, 'DebitAmount')}
@@ -387,7 +415,7 @@ const Container1 = () => {
         />
 <Column 
             field="CreditAmount" 
-            header="CreditAmount" 
+            header="Credit Amount" 
             filter 
             showFilterMenu={false} 
             filterElement={(options) => multiSelectFilterTemplate(options, 'CreditAmount')}
@@ -406,6 +434,7 @@ const Container1 = () => {
             body={loading && <Skeleton />}
         />
             </DataTable>
+        </Box>
         </Grid>
         
                 

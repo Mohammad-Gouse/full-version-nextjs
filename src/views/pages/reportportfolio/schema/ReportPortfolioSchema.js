@@ -9,7 +9,7 @@ const ReportPortfolioSchema = Yup.object().shape({
 });
 
 const defaultValues = {
-                ClientCode: undefined,
+                ClientCode: "",
 };
 
 export { ReportPortfolioSchema, defaultValues };

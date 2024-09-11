@@ -2,9 +2,9 @@
 import React, { createContext, useState, useEffect } from 'react';
 import createAxiosInstance from 'src/configs/axiosConfig';
 
-const LedgerReportContext = createContext();
+const TransactionReportContext = createContext();
 
-const LedgerReportProvider = ({ children }) => {
+const TransactionReportProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ const LedgerReportProvider = ({ children }) => {
       console.log("Fetching data...");
       setLoading(true);
       try {
-          const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/reports/ledger', payload);
+          const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/reports/transaction-statement', payload);
           console.log(response);
           setData(response.data.data);
           setTotal(response.data.total)
@@ -32,10 +32,10 @@ const LedgerReportProvider = ({ children }) => {
   const values = { data, total, loading, error, fetchData };
 
   return (
-      <LedgerReportContext.Provider value={values}>
+      <TransactionReportContext.Provider value={values}>
           {children}
-      </LedgerReportContext.Provider>
+      </TransactionReportContext.Provider>
   );
 };
 
-export { LedgerReportContext, LedgerReportProvider };
+export { TransactionReportContext, TransactionReportProvider };

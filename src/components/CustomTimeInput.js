@@ -5,7 +5,8 @@ const { forwardRef } = require("react")
 
 export const CustomTimeInput = forwardRef(({ ...props }, ref) => {
     // ** Propsp
-    const { label, readOnly } = props
+    const { label, readOnly, InputProps, InputLabelProps
+      } = props
  
     return (
       <TextField
@@ -22,11 +23,7 @@ export const CustomTimeInput = forwardRef(({ ...props }, ref) => {
           readOnly: true,
           endAdornment: <IconifyIcon icon='mdi-calendar' style={{ cursor: 'pointer' }} />
         }}
-        InputLabelProps={{
-          style: {
-            fontSize: '10px',
-          },
-        }}
+        InputLabelProps={InputLabelProps}
       />
     )
   })

@@ -3,7 +3,7 @@ import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-g
 import Marquee from './Marquee';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -14,6 +14,8 @@ import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
   import * as XLSX from 'xlsx';
+import { Skeleton } from 'primereact/skeleton';
+import { CustomLoader } from 'src/components/CustomLoader';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -30,11 +32,11 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'data.xlsx');
+      XLSX.writeFile(workbook, 'HoldingReport.xlsx');
     };
 
     
-        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Scrip":{"value":null,"matchMode":"in"},"ISIN":{"value":null,"matchMode":"in"},"VAR":{"value":null,"matchMode":"in"},"PledgeQty":{"value":null,"matchMode":"in"},"DPQty":{"value":null,"matchMode":"in"},"DPValuation":{"value":null,"matchMode":"in"},"TransitStockQty":{"value":null,"matchMode":"in"},"TransitStockValuation":{"value":null,"matchMode":"in"},"TotalQty":{"value":null,"matchMode":"in"},"TotalRate":{"value":null,"matchMode":"in"},"TotalValuation":{"value":null,"matchMode":"in"}});
+        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"Scrip":{"value":null,"matchMode":"in"},"ISIN":{"value":null,"matchMode":"in"},"VAR":{"value":null,"matchMode":"in"},"PledgeQty":{"value":null,"matchMode":"in"},"PledgeValuation":{"value":null,"matchMode":"in"},"DPQty":{"value":null,"matchMode":"in"},"DPValuation":{"value":null,"matchMode":"in"},"TransitStockQty":{"value":null,"matchMode":"in"},"TransitStockValuation":{"value":null,"matchMode":"in"},"TotalQty":{"value":null,"matchMode":"in"},"TotalRate":{"value":null,"matchMode":"in"},"TotalValuation":{"value":null,"matchMode":"in"}});
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -50,13 +52,13 @@ const Container1 = () => {
             setFilters(_filters);
         };
 
-        const multiSelectFilterTemplate = (options, field) => {
+        const multiSelectFilterTemplate = (options, field, headerName) => {
             return (
                 <MultiSelect
                     value={options.value}
                     options={uniqueValues(field)}
                     onChange={(e) => onFilterChange(e, field)}
-                    placeholder={'Select ' + field}
+                    placeholder={'Select ' + headerName}
                     className="custom-multiselect custom-scrollbar"
                     style={{ minWidth: '12rem' }}
                     filter
@@ -67,7 +69,7 @@ const Container1 = () => {
 
         const headerStyle = {
             padding: '3px 6px',
-            fontSize: '10px',
+            fontSize: '9px',
             height: '9px'
         };
 
@@ -84,7 +86,7 @@ const Container1 = () => {
          justifyContent: 'start',
          alignItems: 'center',
          paddingLeft: '400px',
-         minHeight: '50vh'
+         minHeight:'60vh'
        }}
      >
        <div className='w-[100%] text-center font-bold'>
@@ -103,11 +105,11 @@ const Container1 = () => {
      </div>
 
     return (
-        <Card id="HodingReportForm" sx={{padding:'20px 10px', minHeight:'80vh'}}>
+        <Card id="HodingReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
                     
-    <Grid item lg={1.5} md={6} sm={12} >
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
         <Controller
                   name="ClientCode"
@@ -128,7 +130,7 @@ const Container1 = () => {
                         }}
                         InputLabelProps={{
                           style: 
-                            { 'font-size': '10px' }
+                            { 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }
                           ,
                         }}
                       />
@@ -143,7 +145,7 @@ const Container1 = () => {
 
                     
 <Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px"}} type="submit" variant="contained" color="primary">
+    <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
@@ -152,11 +154,29 @@ const Container1 = () => {
         
 
                     
-        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "10px" }}>
+<Grid item lg={1.5} md={6} sm={12}>
+    <Button fullWidth sx={{fontSize:"10px", fontWeight:'700', padding:'5px 10px'}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
+    Export <img
+                          src='/images/logos/excel.png'
+                          alt='Excel'
+                          style={{
+                            width: '20px',
+                            height: '20px',
+                            marginLeft:'10px'
+                          }}
+                        />
+    </Button> 
+</Grid>
+
+                
+        
+
+                    
+        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
       <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
         {total && Object.keys(total).length > 0 && (
           Object.entries(total).map(([key, value]) => (
-            <Card key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900" }}>
+            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
               {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
             </Card>
           ))
@@ -168,136 +188,161 @@ const Container1 = () => {
         
 
                     
-        <Grid item lg={12} md={12} sm={12} style={{paddingTop:"10px"}}>      
-        <Box sx={{ padding:"10px" }}>
+        <Grid item lg={12} md={12} sm={12} style={{paddingTop:"5px"}}>      
+        <Box>
+         {loading && (
+                <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 1
+                }}>
+
+                <CircularProgress />
+
+                     
+                </div>
+            )}
             <DataTable 
                 size='small' 
                 value={data ?? []} 
                 rows={10} 
                 filters={filters} 
                 filterDisplay="row"
-                sx={{ padding:"0px" }}
-                loading={loading}
                 emptyMessage={emptyMessage}
                 scrollable={true}
                 scrollHeight='390px'
             >
                 <Column 
             field="ClientCode" 
-            header="Client Code" 
+            header="ClientCode" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ClientCode')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'ClientCode', 'ClientCode')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
-        />
-<Column 
-            field="ClientName" 
-            header="Client Name" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ClientName')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="Scrip" 
-            header="Scrip" 
+            header="ScripName" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Scrip')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'Scrip', 'ScripName')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="ISIN" 
-            header="ISIN" 
+            header="IsinNo" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ISIN')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'ISIN', 'IsinNo')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="VAR" 
             header="VAR" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'VAR')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'VAR', 'VAR')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="PledgeQty" 
-            header="Pledge Qty" 
+            header="PledgeQty" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'PledgeQty')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'PledgeQty', 'PledgeQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
+        />
+<Column 
+            field="PledgeValuation" 
+            header="PledgeValuation" 
+            filter 
+            showFilterMenu={false} 
+            filterElement={(options) => multiSelectFilterTemplate(options, 'PledgeValuation', 'PledgeValuation')}
+            bodyStyle={rowStyle}
+            headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="DPQty" 
             header="DPQty" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'DPQty')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'DPQty', 'DPQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="DPValuation" 
-            header="DP Valuation" 
+            header="DPValuation" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'DPValuation')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'DPValuation', 'DPValuation')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="TransitStockQty" 
-            header="Transit Stock Qty" 
+            header="TransitStockQty" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TransitStockQty')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'TransitStockQty', 'TransitStockQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="TransitStockValuation" 
-            header="Transit Stock Valuation" 
+            header="TransitStockValuation" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TransitStockValuation')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'TransitStockValuation', 'TransitStockValuation')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="TotalQty" 
-            header="Total Qty" 
+            header="TotalQty" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TotalQty')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'TotalQty', 'TotalQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="TotalRate" 
-            header="Total Rate" 
+            header="TotalRate" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TotalRate')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'TotalRate', 'TotalRate')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
 <Column 
             field="TotalValuation" 
-            header="Total Valuation" 
+            header="TotalValuation" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TotalValuation')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'TotalValuation', 'TotalValuation')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
+            body={loading && <Skeleton />}
         />
             </DataTable>
         </Box>

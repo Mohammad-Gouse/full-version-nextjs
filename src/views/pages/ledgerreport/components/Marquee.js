@@ -34,6 +34,8 @@ const Marquee = () => {
         <div style={marqueeStyle}>
           <marquee 
               
+              onMouseOver={handleMouseOver}
+              onMouseOut={handleMouseOut} 
               id="maqid" scrolldelay="90" 
               direction="left" 
               loop="repeat" 

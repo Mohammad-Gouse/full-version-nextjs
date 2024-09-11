@@ -11,9 +11,9 @@ const FinancialReportSchema = Yup.object().shape({
 });
 
 const defaultValues = {
-                FinancialYear: "2024",
+                FinancialYear: "2022",
                 Segment: "Equity",
-                ClientCode: undefined,
+                ClientCode: "",
 };
 
 export { FinancialReportSchema, defaultValues };

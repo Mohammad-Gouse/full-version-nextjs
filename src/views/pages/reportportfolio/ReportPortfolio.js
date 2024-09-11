@@ -22,7 +22,7 @@
             setFormValues({ ...formValues, [id]: value });
         };
 
-        const { data, loading, error, fetchData } = useReportPortfolio();
+        const { data, total, loading, error, fetchData } = useReportPortfolio();
 
         const onSubmit = (formData) => {
             for (const key in formData) {

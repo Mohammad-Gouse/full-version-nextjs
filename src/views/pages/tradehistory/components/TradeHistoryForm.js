@@ -172,7 +172,7 @@ const Container1 = () => {
             dateFormat="dd-MMM-yyyy"
             selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
             placeholderText="Select To Date"
-            customInput={<CustomTimeInput label='To Date' />}
+            customInput={<CustomTimeInput label='To Date'  />}
           />
         </DatePickerWrapper>
         )}

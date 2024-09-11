@@ -26,8 +26,12 @@ const navigation = () => {
           path: '/netpositionreport'
         },
         {
-          title: 'Client Wise Financilal Statement',
+          title: 'Client Wise Financial Statement',
           path: '/financialreport'
+        },
+        {
+          title: 'Transaction Statement',
+          path: '/transactionreport'
         },
         {
           title: 'Portfolio',
