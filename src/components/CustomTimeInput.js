@@ -5,7 +5,11 @@ const { forwardRef } = require("react")
 
 export const CustomTimeInput = forwardRef(({ ...props }, ref) => {
     // ** Propsp
-    const { label, readOnly, InputProps, InputLabelProps
+    const { label, readOnly, InputProps, InputLabelProps={
+      style: 
+        { 'font-size': '10px', fontWeight:'bold', color:'#818589' }
+      ,
+    }
       } = props
  
     return (
