@@ -186,7 +186,7 @@ const VerticalNavHeader = props => {
           <img 
             src='/images/logos/logo_nb.png'
             style={{
-              width: '36vh',
+              width: '34vh',
               height: 'auto'
             }}
           ></img>

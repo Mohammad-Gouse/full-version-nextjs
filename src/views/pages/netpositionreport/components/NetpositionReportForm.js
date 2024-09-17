@@ -36,7 +36,7 @@ const Container1 = () => {
     };
 
     
-        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"Scrip":{"value":null,"matchMode":"in"},"BuyQty":{"value":null,"matchMode":"in"},"AvgBuyPrice":{"value":null,"matchMode":"in"},"BuyAmount":{"value":null,"matchMode":"in"},"SellQty":{"value":null,"matchMode":"in"},"AvgSellPrice":{"value":null,"matchMode":"in"},"SellAmount":{"value":null,"matchMode":"in"},"NetAmount":{"value":null,"matchMode":"in"},"OpenQty":{"value":null,"matchMode":"in"},"BPL":{"value":null,"matchMode":"in"},"MTM":{"value":null,"matchMode":"in"},"ClosingPrice":{"value":null,"matchMode":"in"}});
+        const [filters, setFilters] = useState({"Scrip":{"value":null,"matchMode":"in"},"BuyQty":{"value":null,"matchMode":"in"},"AvgBuyPrice":{"value":null,"matchMode":"in"},"BuyAmount":{"value":null,"matchMode":"in"},"SellQty":{"value":null,"matchMode":"in"},"AvgSellPrice":{"value":null,"matchMode":"in"},"SellAmount":{"value":null,"matchMode":"in"},"NetAmount":{"value":null,"matchMode":"in"},"OpenQty":{"value":null,"matchMode":"in"},"BPL":{"value":null,"matchMode":"in"},"MTM":{"value":null,"matchMode":"in"},"ClosingPrice":{"value":null,"matchMode":"in"}});
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -52,13 +52,13 @@ const Container1 = () => {
             setFilters(_filters);
         };
 
-        const multiSelectFilterTemplate = (options, field) => {
+        const multiSelectFilterTemplate = (options, field, headerName) => {
             return (
                 <MultiSelect
                     value={options.value}
                     options={uniqueValues(field)}
                     onChange={(e) => onFilterChange(e, field)}
-                    placeholder={'Select ' + field}
+                    placeholder={'Select ' + headerName}
                     className="custom-multiselect custom-scrollbar"
                     style={{ minWidth: '12rem' }}
                     filter
@@ -128,7 +128,7 @@ const Container1 = () => {
             fullWidth
             error={!!errors.FinancialYear}
           >
-          <MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="2024">2024-2025</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="2024">2024-2025</MenuItem>
           </Select>
             )}
           />
@@ -163,7 +163,7 @@ const Container1 = () => {
             fullWidth
             error={!!errors.Segment}
           >
-          <MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="Commudity">Commudity</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commudity">Commudity</MenuItem>
           </Select>
             )}
           />
@@ -198,7 +198,7 @@ const Container1 = () => {
             fullWidth
             error={!!errors.Exchange}
           >
-          <MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="ALL">ALL</MenuItem><MenuItem sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} value="BSE">BSE</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="BSE">BSE</MenuItem>
           </Select>
             )}
           />
@@ -307,6 +307,24 @@ const Container1 = () => {
         
 
                     
+<Grid item lg={1.5} md={6} sm={12}>
+    <Button fullWidth sx={{fontSize:"10px", fontWeight:'700', padding:'5px 10px'}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
+    Export <img
+                          src='/images/logos/excel.png'
+                          alt='Excel'
+                          style={{
+                            width: '20px',
+                            height: '20px',
+                            marginLeft:'10px'
+                          }}
+                        />
+    </Button> 
+</Grid>
+
+                
+        
+
+                    
      <Marquee />
     
                 
@@ -340,101 +358,91 @@ const Container1 = () => {
                 scrollHeight='390px'
             >
                 <Column 
-            field="ClientCode" 
-            header="Client Code" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ClientCode')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
             field="Scrip" 
-            header="Scrip" 
+            header="ScripName" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Scrip')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'Scrip', 'ScripName')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
             field="BuyQty" 
-            header="Buy Quantity" 
+            header="BuyQty" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BuyQty')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'BuyQty', 'BuyQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
             field="AvgBuyPrice" 
-            header="Average Buy Price" 
+            header="AverageBuyPrice" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'AvgBuyPrice')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'AvgBuyPrice', 'AverageBuyPrice')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
             field="BuyAmount" 
-            header="Buy Amount" 
+            header="BuyAmount" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BuyAmount')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'BuyAmount', 'BuyAmount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
             field="SellQty" 
-            header="Sell Quantity" 
+            header="SellQty" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'SellQty')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'SellQty', 'SellQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
             field="AvgSellPrice" 
-            header="Average Sell Price" 
+            header="AverageSellPrice" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'AvgSellPrice')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'AvgSellPrice', 'AverageSellPrice')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
             field="SellAmount" 
-            header="Sell Amount" 
+            header="SellAmount" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'SellAmount')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'SellAmount', 'SellAmount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
             field="NetAmount" 
-            header="Net Amount" 
+            header="NetAmount" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'NetAmount')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'NetAmount', 'NetAmount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
             field="OpenQty" 
-            header="Open Quantity" 
+            header="OpenQty" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'OpenQty')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'OpenQty', 'OpenQty')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
@@ -444,7 +452,7 @@ const Container1 = () => {
             header="BPL" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BPL')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'BPL', 'BPL')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
@@ -454,17 +462,17 @@ const Container1 = () => {
             header="MTM" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'MTM')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'MTM', 'MTM')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
             field="ClosingPrice" 
-            header="Closing Price" 
+            header="ClosingPrice" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ClosingPrice')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'ClosingPrice', 'ClosingPrice')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}

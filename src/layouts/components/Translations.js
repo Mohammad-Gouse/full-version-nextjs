@@ -5,7 +5,7 @@ const Translations = ({ text }) => {
   // ** Hook
   const { t } = useTranslation()
 
-  return <><div style={{fontSize:"12px"}}>{`${t(text)}`} </div></>
+  return <><span style={{fontSize:"12px"}}>{`${t(text)}`} </span></>
 }
 
 export default Translations

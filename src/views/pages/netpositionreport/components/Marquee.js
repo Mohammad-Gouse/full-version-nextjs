@@ -9,7 +9,7 @@
       height:'1rem',
       position:'fixed',
       width:'100vw',
-      background:'#666CFF',
+      background:'#25335C',
       left:0,
       bottom:0,
       zIndex: 1233,

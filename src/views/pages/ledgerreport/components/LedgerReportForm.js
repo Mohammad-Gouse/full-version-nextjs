@@ -16,6 +16,9 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
   import * as XLSX from 'xlsx';
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
+import globalStyle from 'src/configs/globalStyleConfig';
+import CustomTextField from 'src/customComponents/customInputComponents/CustomTextField';
+
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -52,13 +55,13 @@ const Container1 = () => {
             setFilters(_filters);
         };
 
-        const multiSelectFilterTemplate = (options, field) => {
+        const multiSelectFilterTemplate = (options, field, headerName) => {
             return (
                 <MultiSelect
                     value={options.value}
                     options={uniqueValues(field)}
                     onChange={(e) => onFilterChange(e, field)}
-                    placeholder={'Select ' + field}
+                    placeholder={'Select ' + headerName}
                     className="custom-multiselect custom-scrollbar"
                     style={{ minWidth: '12rem' }}
                     filter
@@ -105,30 +108,30 @@ const Container1 = () => {
      </div>
 
     return (
-        <Card id="LedgerReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
-            <Grid container spacing={5}>
+        <Card id="LedgerReportForm" sx={globalStyle.cardForm.style}>
+            <Grid container spacing={globalStyle.gridForm.spacing}>
                 
                     
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
+    <Grid item lg={globalStyle.selectField.gridSize.lg} md={globalStyle.selectField.gridSize.md} sm={globalStyle.selectField.gridSize.sm} xs={globalStyle.selectField.gridSize.xs} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="FinancialYear">Financial Year</InputLabel>
+        <InputLabel sx={globalStyle.inputLabel} id="FinancialYear">Financial Year</InputLabel>
         <Controller
           name="FinancialYear"
           control={control}
           render={({ field }) => (
           <Select
           {...field}
-            sx={{ 'font-size': '10px' }}
+            sx={globalStyle.selectField.SelectProps.style}
             labelId = "FinancialYear"
             label='Financial Year'
             defaultValue="2024-2025"
             disabled={false}
             id='FinancialYear'
-            size="small"
+            size={globalStyle.selectField.size}
             fullWidth
             error={!!errors.FinancialYear}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="2024-2025">2024-25</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="2023-2024">2023-24</MenuItem>
+          <MenuItem sx={globalStyle.selectField.MenuProps.style} value="2024-2025">2024-25</MenuItem><MenuItem sx={globalStyle.selectField.MenuProps.style} value="2023-2024">2023-24</MenuItem>
           </Select>
             )}
           />
@@ -223,26 +226,27 @@ const Container1 = () => {
                       <TextField
                         {...field}
                         id='ClientCode'
+                        defaultValue=""
                         label={'Client Code'}
                         size="small"
                         fullWidth
                         error={!!errors?.ClientCode }
                         helperText={errors?.ClientCode?.message}
-                        InputProps={{
-                          style:
-                            { 'font-size': '10px' }
-                          ,
-                        }}
-                        InputLabelProps={{
-                          style: 
-                            { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }
-                          ,
-                        }}
+                        InputProps={globalStyle.textField.InputProps}
+                        InputLabelProps={globalStyle.textField.InputLabelProps}
                       />
                   )}
           />
       </FormControl>
     </Grid>
+
+    <CustomTextField
+        name="ClientName"
+        control={control}
+        label="Client Name"
+        errors={errors}
+        gridProps={{ lg: 1.5, md: 6, sm: 12, xs: 12 }}  // Grid settings
+      />
      
     
                 
@@ -378,7 +382,7 @@ const Container1 = () => {
             header="Date" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TransactionDate')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'TransactionDate', 'Date')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
@@ -388,7 +392,7 @@ const Container1 = () => {
             header="Voucher" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Voucher')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'Voucher', 'Voucher')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
@@ -398,7 +402,7 @@ const Container1 = () => {
             header=" Narration" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Narration')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'Narration', ' Narration')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
@@ -408,7 +412,7 @@ const Container1 = () => {
             header="Debit Amount" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'DebitAmount')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'DebitAmount', 'Debit Amount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
@@ -418,7 +422,7 @@ const Container1 = () => {
             header="Credit Amount" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'CreditAmount')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'CreditAmount', 'Credit Amount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
@@ -428,7 +432,7 @@ const Container1 = () => {
             header="Balance" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Balance')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'Balance', 'Balance')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}

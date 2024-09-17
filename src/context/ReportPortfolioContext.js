@@ -6,6 +6,7 @@ const ReportPortfolioContext = createContext();
 
 const ReportPortfolioProvider = ({ children }) => {
   const [data, setData] = useState(null);
+  const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -19,6 +20,7 @@ const ReportPortfolioProvider = ({ children }) => {
           const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/reports/portfolio/equity', payload);
           console.log(response);
           setData(response.data.data);
+          setTotal(response.data.total)
       } catch (error) {
           console.log("Error fetching data...");
           setError(error);
@@ -27,7 +29,7 @@ const ReportPortfolioProvider = ({ children }) => {
       }
   };
 
-  const values = { data, loading, error, fetchData };
+  const values = { data, total, loading, error, fetchData };
 
   return (
       <ReportPortfolioContext.Provider value={values}>

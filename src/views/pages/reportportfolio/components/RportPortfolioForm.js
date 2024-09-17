@@ -115,7 +115,7 @@ const Container1 = () => {
           control={control}
           rules={{ required: false }}
           render={({ field }) => (
-            <RadioGroup row {...field} aria-label='segment' name='segment'>
+            <RadioGroup row {...field} aria-label='segment' name='segment' defaultValue='cash'>
               
               <FormControlLabel
                 value='cash'
@@ -215,6 +215,22 @@ const Container1 = () => {
     </Button> 
 </Grid>
 
+                
+        
+
+                    
+        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
+      <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
+        {total && Object.keys(total).length > 0 && (
+          Object.entries(total).map(([key, value]) => (
+            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
+              {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
+            </Card>
+          ))
+        ) }
+      </Box>
+    </Grid>
+        
                 
         
 

@@ -56,6 +56,7 @@ import 'src/iconify-bundle/icons-bundle-react'
 
 // ** Global css styles
 import '../../styles/globals.css'
+import Marquee from 'src/views/pages/brokeragereport/components/Marquee'
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -121,6 +122,7 @@ const App = props => {
                           {getLayout(<Component {...pageProps} />)}
                         </AclGuard>
                       </Guard>
+                      <Marquee/>
                     </WindowWrapper>
                     <ReactHotToast>
                       <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />

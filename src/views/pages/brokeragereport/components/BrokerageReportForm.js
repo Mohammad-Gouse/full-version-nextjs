@@ -85,7 +85,7 @@ const Container1 = () => {
          display: 'flex',
          justifyContent: 'start',
          alignItems: 'center',
-         paddingLeft: '400px',
+         paddingLeft: '35vw',
          minHeight:'60vh'
        }}
      >
@@ -108,10 +108,10 @@ const Container1 = () => {
         <Card id="BrokerageReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
-                    
+            
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} id="FinancialYear">Financial Year</InputLabel>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="FinancialYear">Financial Year</InputLabel>
         <Controller
           name="FinancialYear"
           control={control}
@@ -140,13 +140,12 @@ const Container1 = () => {
         </FormControl>
       </Grid>
     
-                
         
 
-                    
+            
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} id="Segment">Segment</InputLabel>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Segment">Segment</InputLabel>
         <Controller
           name="Segment"
           control={control}
@@ -175,13 +174,12 @@ const Container1 = () => {
         </FormControl>
       </Grid>
     
-                
         
 
-                    
+            
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} id="Exchange">Exchange</InputLabel>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Exchange">Exchange</InputLabel>
         <Controller
           name="Exchange"
           control={control}
@@ -210,10 +208,9 @@ const Container1 = () => {
         </FormControl>
       </Grid>
     
-                
         
 
-                    
+            
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
         <Controller
@@ -223,6 +220,7 @@ const Container1 = () => {
                       <TextField
                         {...field}
                         id='ClientCode'
+                        defaultValue=""
                         label={'Client Code'}
                         size="small"
                         fullWidth
@@ -235,7 +233,7 @@ const Container1 = () => {
                         }}
                         InputLabelProps={{
                           style: 
-                            { 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }
+                            { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }
                           ,
                         }}
                       />
@@ -245,10 +243,9 @@ const Container1 = () => {
     </Grid>
      
     
-                
         
 
-                    
+            
  <Grid item lg={1.5} md={6} sm={12} xs={12} >
     <FormControl fullWidth>
       <Controller
@@ -261,7 +258,7 @@ const Container1 = () => {
             dateFormat="dd-MMM-yyyy"
             selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
             placeholderText="Select From Date"
-            customInput={<CustomTimeInput label='From Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }, }}  />}
+            customInput={<CustomTimeInput label='From Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
           />
         </DatePickerWrapper>
         )}
@@ -269,10 +266,9 @@ const Container1 = () => {
     </FormControl>
   </Grid>    
     
-                
         
 
-                    
+            
  <Grid item lg={1.5} md={6} sm={12} xs={12} >
     <FormControl fullWidth>
       <Controller
@@ -285,7 +281,7 @@ const Container1 = () => {
             dateFormat="dd-MMM-yyyy"
             selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
             placeholderText="Select To Date"
-            customInput={<CustomTimeInput label='To Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }, }}  />}
+            customInput={<CustomTimeInput label='To Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
           />
         </DatePickerWrapper>
         )}
@@ -293,20 +289,18 @@ const Container1 = () => {
     </FormControl>
   </Grid>    
     
-                
         
 
-                    
+            
 <Grid item lg={1.5} md={6} sm={12}>
     <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
 
-                
         
 
-                    
+            
 <Grid item lg={1.5} md={6} sm={12}>
     <Button fullWidth sx={{fontSize:"10px", fontWeight:'700', padding:'5px 10px'}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
     Export <img
@@ -321,10 +315,9 @@ const Container1 = () => {
     </Button> 
 </Grid>
 
-                
         
 
-                    
+            
         <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
       <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
         {total && Object.keys(total).length > 0 && (
@@ -337,16 +330,14 @@ const Container1 = () => {
       </Box>
     </Grid>
         
-                
         
 
-                    
+            
      <Marquee />
     
-                
         
 
-                    
+            
         <Grid item lg={12} md={12} sm={12} style={{paddingTop:"5px"}}>      
         <Box>
          {loading && (
@@ -437,7 +428,6 @@ const Container1 = () => {
         </Box>
         </Grid>
         
-                
         
             </Grid>
         </Card>
