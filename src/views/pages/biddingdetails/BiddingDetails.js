@@ -3,17 +3,17 @@
     import Box from '@mui/material/Box';
     import { useForm, FormProvider } from 'react-hook-form';
     import { yupResolver } from '@hookform/resolvers/yup';
-    import { TradeBlockDataSchema, defaultValues }  from './schema/TradeBlockDataSchema';
-    import { TradeBlockDataContext } from 'src/context/TradeBlockDataContext';
-    import { useTradeBlockData } from 'src/hooks/TradeBlockDataHook';
+    import { BiddingDetailsSchema, defaultValues }  from './schema/BiddingDetailsSchema';
+    import { BiddingDetailsContext } from 'src/context/BiddingDetailsContext';
+    import { useBiddingDetails } from 'src/hooks/BiddingDetailsHook';
     import { Button } from '@mui/material';
     import moment from 'moment';
-    import TradeBlockDataForm from './components/TradeBlockDataForm';
+    import BiddingDetailsForm from './components/BiddingDetailsForm';
 
-    const TradeBlockData = () => {
+    const BiddingDetails = () => {
         const methods = useForm({
             defaultValues:defaultValues,
-            resolver: yupResolver(TradeBlockDataSchema),
+            resolver: yupResolver(BiddingDetailsSchema),
         });
 
          const [formValues, setFormValues] = useState({});
@@ -22,7 +22,7 @@
             setFormValues({ ...formValues, [id]: value });
         };
 
-        const { data, total, loading, error, fetchData } = useTradeBlockData();
+        const { data, total, loading, error, fetchData } = useBiddingDetails();
 
         const onSubmit = (formData) => {
             for (const key in formData) {
@@ -40,12 +40,12 @@
             <FormProvider {...methods}>
                 <Box sx={{ padding: 2 }}>
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        <TradeBlockDataForm formValues={formValues} handleInputChange={handleInputChange} />
+                        <BiddingDetailsForm formValues={formValues} handleInputChange={handleInputChange} />
                     </form>
                 </Box>
             </FormProvider>
         );
     }
 
-    export default TradeBlockData;
+    export default BiddingDetails;
     

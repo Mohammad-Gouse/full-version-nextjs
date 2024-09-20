@@ -2,9 +2,9 @@
 import React, { createContext, useState, useEffect } from 'react';
 import createAxiosInstance from 'src/configs/axiosConfig';
 
-const TradeBlockDataContext = createContext();
+const RealTimeTransactionContext = createContext();
 
-const TradeBlockDataProvider = ({ children }) => {
+const RealTimeTransactionProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ const TradeBlockDataProvider = ({ children }) => {
       console.log("Fetching data...");
       setLoading(true);
       try {
-          const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/trades/blockdata', payload);
+          const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/realtime/transaction/statement', payload);
           console.log(response);
           setData(response.data.data);
           setTotal(response.data.total)
@@ -32,10 +32,10 @@ const TradeBlockDataProvider = ({ children }) => {
   const values = { data, total, loading, error, fetchData };
 
   return (
-      <TradeBlockDataContext.Provider value={values}>
+      <RealTimeTransactionContext.Provider value={values}>
           {children}
-      </TradeBlockDataContext.Provider>
+      </RealTimeTransactionContext.Provider>
   );
 };
 
-export { TradeBlockDataContext, TradeBlockDataProvider };
+export { RealTimeTransactionContext, RealTimeTransactionProvider };

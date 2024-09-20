@@ -1,14 +1,13 @@
 
-import Marquee from './Marquee';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useLedgerReport } from 'src/hooks/LedgerReportHook';
+import { useRealTimeTransaction } from 'src/hooks/RealTimeTransactionHook';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
@@ -19,7 +18,7 @@ import { CustomLoader } from 'src/components/CustomLoader';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, total, loading, error, fetchData } = useLedgerReport();
+     const { data, total, loading, error, fetchData } = useRealTimeTransaction();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -32,11 +31,11 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'LedgerReport.xlsx');
+      XLSX.writeFile(workbook, 'RealTimeTransaction.xlsx');
     };
 
     
-        const [filters, setFilters] = useState({"TransactionDate":{"value":null,"matchMode":"in"},"Voucher":{"value":null,"matchMode":"in"},"Narration":{"value":null,"matchMode":"in"},"DebitAmount":{"value":null,"matchMode":"in"},"CreditAmount":{"value":null,"matchMode":"in"},"Balance":{"value":null,"matchMode":"in"}});
+        const [filters, setFilters] = useState({"Scrip":{"value":null,"matchMode":"in"},"StrickPrice":{"value":null,"matchMode":"in"},"OptionType":{"value":null,"matchMode":"in"},"Quantity":{"value":null,"matchMode":"in"},"BuySell":{"value":null,"matchMode":"in"},"MarketPrice":{"value":null,"matchMode":"in"},"GrossAmount":{"value":null,"matchMode":"in"}});
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -85,7 +84,7 @@ const Container1 = () => {
          justifyContent: 'start',
          alignItems: 'center',
          paddingLeft: '35vw',
-         minHeight:'59.7vh'
+         minHeight:'60vh'
        }}
      >
        <div className='w-[100%] text-center font-bold'>
@@ -103,21 +102,13 @@ const Container1 = () => {
        </div>
      </div>
 
-useEffect(() => {
-  if (watch('FinancialYear')) {
-    const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
-    const aprilFirstDate = moment(`01/04/${selectedYear}`, "DD/MM/YYYY").toDate(); // Create April 1st date
-    setValue('StartDate', aprilFirstDate); // Set StartDate to April 1st
-  }
-}, [watch('FinancialYear')]);
-
      
         
 
     
 
     return (
-        <Card id="LedgerReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
+        <Card id="RealTimeTransactionForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
             
@@ -133,14 +124,14 @@ useEffect(() => {
             sx={{ 'font-size': '10px' }}
             labelId = "FinancialYear"
             label='Financial Year'
-            defaultValue="2024-2025"
-            disabled={false}
+            defaultValue="2024"
+            disabled={true}
             id='FinancialYear'
             size="small"
             fullWidth
             error={!!errors.FinancialYear}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="2024-2025">2024-25</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="2023-2024">2023-24</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="2024">2024-2025</MenuItem>
           </Select>
             )}
           />
@@ -174,7 +165,7 @@ useEffect(() => {
             fullWidth
             error={!!errors.Segment}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="NBFC">NBFC</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commudity">Commudity</MenuItem>
           </Select>
             )}
           />
@@ -258,52 +249,6 @@ useEffect(() => {
         
 
             
- <Grid item lg={1.5} md={6} sm={12} xs={12} >
-    <FormControl fullWidth>
-      <Controller
-        name="StartDate"
-        control={control}
-        render={({ field }) => (
-        <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
-          <DatePicker
-            {...field}
-            dateFormat="dd-MMM-yyyy"
-            selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
-            placeholderText="Select From Date"
-            customInput={<CustomTimeInput label='From Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
-          />
-        </DatePickerWrapper>
-        )}
-        />
-    </FormControl>
-  </Grid>    
-    
-        
-
-            
- <Grid item lg={1.5} md={6} sm={12} xs={12} >
-    <FormControl fullWidth>
-      <Controller
-        name="EndDate"
-        control={control}
-        render={({ field }) => (
-        <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
-          <DatePicker
-            {...field}
-            dateFormat="dd-MMM-yyyy"
-            selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
-            placeholderText="Select To Date"
-            customInput={<CustomTimeInput label='To Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
-          />
-        </DatePickerWrapper>
-        )}
-        />
-    </FormControl>
-  </Grid>    
-    
-        
-
-            
 <Grid item lg={1.5} md={6} sm={12}>
     <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
         search
@@ -327,26 +272,6 @@ useEffect(() => {
     </Button> 
 </Grid>
 
-        
-
-            
-        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
-      <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
-        {total && Object.keys(total).length > 0 && (
-          Object.entries(total).map(([key, value]) => (
-            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
-              {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
-            </Card>
-          ))
-        ) }
-      </Box>
-    </Grid>
-        
-        
-
-            
-     <Marquee />
-    
         
 
             
@@ -377,61 +302,71 @@ useEffect(() => {
                 scrollHeight='390px'
             >
                 <Column 
-            field="TransactionDate" 
-            header="Date" 
+            field="Scrip" 
+            header="Scrip" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TransactionDate', 'Date')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'Scrip', 'Scrip')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="Voucher" 
-            header="Voucher" 
+            field="StrickPrice" 
+            header="Strike Price" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Voucher', 'Voucher')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'StrickPrice', 'Strike Price')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="Narration" 
-            header=" Narration" 
+            field="OptionType" 
+            header="Option Type" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Narration', ' Narration')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'OptionType', 'Option Type')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="DebitAmount" 
-            header="Debit Amount" 
+            field="Quantity" 
+            header="Quantity" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'DebitAmount', 'Debit Amount')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'Quantity', 'Quantity')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="CreditAmount" 
-            header="Credit Amount" 
+            field="BuySell" 
+            header="Buy/Sell" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'CreditAmount', 'Credit Amount')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'BuySell', 'Buy/Sell')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="Balance" 
-            header="Balance" 
+            field="MarketPrice" 
+            header="Market Price" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Balance', 'Balance')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'MarketPrice', 'Market Price')}
+            bodyStyle={rowStyle}
+            headerStyle={headerStyle}
+            body={loading && <Skeleton />}
+        />
+<Column 
+            field="GrossAmount" 
+            header="Gross Amount" 
+            filter 
+            showFilterMenu={false} 
+            filterElement={(options) => multiSelectFilterTemplate(options, 'GrossAmount', 'Gross Amount')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}

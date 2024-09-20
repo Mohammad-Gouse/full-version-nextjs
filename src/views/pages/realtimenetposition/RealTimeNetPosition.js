@@ -3,17 +3,17 @@
     import Box from '@mui/material/Box';
     import { useForm, FormProvider } from 'react-hook-form';
     import { yupResolver } from '@hookform/resolvers/yup';
-    import { TradeBlockDataSchema, defaultValues }  from './schema/TradeBlockDataSchema';
-    import { TradeBlockDataContext } from 'src/context/TradeBlockDataContext';
-    import { useTradeBlockData } from 'src/hooks/TradeBlockDataHook';
+    import { RealTimeNetPositionSchema, defaultValues }  from './schema/RealTimeNetPositionSchema';
+    import { RealTimeNetPositionContext } from 'src/context/RealTimeNetPositionContext';
+    import { useRealTimeNetPosition } from 'src/hooks/RealTimeNetPositionHook';
     import { Button } from '@mui/material';
     import moment from 'moment';
-    import TradeBlockDataForm from './components/TradeBlockDataForm';
+    import RealTimeNetPositionForm from './components/RealTimeNetPositionForm';
 
-    const TradeBlockData = () => {
+    const RealTimeNetPosition = () => {
         const methods = useForm({
             defaultValues:defaultValues,
-            resolver: yupResolver(TradeBlockDataSchema),
+            resolver: yupResolver(RealTimeNetPositionSchema),
         });
 
          const [formValues, setFormValues] = useState({});
@@ -22,7 +22,7 @@
             setFormValues({ ...formValues, [id]: value });
         };
 
-        const { data, total, loading, error, fetchData } = useTradeBlockData();
+        const { data, total, loading, error, fetchData } = useRealTimeNetPosition();
 
         const onSubmit = (formData) => {
             for (const key in formData) {
@@ -40,12 +40,12 @@
             <FormProvider {...methods}>
                 <Box sx={{ padding: 2 }}>
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        <TradeBlockDataForm formValues={formValues} handleInputChange={handleInputChange} />
+                        <RealTimeNetPositionForm formValues={formValues} handleInputChange={handleInputChange} />
                     </form>
                 </Box>
             </FormProvider>
         );
     }
 
-    export default TradeBlockData;
+    export default RealTimeNetPosition;
     

@@ -1,0 +1,7 @@
+useEffect(() => {
+    if (watch('FinancialYear')) {
+      const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
+      const aprilFirstDate = moment(`01/04/${selectedYear}`, "DD/MM/YYYY").toDate(); // Create April 1st date
+      setValue('StartDate', aprilFirstDate); // Set StartDate to April 1st
+    }
+  }, [watch('FinancialYear')]);

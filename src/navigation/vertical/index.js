@@ -55,6 +55,48 @@ const navigation = () => {
 
       ]
     },
+    {
+      title: 'Client Profile',
+      icon: 'fluent:gift-16-regular',
+      children: [
+        {
+          title: 'Client Search',
+          path: '/clientsearch'
+        },
+      ]
+    },
+    {
+      title: 'RealTime',
+      icon: 'fluent:gift-16-regular',
+      children: [
+        {
+          title: 'TurnOver',
+          path: '/realtimeturnover'
+        },
+        {
+          title: 'Transaction Statement',
+          path: '/realtimetransaction'
+        },
+        {
+          title: 'Net Position',
+          path: '/realtimenetposition'
+        },
+      ]
+    },
+    {
+      title: 'IPO',
+      icon: 'fluent:gift-16-regular',
+      children: [
+        {
+          title: 'Bidding Details',
+          path: '/biddingdetails'
+        },
+        {
+          title: 'Allotment Data',
+          path: '/allotmentdata'
+        },
+      ]
+    },
     // {
     //   title: 'menu1',
     //   icon: 'mdi:contact-outline',

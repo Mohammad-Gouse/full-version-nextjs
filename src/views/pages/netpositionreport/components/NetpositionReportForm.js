@@ -1,7 +1,7 @@
 
 import Marquee from './Marquee';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress } from '@mui/material';
 import DatePicker from 'react-datepicker';
@@ -103,6 +103,14 @@ const Container1 = () => {
            }} className='w-[100%] text-center  font-bold'>No data found</div>
        </div>
      </div>
+
+useEffect(() => {
+  if (watch('FinancialYear')) {
+    const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
+    const aprilFirstDate = moment(`01/04/${selectedYear}`, "DD/MM/YYYY").toDate(); // Create April 1st date
+    setValue('StartDate', aprilFirstDate); // Set StartDate to April 1st
+  }
+}, [watch('FinancialYear')]);
 
     return (
         <Card id="NetpositionReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>

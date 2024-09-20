@@ -1,14 +1,13 @@
 
-import Marquee from './Marquee';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useLedgerReport } from 'src/hooks/LedgerReportHook';
+import { useRealTimeTurnOver } from 'src/hooks/RealTimeTurnOverHook';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
@@ -19,7 +18,7 @@ import { CustomLoader } from 'src/components/CustomLoader';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, total, loading, error, fetchData } = useLedgerReport();
+     const { data, total, loading, error, fetchData } = useRealTimeTurnOver();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -32,11 +31,11 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'LedgerReport.xlsx');
+      XLSX.writeFile(workbook, 'RealTimeTurnOver.xlsx');
     };
 
     
-        const [filters, setFilters] = useState({"TransactionDate":{"value":null,"matchMode":"in"},"Voucher":{"value":null,"matchMode":"in"},"Narration":{"value":null,"matchMode":"in"},"DebitAmount":{"value":null,"matchMode":"in"},"CreditAmount":{"value":null,"matchMode":"in"},"Balance":{"value":null,"matchMode":"in"}});
+        const [filters, setFilters] = useState({"Region":{"value":null,"matchMode":"in"},"Branch":{"value":null,"matchMode":"in"},"FamilyCode":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"BuyVolume":{"value":null,"matchMode":"in"},"SellVolume":{"value":null,"matchMode":"in"},"TotalTurnOver":{"value":null,"matchMode":"in"},"NoOfClientsTraded":{"value":null,"matchMode":"in"},"NoOfTrades":{"value":null,"matchMode":"in"}});
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -85,7 +84,7 @@ const Container1 = () => {
          justifyContent: 'start',
          alignItems: 'center',
          paddingLeft: '35vw',
-         minHeight:'59.7vh'
+         minHeight:'60vh'
        }}
      >
        <div className='w-[100%] text-center font-bold'>
@@ -103,21 +102,13 @@ const Container1 = () => {
        </div>
      </div>
 
-useEffect(() => {
-  if (watch('FinancialYear')) {
-    const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
-    const aprilFirstDate = moment(`01/04/${selectedYear}`, "DD/MM/YYYY").toDate(); // Create April 1st date
-    setValue('StartDate', aprilFirstDate); // Set StartDate to April 1st
-  }
-}, [watch('FinancialYear')]);
-
      
         
 
     
 
     return (
-        <Card id="LedgerReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
+        <Card id="ReadTimeTurnOverForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
             
@@ -133,14 +124,14 @@ useEffect(() => {
             sx={{ 'font-size': '10px' }}
             labelId = "FinancialYear"
             label='Financial Year'
-            defaultValue="2024-2025"
-            disabled={false}
+            defaultValue="2024"
+            disabled={true}
             id='FinancialYear'
             size="small"
             fullWidth
             error={!!errors.FinancialYear}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="2024-2025">2024-25</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="2023-2024">2023-24</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="2024">2024-2025</MenuItem>
           </Select>
             )}
           />
@@ -174,7 +165,7 @@ useEffect(() => {
             fullWidth
             error={!!errors.Segment}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="NBFC">NBFC</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commudity">Commudity</MenuItem>
           </Select>
             )}
           />
@@ -225,6 +216,108 @@ useEffect(() => {
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Region">Region</InputLabel>
+        <Controller
+          name="Region"
+          control={control}
+          render={({ field }) => (
+          <Select
+          {...field}
+            sx={{ 'font-size': '10px' }}
+            labelId = "Region"
+            label='Region'
+            defaultValue="ALL"
+            disabled={false}
+            id='Region'
+            size="small"
+            fullWidth
+            error={!!errors.Region}
+          >
+          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="AHMEDABAD">AHMEDABAD</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="KERALA">KERALA</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="DELHI">DELHI</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="KARNATAKA">KARNATAKA</MenuItem>
+          </Select>
+            )}
+          />
+            {errors.Region && (
+            <FormHelperText sx={{ color: 'error.main' }}>
+              {errors.Region.message}
+            </FormHelperText>
+          )}
+        </FormControl>
+      </Grid>
+    
+        
+
+            
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
+      <FormControl fullWidth>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Branch">Branch</InputLabel>
+        <Controller
+          name="Branch"
+          control={control}
+          render={({ field }) => (
+          <Select
+          {...field}
+            sx={{ 'font-size': '10px' }}
+            labelId = "Branch"
+            label='Branch'
+            defaultValue="ALL"
+            disabled={false}
+            id='Branch'
+            size="small"
+            fullWidth
+            error={!!errors.Branch}
+          >
+          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem>
+          </Select>
+            )}
+          />
+            {errors.Branch && (
+            <FormHelperText sx={{ color: 'error.main' }}>
+              {errors.Branch.message}
+            </FormHelperText>
+          )}
+        </FormControl>
+      </Grid>
+    
+        
+
+            
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
+      <FormControl fullWidth>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Franchise">Franchise</InputLabel>
+        <Controller
+          name="Franchise"
+          control={control}
+          render={({ field }) => (
+          <Select
+          {...field}
+            sx={{ 'font-size': '10px' }}
+            labelId = "Franchise"
+            label='Franchise'
+            defaultValue="ALL"
+            disabled={false}
+            id='Franchise'
+            size="small"
+            fullWidth
+            error={!!errors.Franchise}
+          >
+          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem>
+          </Select>
+            )}
+          />
+            {errors.Franchise && (
+            <FormHelperText sx={{ color: 'error.main' }}>
+              {errors.Franchise.message}
+            </FormHelperText>
+          )}
+        </FormControl>
+      </Grid>
+    
+        
+
+            
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
+      <FormControl fullWidth>
         <Controller
                   name="ClientCode"
                   control={control}
@@ -254,52 +347,6 @@ useEffect(() => {
       </FormControl>
     </Grid>
      
-    
-        
-
-            
- <Grid item lg={1.5} md={6} sm={12} xs={12} >
-    <FormControl fullWidth>
-      <Controller
-        name="StartDate"
-        control={control}
-        render={({ field }) => (
-        <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
-          <DatePicker
-            {...field}
-            dateFormat="dd-MMM-yyyy"
-            selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
-            placeholderText="Select From Date"
-            customInput={<CustomTimeInput label='From Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
-          />
-        </DatePickerWrapper>
-        )}
-        />
-    </FormControl>
-  </Grid>    
-    
-        
-
-            
- <Grid item lg={1.5} md={6} sm={12} xs={12} >
-    <FormControl fullWidth>
-      <Controller
-        name="EndDate"
-        control={control}
-        render={({ field }) => (
-        <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
-          <DatePicker
-            {...field}
-            dateFormat="dd-MMM-yyyy"
-            selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
-            placeholderText="Select To Date"
-            customInput={<CustomTimeInput label='To Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
-          />
-        </DatePickerWrapper>
-        )}
-        />
-    </FormControl>
-  </Grid>    
     
         
 
@@ -345,11 +392,6 @@ useEffect(() => {
         
 
             
-     <Marquee />
-    
-        
-
-            
         <Grid item lg={12} md={12} sm={12} style={{paddingTop:"5px"}}>      
         <Box>
          {loading && (
@@ -377,61 +419,91 @@ useEffect(() => {
                 scrollHeight='390px'
             >
                 <Column 
-            field="TransactionDate" 
-            header="Date" 
+            field="Region" 
+            header="Region" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TransactionDate', 'Date')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'Region', 'Region')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="Voucher" 
-            header="Voucher" 
+            field="Branch" 
+            header="Branch" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Voucher', 'Voucher')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'Branch', 'Branch')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="Narration" 
-            header=" Narration" 
+            field="FamilyCode" 
+            header="Family Code" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Narration', ' Narration')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'FamilyCode', 'Family Code')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="DebitAmount" 
-            header="Debit Amount" 
+            field="ClientCode" 
+            header="Client Code" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'DebitAmount', 'Debit Amount')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'ClientCode', 'Client Code')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="CreditAmount" 
-            header="Credit Amount" 
+            field="BuyVolume" 
+            header="Buy Volume" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'CreditAmount', 'Credit Amount')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'BuyVolume', 'Buy Volume')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
 <Column 
-            field="Balance" 
-            header="Balance" 
+            field="SellVolume" 
+            header="Sell Volume" 
             filter 
             showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Balance', 'Balance')}
+            filterElement={(options) => multiSelectFilterTemplate(options, 'SellVolume', 'Sell Volume')}
+            bodyStyle={rowStyle}
+            headerStyle={headerStyle}
+            body={loading && <Skeleton />}
+        />
+<Column 
+            field="TotalTurnOver" 
+            header="Total Turnover" 
+            filter 
+            showFilterMenu={false} 
+            filterElement={(options) => multiSelectFilterTemplate(options, 'TotalTurnOver', 'Total Turnover')}
+            bodyStyle={rowStyle}
+            headerStyle={headerStyle}
+            body={loading && <Skeleton />}
+        />
+<Column 
+            field="NoOfClientsTraded" 
+            header="Number of Clients Traded" 
+            filter 
+            showFilterMenu={false} 
+            filterElement={(options) => multiSelectFilterTemplate(options, 'NoOfClientsTraded', 'Number of Clients Traded')}
+            bodyStyle={rowStyle}
+            headerStyle={headerStyle}
+            body={loading && <Skeleton />}
+        />
+<Column 
+            field="NoOfTrades" 
+            header="Number of Trades" 
+            filter 
+            showFilterMenu={false} 
+            filterElement={(options) => multiSelectFilterTemplate(options, 'NoOfTrades', 'Number of Trades')}
             bodyStyle={rowStyle}
             headerStyle={headerStyle}
             body={loading && <Skeleton />}

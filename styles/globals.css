@@ -102,32 +102,18 @@ code[class*='language-'] {
 
 .p-datatable > .p-datatable-wrapper {
   overflow: auto;
-  scrollbar-width: thin;
-  min-height: 77vh;
+  /* scrollbar-width: thin; */
+  min-height: 71.5vh;
 }
-
+/* 
 /* WebKit browsers */
-::-webkit-scrollbar {
-  width: 3px; /* Width of the scrollbar */
-}
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Background color of the scrollbar track */
-  border-radius: 10px; /* Radius for the scrollbar track */
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888; /* Background color of the scrollbar thumb */
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Background color of the scrollbar thumb on hover */
-}
 
 
 .p-datatable .p-datatable-tbody > tr {
   text-align: center;
   font-size: 10px;
+  color: #36454F;
 }
 
 .css-1m0b7cl .react-datepicker .react-datepicker__month-container {
@@ -143,4 +129,28 @@ code[class*='language-'] {
 .css-16mxzv4-MuiFormHelperText-root.Mui-error {
   font-size: 8px;
 }
+
+
+::-webkit-scrollbar {
+  width: 4px; /* Width of the vertical scrollbar */
+  height: 4px;
+  background-color: #f5f5f5;
+}
+ 
+/* Style vertical scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background-color: #b1aeaef2; /* Color of the vertical scrollbar thumb */
+}
+ 
+/* Hide horizontal scrollbar */
+::-webkit-scrollbar-y {
+  /* display: none;  */
+  height: 5px;
+}
+ 
+/* Style horizontal scrollbar thumb */
+::-webkit-scrollbar-thumb-x {
+  background-color: #d2cdcd; /* Color of the horizontal scrollbar thumb */
+}
+
 
