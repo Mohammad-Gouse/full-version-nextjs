@@ -103,6 +103,14 @@ const Container1 = () => {
        </div>
      </div>
 
+const columns = [
+  { field: 'ClientCode', header: 'Client Code' },
+  { field: 'ClientName', header: 'Client Name' },
+  { field: 'DebitAmount', header: 'Debit Amount' },
+  { field: 'CreditAmount', header: 'Credit Amount' },
+  { field: 'NetAmount', header: 'Net Amount' },
+];
+
     return (
         <Card id="FinanciaReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
@@ -271,7 +279,32 @@ const Container1 = () => {
                      
                 </div>
             )}
-            <DataTable 
+             <DataTable 
+            size='small'
+            value={data ?? []}
+            rows={10}
+            filters={filters}
+            filterDisplay="row"
+            emptyMessage={emptyMessage}
+            scrollable={true}
+            scrollHeight='390px'
+        >
+            {/* Dynamically render columns based on the columns array */}
+            {columns.map((col, index) => (
+                <Column
+                    key={index}
+                    field={col.field}
+                    header={col.header}
+                    filter
+                    showFilterMenu={false}
+                    filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+                    bodyStyle={rowStyle}
+                    headerStyle={headerStyle}
+                    body={loading ? <Skeleton /> : null}  // Show skeleton while loading
+                />
+            ))}
+        </DataTable>
+            {/* <DataTable 
                 size='small' 
                 value={data ?? []} 
                 rows={10} 
@@ -331,7 +364,7 @@ const Container1 = () => {
             headerStyle={headerStyle}
             body={loading && <Skeleton />}
         />
-            </DataTable>
+            </DataTable> */}
         </Box>
         </Grid>
         

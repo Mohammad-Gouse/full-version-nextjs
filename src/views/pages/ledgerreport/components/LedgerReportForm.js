@@ -3,7 +3,7 @@ import Marquee from './Marquee';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -16,6 +16,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
   import * as XLSX from 'xlsx';
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
+import axios from 'axios';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -37,6 +38,7 @@ const Container1 = () => {
 
     
         const [filters, setFilters] = useState({"TransactionDate":{"value":null,"matchMode":"in"},"Voucher":{"value":null,"matchMode":"in"},"Narration":{"value":null,"matchMode":"in"},"DebitAmount":{"value":null,"matchMode":"in"},"CreditAmount":{"value":null,"matchMode":"in"},"Balance":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"TransactionDate","header":"Date"},{"field":"Voucher","header":"Voucher"},{"field":"Narration","header":" Narration"},{"field":"DebitAmount","header":"Debit Amount"},{"field":"CreditAmount","header":"Credit Amount"},{"field":"Balance","header":"Balance"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -79,39 +81,14 @@ const Container1 = () => {
             height: '4vh !important'
         };
 
-        const emptyMessage= <div
-       style={{
-         display: 'flex',
-         justifyContent: 'start',
-         alignItems: 'center',
-         paddingLeft: '35vw',
-         minHeight:'59.7vh'
-       }}
-     >
-       <div className='w-[100%] text-center font-bold'>
-         <img
-           src='/images/datagrid/nodata.gif'
-           alt='No data found'
-           style={{
-             width: '200px',
-             height: '200px'
-           }}
-         />
-         <div style={{
-             textAlign:"center"
-           }} className='w-[100%] text-center  font-bold'>No data found</div>
-       </div>
-     </div>
-
-useEffect(() => {
-  if (watch('FinancialYear')) {
-    const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
-    const aprilFirstDate = moment(`01/04/${selectedYear}`, "DD/MM/YYYY").toDate(); // Create April 1st date
-    setValue('StartDate', aprilFirstDate); // Set StartDate to April 1st
-  }
-}, [watch('FinancialYear')]);
-
-     
+        const emptyMessage = (
+            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+                <div className='w-[100%] text-center font-bold'>
+                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                </div>
+            </div>
+        );
         
 
     
@@ -304,8 +281,8 @@ useEffect(() => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
+<Grid item lg={0.8} md={6} sm={12} xs={12}>
+    <Button fullWidth sx={{"fontSize":"10px","padding":"7px 0px"}} type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
@@ -313,18 +290,16 @@ useEffect(() => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px", fontWeight:'700', padding:'5px 10px'}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
-    Export <img
-                          src='/images/logos/excel.png'
-                          alt='Excel'
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            marginLeft:'10px'
-                          }}
-                        />
-    </Button> 
+<Grid item lg={0.2} md={6} sm={12} xs={12}>
+    <Tooltip title='Export'>
+      <Button fullWidth sx={{"fontSize":"10px","fontWeight":"700","padding":"5px 10px"}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
+       <img
+                            src='/images/logos/excel.png'
+                            alt='Excel'
+                            style={{"width":"20px","height":"20px"}}
+                          />
+      </Button> 
+    </Tooltip>
 </Grid>
 
         
@@ -360,10 +335,7 @@ useEffect(() => {
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1
                 }}>
-
                 <CircularProgress />
-
-                     
                 </div>
             )}
             <DataTable 
@@ -376,66 +348,20 @@ useEffect(() => {
                 scrollable={true}
                 scrollHeight='390px'
             >
-                <Column 
-            field="TransactionDate" 
-            header="Date" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TransactionDate', 'Date')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Voucher" 
-            header="Voucher" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Voucher', 'Voucher')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Narration" 
-            header=" Narration" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Narration', ' Narration')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="DebitAmount" 
-            header="Debit Amount" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'DebitAmount', 'Debit Amount')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="CreditAmount" 
-            header="Credit Amount" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'CreditAmount', 'Credit Amount')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Balance" 
-            header="Balance" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Balance', 'Balance')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
+                {/* Dynamically render columns based on the columns array */}
+                {columns.map((col, index) => (
+                    <Column
+                        key={index}
+                        field={col.field}
+                        header={col.header}
+                        filter
+                        showFilterMenu={false}
+                        filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+                        bodyStyle={rowStyle}
+                        headerStyle={headerStyle}
+                        body={loading ? <Skeleton /> : null}  // Show skeleton while loading
+                    />
+                ))}
             </DataTable>
         </Box>
         </Grid>

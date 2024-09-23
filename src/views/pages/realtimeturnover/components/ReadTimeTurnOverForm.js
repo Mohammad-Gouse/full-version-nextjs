@@ -2,7 +2,7 @@
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -15,6 +15,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
   import * as XLSX from 'xlsx';
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
+import axios from 'axios';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -36,6 +37,7 @@ const Container1 = () => {
 
     
         const [filters, setFilters] = useState({"Region":{"value":null,"matchMode":"in"},"Branch":{"value":null,"matchMode":"in"},"FamilyCode":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"BuyVolume":{"value":null,"matchMode":"in"},"SellVolume":{"value":null,"matchMode":"in"},"TotalTurnOver":{"value":null,"matchMode":"in"},"NoOfClientsTraded":{"value":null,"matchMode":"in"},"NoOfTrades":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"Region","header":"Region"},{"field":"Branch","header":"Branch"},{"field":"FamilyCode","header":"Family Code"},{"field":"ClientCode","header":"Client Code"},{"field":"BuyVolume","header":"Buy Volume"},{"field":"SellVolume","header":"Sell Volume"},{"field":"TotalTurnOver","header":"Total Turnover"},{"field":"NoOfClientsTraded","header":"Number of Clients Traded"},{"field":"NoOfTrades","header":"Number of Trades"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -78,31 +80,14 @@ const Container1 = () => {
             height: '4vh !important'
         };
 
-        const emptyMessage= <div
-       style={{
-         display: 'flex',
-         justifyContent: 'start',
-         alignItems: 'center',
-         paddingLeft: '35vw',
-         minHeight:'60vh'
-       }}
-     >
-       <div className='w-[100%] text-center font-bold'>
-         <img
-           src='/images/datagrid/nodata.gif'
-           alt='No data found'
-           style={{
-             width: '200px',
-             height: '200px'
-           }}
-         />
-         <div style={{
-             textAlign:"center"
-           }} className='w-[100%] text-center  font-bold'>No data found</div>
-       </div>
-     </div>
-
-     
+        const emptyMessage = (
+            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+                <div className='w-[100%] text-center font-bold'>
+                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                </div>
+            </div>
+        );
         
 
     
@@ -351,8 +336,8 @@ const Container1 = () => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
+<Grid item lg={0.8} md={6} sm={12} xs={12}>
+    <Button fullWidth sx={{"fontSize":"10px","padding":"7px 0px"}} type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
@@ -360,18 +345,21 @@ const Container1 = () => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px", fontWeight:'700', padding:'5px 10px'}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
-    Export <img
-                          src='/images/logos/excel.png'
-                          alt='Excel'
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            marginLeft:'10px'
-                          }}
-                        />
-    </Button> 
+<Grid item lg={0.2} md={6} sm={12} xs={12}>
+  <Grid item lg={0.2} md={6} sm={12} xs={12}>
+
+
+
+</Grid>
+    <Tooltip title='Export'>
+      <Button fullWidth sx={{"fontSize":"10px","fontWeight":"700","padding":"5px 10px"}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
+       <img
+                            src='/images/logos/excel.png'
+                            alt='Excel'
+                            style={{"width":"20px","height":"20px"}}
+                          />
+      </Button> 
+    </Tooltip>
 </Grid>
 
         
@@ -402,10 +390,7 @@ const Container1 = () => {
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1
                 }}>
-
                 <CircularProgress />
-
-                     
                 </div>
             )}
             <DataTable 
@@ -418,96 +403,20 @@ const Container1 = () => {
                 scrollable={true}
                 scrollHeight='390px'
             >
-                <Column 
-            field="Region" 
-            header="Region" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Region', 'Region')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Branch" 
-            header="Branch" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Branch', 'Branch')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="FamilyCode" 
-            header="Family Code" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'FamilyCode', 'Family Code')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="ClientCode" 
-            header="Client Code" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ClientCode', 'Client Code')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BuyVolume" 
-            header="Buy Volume" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BuyVolume', 'Buy Volume')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="SellVolume" 
-            header="Sell Volume" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'SellVolume', 'Sell Volume')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="TotalTurnOver" 
-            header="Total Turnover" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TotalTurnOver', 'Total Turnover')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="NoOfClientsTraded" 
-            header="Number of Clients Traded" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'NoOfClientsTraded', 'Number of Clients Traded')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="NoOfTrades" 
-            header="Number of Trades" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'NoOfTrades', 'Number of Trades')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
+                {/* Dynamically render columns based on the columns array */}
+                {columns.map((col, index) => (
+                    <Column
+                        key={index}
+                        field={col.field}
+                        header={col.header}
+                        filter
+                        showFilterMenu={false}
+                        filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+                        bodyStyle={rowStyle}
+                        headerStyle={headerStyle}
+                        body={loading ? <Skeleton /> : null}  // Show skeleton while loading
+                    />
+                ))}
             </DataTable>
         </Box>
         </Grid>
