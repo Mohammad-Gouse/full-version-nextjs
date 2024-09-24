@@ -1,13 +1,13 @@
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useReportPortfolio } from 'src/hooks/ReportPortfolioHook';
+import { useKYCFormTracking } from 'src/hooks/KYCFormTrackingHook';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
@@ -16,11 +16,10 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
-import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, total, loading, error, fetchData } = useReportPortfolio();
+     const { data, total, loading, error, fetchData } = useKYCFormTracking();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -33,12 +32,12 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'ReportPortfolio.xlsx');
+      XLSX.writeFile(workbook, 'KYCFormTracking.xlsx');
     };
 
     
-        const [filters, setFilters] = useState({"Scrip":{"value":null,"matchMode":"in"},"Quantity":{"value":null,"matchMode":"in"},"AvgBuyPrice":{"value":null,"matchMode":"in"},"MTM":{"value":null,"matchMode":"in"},"TodaysGain":{"value":null,"matchMode":"in"},"CurrentValue":{"value":null,"matchMode":"in"},"InvestedValue":{"value":null,"matchMode":"in"},"Overall P&L":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"Scrip","header":"Scrip Name"},{"field":"Quantity","header":"Quantity"},{"field":"AvgBuyPrice","header":"AverageBuyPrice"},{"field":"MTM","header":"Current Mkt Price"},{"field":"TodaysGain","header":"Todays Gain"},{"field":"CurrentValue","header":"Current Value"},{"field":"InvestedValue","header":"Invested Value"},{"field":"Overall P&L","header":"Overall P&L"}]);  // Dynamic columns from JSON input
+        const [filters, setFilters] = useState({"FormStatus":{"value":null,"matchMode":"in"},"Form Number":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Objection":{"value":null,"matchMode":"in"},"Status":{"value":null,"matchMode":"in"},"Intime":{"value":null,"matchMode":"in"},"PunchedTime":{"value":null,"matchMode":"in"},"RecievedBy":{"value":null,"matchMode":"in"},"EmailId":{"value":null,"matchMode":"in"},"Exchange":{"value":null,"matchMode":"in"},"ZoneName":{"value":null,"matchMode":"in"},"eSignTime":{"value":null,"matchMode":"in"},"EditMode":{"value":null,"matchMode":"in"},"RMCode":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"FormStatus","header":"Form Status"},{"field":"Form Number","header":"Form Number"},{"field":"ClientCode","header":"Client Code"},{"field":"ClientName","header":"Client Name"},{"field":"Objection","header":"Objection"},{"field":"Status","header":"Status"},{"field":"Intime","header":"In Time"},{"field":"PunchedTime","header":"Punched Time"},{"field":"RecievedBy","header":"Received By"},{"field":"EmailId","header":"Email ID"},{"field":"Exchange","header":"Exchange"},{"field":"ZoneName","header":"Zone Name"},{"field":"eSignTime","header":"eSign Time"},{"field":"EditMode","header":"Edit Mode"},{"field":"RMCode","header":"RM Code"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -91,73 +90,39 @@ const Container1 = () => {
         );
         
 
-      const toast = useRef(null);
-
-  useEffect(() => {
-    if (error) {
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Something went wrong',
-        life: 3000,
-      });
-    }
-  }, [error]);
-
     
 
     return (
-        <Card id="RportPortfolioForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
+        <Card id="FormTrackingForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
-
-                <div className="card flex justify-content-center">
-                <Toast
-                    ref={toast}
-                    position="bottom-center"
-                    className="small-toast"
-                />
-                </div>
-
                 
             
-    <Grid item lg={2} md={6} sm={12} xs={12}>
-      <FormControl error={Boolean(errors.segment)}>
+    <Grid item lg={0.7} md={6} sm={12} xs={12}>
+      <FormControl error={Boolean(errors.Client)}>
         <Controller
-          name='segment'
+          name='Client'
           control={control}
           rules={{ required: false }}
           render={({ field }) => (
-            <RadioGroup row {...field} aria-label='segment' name='segment'>
+            <RadioGroup row {...field} aria-label='Client' name='Client'>
               
               <FormControlLabel
-                value='equity'
-                label='Cash'
-                sx={errors.segment ? { color: 'error.main' } : null}
+                value='Punch'
+                label='Punch'
+                sx={errors.Client ? { color: 'error.main' } : null}
                 componentsProps={{
                   typography: { sx: {"fontSize":"10px","fontWeight":"600","color":"#818589"} }
                 }}
                 control={<Radio sx={{
                   '& .MuiSvgIcon-root': {"fontSize":"14px"},
-                  ...(errors.segment && { color: 'error.main' })
-                }} />}
-              />
-              <FormControlLabel
-                value='commodity'
-                label='NSEF'
-                sx={errors.segment ? { color: 'error.main' } : null}
-                componentsProps={{
-                  typography: { sx: {"fontSize":"10px","fontWeight":"600","color":"#818589"} }
-                }}
-                control={<Radio sx={{
-                  '& .MuiSvgIcon-root': {"fontSize":"14px"},
-                  ...(errors.segment && { color: 'error.main' })
+                  ...(errors.Client && { color: 'error.main' })
                 }} />}
               />
             </RadioGroup>
           )}
         />
-        {errors.segment && (
-          <FormHelperText sx={{ color: 'error.main' }} id='segment-helper-text'>
+        {errors.Client && (
+          <FormHelperText sx={{ color: 'error.main' }} id='Client-helper-text'>
             This field is required
           </FormHelperText>
         )}
@@ -177,7 +142,7 @@ const Container1 = () => {
                         {...field}
                         id='ClientCode'
                         defaultValue=""
-                        label={'Client Code'}
+                        label={'Client'}
                         size="small"
                         fullWidth
                         error={!!errors?.ClientCode }
@@ -198,6 +163,52 @@ const Container1 = () => {
       </FormControl>
     </Grid>
      
+    
+        
+
+            
+ <Grid item lg={1.5} md={6} sm={12} xs={12} >
+    <FormControl fullWidth>
+      <Controller
+        name="StartDate"
+        control={control}
+        render={({ field }) => (
+        <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
+          <DatePicker
+            {...field}
+            dateFormat="dd-MMM-yyyy"
+            selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
+            placeholderText="Select From Date"
+            customInput={<CustomTimeInput label='From Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
+          />
+        </DatePickerWrapper>
+        )}
+        />
+    </FormControl>
+  </Grid>    
+    
+        
+
+            
+ <Grid item lg={1.5} md={6} sm={12} xs={12} >
+    <FormControl fullWidth>
+      <Controller
+        name="EndDate"
+        control={control}
+        render={({ field }) => (
+        <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
+          <DatePicker
+            {...field}
+            dateFormat="dd-MMM-yyyy"
+            selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
+            placeholderText="Select To Date"
+            customInput={<CustomTimeInput label='To Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }, }}  />}
+          />
+        </DatePickerWrapper>
+        )}
+        />
+    </FormControl>
+  </Grid>    
     
         
 
@@ -223,21 +234,6 @@ const Container1 = () => {
     </Tooltip>
 </Grid>
 
-        
-
-            
-        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
-      <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
-        {total && Object.keys(total).length > 0 && (
-          Object.entries(total).map(([key, value]) => (
-            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
-              {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
-            </Card>
-          ))
-        ) }
-      </Box>
-    </Grid>
-        
         
 
             

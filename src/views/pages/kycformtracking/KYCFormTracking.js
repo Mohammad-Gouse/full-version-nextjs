@@ -3,17 +3,17 @@
     import Box from '@mui/material/Box';
     import { useForm, FormProvider } from 'react-hook-form';
     import { yupResolver } from '@hookform/resolvers/yup';
-    import { ReportPortfolioSchema, defaultValues }  from './schema/ReportPortfolioSchema';
-    import { ReportPortfolioContext } from 'src/context/ReportPortfolioContext';
-    import { useReportPortfolio } from 'src/hooks/ReportPortfolioHook';
+    import { KYCFormTrackingSchema, defaultValues }  from './schema/KYCFormTrackingSchema';
+    import { KYCFormTrackingContext } from 'src/context/KYCFormTrackingContext';
+    import { useKYCFormTracking } from 'src/hooks/KYCFormTrackingHook';
     import { Button } from '@mui/material';
     import moment from 'moment';
-    import RportPortfolioForm from './components/RportPortfolioForm';
+    import FormTrackingForm from './components/FormTrackingForm';
 
-    const ReportPortfolio = () => {
+    const KYCFormTracking = () => {
         const methods = useForm({
             defaultValues:defaultValues,
-            resolver: yupResolver(ReportPortfolioSchema),
+            resolver: yupResolver(KYCFormTrackingSchema),
         });
 
          const [formValues, setFormValues] = useState({});
@@ -22,7 +22,7 @@
             setFormValues({ ...formValues, [id]: value });
         };
 
-        const { data, total, loading, error, fetchData } = useReportPortfolio();
+        const { data, total, loading, error, fetchData } = useKYCFormTracking();
 
         const onSubmit = (formData) => {
             for (const key in formData) {
@@ -32,19 +32,20 @@
             }
             formData.Branch = "HO"
             formData.Role = "11"
-            fetchData(formData, formData.segment) 
+
+            fetchData(formData)
         };
 
         return (
             <FormProvider {...methods}>
                 <Box sx={{ padding: 2 }}>
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        <RportPortfolioForm formValues={formValues} handleInputChange={handleInputChange} />
+                        <FormTrackingForm formValues={formValues} handleInputChange={handleInputChange} />
                     </form>
                 </Box>
             </FormProvider>
         );
     }
 
-    export default ReportPortfolio;
+    export default KYCFormTracking;
     

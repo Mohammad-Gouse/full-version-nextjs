@@ -174,9 +174,14 @@ const Container1 = () => {
                             />
                         )}
                         ListboxProps={{
-                            sx: { fontSize: '10px' }
+                            style: {
+                                fontSize: '10px',
+                                whiteSpace: 'nowrap',    // Ensure the text stays on one line
+                                minWidth: '300px',       // Ensure the dropdown is wide enough to fit the text
+                                width: 'auto',           // Auto-adjust based on content
+                            }
                         }}
-                        sx={{ fontSize: '10px' }}
+                        style={{ fontSize: '10px' }}
                     />
                 )}
             />

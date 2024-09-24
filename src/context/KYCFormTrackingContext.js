@@ -2,9 +2,9 @@
 import React, { createContext, useState, useEffect } from 'react';
 import createAxiosInstance from 'src/configs/axiosConfig';
 
-const ReportPortfolioContext = createContext();
+const KYCFormTrackingContext = createContext();
 
-const ReportPortfolioProvider = ({ children }) => {
+const KYCFormTrackingProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,11 +13,11 @@ const ReportPortfolioProvider = ({ children }) => {
   // Create Axios instance
   const axiosInstance = createAxiosInstance();
 
-  const fetchData = async (payload,endPoint) => {
+  const fetchData = async (payload) => {
       console.log("Fetching data...");
       setLoading(true);
       try {
-          const response = await axiosInstance.post(`http://175.184.255.158:5555/api/v1/reports/portfolio/${endPoint}`, payload);
+          const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/kyc/formtracking', payload);
           console.log(response);
           setData(response.data.data);
           setTotal(response.data.total)
@@ -32,10 +32,10 @@ const ReportPortfolioProvider = ({ children }) => {
   const values = { data, total, loading, error, fetchData };
 
   return (
-      <ReportPortfolioContext.Provider value={values}>
+      <KYCFormTrackingContext.Provider value={values}>
           {children}
-      </ReportPortfolioContext.Provider>
+      </KYCFormTrackingContext.Provider>
   );
 };
 
-export { ReportPortfolioContext, ReportPortfolioProvider };
+export { KYCFormTrackingContext, KYCFormTrackingProvider };

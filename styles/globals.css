@@ -154,3 +154,28 @@ code[class*='language-'] {
 }
 
 
+.small-toast .p-toast-message {
+  font-size: 10px;     /* Smaller font size */
+  padding: 5px 10px;   /* Reduce padding */
+}
+
+.small-toast .p-toast-message .p-toast-summary {
+  font-size: 10px;     /* Smaller summary text */
+  font-weight: bold;   /* Optional: Keep the text bold */
+}
+
+.small-toast .p-toast-message .p-toast-detail {
+  font-size: 9px;      /* Smaller detail text */
+}
+
+.small-toast .p-toast-message-icon {
+  font-size: 12px;     /* Smaller icon size */
+}
+
+.small-toast {
+  width: 200px !important;  /* Limit the toast width */
+}
+
+.small-toast .p-toast-message .p-toast-message-content {
+  padding: 0px !important;
+}

@@ -1,9 +1,9 @@
 
 import Marquee from './Marquee';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -16,6 +16,8 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
   import * as XLSX from 'xlsx';
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
+import axios from 'axios';
+import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -37,6 +39,7 @@ const Container1 = () => {
 
     
         const [filters, setFilters] = useState({"Exchange":{"value":null,"matchMode":"in"},"BuyValue":{"value":null,"matchMode":"in"},"SellValue":{"value":null,"matchMode":"in"},"Turnover":{"value":null,"matchMode":"in"},"Brokerage":{"value":null,"matchMode":"in"},"TransactionDate":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"Exchange","header":"Exchange"},{"field":"BuyValue","header":"Buy Value"},{"field":"SellValue","header":"Sell Value"},{"field":"Turnover","header":"Total Turnover"},{"field":"Brokerage","header":"Brokerage"},{"field":"TransactionDate","header":"Date"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -78,43 +81,44 @@ const Container1 = () => {
             fontSize: '10px',
             height: '4vh !important'
         };
+
+        const emptyMessage = (
+            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+                <div className='w-[100%] text-center font-bold'>
+                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                </div>
+            </div>
+        );
         
 
-    const emptyMessage= <div
-       style={{
-         display: 'flex',
-         justifyContent: 'start',
-         alignItems: 'center',
-         paddingLeft: '35vw',
-         minHeight:'60vh'
-       }}
-     >
-       <div className='w-[100%] text-center font-bold'>
-         <img
-           src='/images/datagrid/nodata.gif'
-           alt='No data found'
-           style={{
-             width: '200px',
-             height: '200px'
-           }}
-         />
-         <div style={{
-             textAlign:"center"
-           }} className='w-[100%] text-center  font-bold'>No data found</div>
-       </div>
-     </div>
+      const toast = useRef(null);
 
-useEffect(() => {
-  if (watch('FinancialYear')) {
-    const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
-    const aprilFirstDate = moment(`01/04/${selectedYear}`, "DD/MM/YYYY").toDate(); // Create April 1st date
-    setValue('StartDate', aprilFirstDate); // Set StartDate to April 1st
-  }
-}, [watch('FinancialYear')]);
+  useEffect(() => {
+    if (error) {
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Something went wrong',
+        life: 3000,
+      });
+    }
+  }, [error]);
+
+    
 
     return (
         <Card id="BrokerageReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
+
+                <div className="card flex justify-content-center">
+                <Toast
+                    ref={toast}
+                    position="bottom-center"
+                    className="small-toast"
+                />
+                </div>
+
                 
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
@@ -300,8 +304,8 @@ useEffect(() => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
+<Grid item lg={0.8} md={6} sm={12} xs={12}>
+    <Button fullWidth sx={{"fontSize":"10px","padding":"7px 0px"}} type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
@@ -309,18 +313,16 @@ useEffect(() => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px", fontWeight:'700', padding:'5px 10px'}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
-    Export <img
-                          src='/images/logos/excel.png'
-                          alt='Excel'
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            marginLeft:'10px'
-                          }}
-                        />
-    </Button> 
+<Grid item lg={0.2} md={6} sm={12} xs={12}>
+    <Tooltip title='Export'>
+      <Button fullWidth sx={{"fontSize":"10px","fontWeight":"700","padding":"5px 10px"}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
+       <img
+                            src='/images/logos/excel.png'
+                            alt='Excel'
+                            style={{"width":"20px","height":"20px"}}
+                          />
+      </Button> 
+    </Tooltip>
 </Grid>
 
         
@@ -356,10 +358,7 @@ useEffect(() => {
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1
                 }}>
-
                 <CircularProgress />
-
-                     
                 </div>
             )}
             <DataTable 
@@ -372,66 +371,20 @@ useEffect(() => {
                 scrollable={true}
                 scrollHeight='390px'
             >
-                <Column 
-            field="Exchange" 
-            header="Exchange" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Exchange', 'Exchange')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BuyValue" 
-            header="Buy Value" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BuyValue', 'Buy Value')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="SellValue" 
-            header="Sell Value" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'SellValue', 'Sell Value')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Turnover" 
-            header="Total Turnover" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Turnover', 'Total Turnover')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Brokerage" 
-            header="Brokerage" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Brokerage', 'Brokerage')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="TransactionDate" 
-            header="Date" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'TransactionDate', 'Date')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
+                {/* Dynamically render columns based on the columns array */}
+                {columns.map((col, index) => (
+                    <Column
+                        key={index}
+                        field={col.field}
+                        header={col.header}
+                        filter
+                        showFilterMenu={false}
+                        filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+                        bodyStyle={rowStyle}
+                        headerStyle={headerStyle}
+                        body={loading ? <Skeleton /> : null}  // Show skeleton while loading
+                    />
+                ))}
             </DataTable>
         </Box>
         </Grid>

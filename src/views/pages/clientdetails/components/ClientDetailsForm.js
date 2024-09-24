@@ -17,7 +17,8 @@ import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
 
 const transformData = (data) => {
-  const client = data;
+  // console.log(data)
+  const client = data ? data[0] : [];
   return [
     { label: 'Client Name', value: client?.ClientName ?? '' },
     { label: 'Mobile Number (Trading/DP)', value: client?.Mobile ?? '' },
@@ -63,13 +64,11 @@ const Container1 = () => {
     };
 
     const [clientData, setClientData] = useState([]);
-    let showCode = ''
-
     useEffect(() => {
-      const transformedData = transformData(data);
-      showCode = data.cl
-      setClientData(transformedData);
-    }, [fetchData]);
+      console.log(data)
+      setClientData(transformData(data))
+    }, [data]);
+
 
 
 
@@ -92,15 +91,15 @@ const Container1 = () => {
             <Grid container spacing={5}>
                 
             
-    <Grid item xs={12} sm={6} lg={2} sx={{marginLeft:"2px"}}>
+    <Grid item xs={12} sm={6} lg={2.5} sx={{marginLeft:"2px"}}>
       <FormControl error={Boolean(errors.Client)}>
         <Controller
           name='Client'
+          id='Client'
           control={control}
           rules={{ required: false }}
           render={({ field }) => (
-            <RadioGroup row {...field} aria-label='Client' name='Client' defaultValue='ClientCode'>
-              
+            <RadioGroup row {...field} aria-label='Client' name='Client'>
               <FormControlLabel
                 value='ClientCode'
                 label='Client Code'
@@ -148,7 +147,6 @@ const Container1 = () => {
                       <TextField
                         {...field}
                         id='ClientCode'
-                        defaultValue=""
                         label={'Client'}
                         size="small"
                         fullWidth
@@ -181,15 +179,12 @@ const Container1 = () => {
 </Grid>
 
 
-<Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
+<Grid item lg={3} md={6} sm={12} style={{ paddingTop: "", paddingBottom:'' }}>
       <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
-        {total && Object.keys(total).length > 0 && (
-          Object.entries(total).map(([key, value]) => (
-            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
-              {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
+      <Card variant="outlined" sx={{ padding: "8px 5px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
+                  
+              {"Client Code"}: {data?.length>0 ? control._formValues.ClientCode: ''}
             </Card>
-          ))
-        ) }
       </Box>
     </Grid>
         

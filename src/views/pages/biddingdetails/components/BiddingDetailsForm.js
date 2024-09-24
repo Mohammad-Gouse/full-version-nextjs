@@ -17,6 +17,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
+import zIndex from '@mui/material/styles/zIndex';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -174,7 +175,7 @@ const Container1 = () => {
                             />
                         )}
                         ListboxProps={{
-                            sx: { fontSize: '10px' }
+                            sx: { fontSize: '10px', zIndex:-100 }
                         }}
                         sx={{ fontSize: '10px' }}
                     />

@@ -1,5 +1,6 @@
 // ** MUI Imports
 import { styled, useTheme } from '@mui/material/styles'
+import zIndex from '@mui/material/styles/zIndex'
 import MuiSwipeableDrawer from '@mui/material/SwipeableDrawer'
 
 const SwipeableDrawer = styled(MuiSwipeableDrawer)({
@@ -16,7 +17,8 @@ const SwipeableDrawer = styled(MuiSwipeableDrawer)({
     left: 'unset',
     right: 'unset',
     overflowX: 'hidden',
-    transition: 'width .25s ease-in-out, box-shadow .25s ease-in-out'
+    transition: 'width .25s ease-in-out, box-shadow .25s ease-in-out',
+    zIndex: 9999
   }
 })
 

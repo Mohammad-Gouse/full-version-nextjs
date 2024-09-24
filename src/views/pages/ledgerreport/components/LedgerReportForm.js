@@ -1,7 +1,8 @@
 
+import Autocomplete from '@mui/material/Autocomplete';
 import Marquee from './Marquee';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
@@ -17,6 +18,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
+import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -37,6 +39,33 @@ const Container1 = () => {
     };
 
     
+    const [ExchangeOptions, setExchangeOptions] = useState([]);  // Dynamic state for options
+    const [loadingExchange, setloadingExchange] = useState(true);  // Dynamic state for loading
+
+    useEffect(() => {
+        const fetchExchangeOptions = async () => {  // Dynamic fetch function
+            try {
+                const accessToken = window.localStorage.getItem('accessToken');
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/exchange/segment', {"Segment":"Equity"},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+                const data = response.data.data.map((item) => item.Exchange);  // Extract specific field values
+                setExchangeOptions(data);  // Set options for Autocomplete
+                setloadingExchange(false);  // Disable loading state
+            } catch (error) {
+                console.error('Error fetching options for Exchange:', error);
+                setloadingExchange(false);  // Disable loading state on error
+            }
+        };
+
+        fetchExchangeOptions();  // Fetch options
+    }, []);
+    
+
         const [filters, setFilters] = useState({"TransactionDate":{"value":null,"matchMode":"in"},"Voucher":{"value":null,"matchMode":"in"},"Narration":{"value":null,"matchMode":"in"},"DebitAmount":{"value":null,"matchMode":"in"},"CreditAmount":{"value":null,"matchMode":"in"},"Balance":{"value":null,"matchMode":"in"}});
         const [columns] = useState([{"field":"TransactionDate","header":"Date"},{"field":"Voucher","header":"Voucher"},{"field":"Narration","header":" Narration"},{"field":"DebitAmount","header":"Debit Amount"},{"field":"CreditAmount","header":"Credit Amount"},{"field":"Balance","header":"Balance"}]);  // Dynamic columns from JSON input
 
@@ -91,11 +120,33 @@ const Container1 = () => {
         );
         
 
+      const toast = useRef(null);
+
+  useEffect(() => {
+    if (error) {
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Something went wrong',
+        life: 3000,
+      });
+    }
+  }, [error]);
+
     
 
     return (
         <Card id="LedgerReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
+
+                <div className="card flex justify-content-center">
+                <Toast
+                    ref={toast}
+                    position="bottom-center"
+                    className="small-toast"
+                />
+                </div>
+
                 
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
@@ -166,36 +217,47 @@ const Container1 = () => {
         
 
             
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Exchange">Exchange</InputLabel>
-        <Controller
-          name="Exchange"
-          control={control}
-          render={({ field }) => (
-          <Select
-          {...field}
-            sx={{ 'font-size': '10px' }}
-            labelId = "Exchange"
-            label='Exchange'
-            defaultValue="ALL"
-            disabled={false}
-            id='Exchange'
-            size="small"
-            fullWidth
-            error={!!errors.Exchange}
-          >
-          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="BSE">BSE</MenuItem>
-          </Select>
-            )}
-          />
-            {errors.Exchange && (
-            <FormHelperText sx={{ color: 'error.main' }}>
-              {errors.Exchange.message}
-            </FormHelperText>
-          )}
+    <Grid item lg={1.5} md={6} sm={12} xs={12}>
+        <FormControl fullWidth>
+            <Controller
+                name="Exchange"
+                control={control}
+                render={({ field }) => (
+                    <Autocomplete
+                        {...field}
+                        id="Exchange"
+                        options={ExchangeOptions}
+                        loading={loadingExchange}
+                        size="small"
+                        fullWidth
+                        getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option, value) => option === value}
+                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Select Exchange"
+                                error={!!errors?.Exchange}
+                                helperText={errors?.Exchange?.message}
+                                size="small"
+                                InputProps={{
+                                    ...params.InputProps,
+                                    style: { fontSize: '10px' },
+                                }}
+                                InputLabelProps={{
+                                    style: { fontSize: '10px', fontWeight: '600', color: '#818589' },
+                                }}
+                            />
+                        )}
+                        ListboxProps={{
+                            sx: { fontSize: '10px' }
+                        }}
+                        sx={{ fontSize: '10px' }}
+                    />
+                )}
+            />
         </FormControl>
-      </Grid>
+    </Grid>
     
         
 

@@ -60,6 +60,10 @@ const navigation = () => {
       icon: 'fluent:gift-16-regular',
       children: [
         {
+          title: 'Client Details',
+          path: '/clientdetails'
+        },
+        {
           title: 'Client Search',
           path: '/clientsearch'
         },
