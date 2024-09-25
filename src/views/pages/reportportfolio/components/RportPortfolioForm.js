@@ -37,6 +37,20 @@ const Container1 = () => {
     };
 
     
+            const toast = useRef(null);
+
+            useEffect(() => {
+            if (error) {
+            toast.current.show({
+            severity: 'error',
+            summary: 'error',
+            detail: 'Something Went Wrong',
+            life: 3000,
+            });
+            }
+            }, [error]);
+        
+
         const [filters, setFilters] = useState({"Scrip":{"value":null,"matchMode":"in"},"Quantity":{"value":null,"matchMode":"in"},"AvgBuyPrice":{"value":null,"matchMode":"in"},"MTM":{"value":null,"matchMode":"in"},"TodaysGain":{"value":null,"matchMode":"in"},"CurrentValue":{"value":null,"matchMode":"in"},"InvestedValue":{"value":null,"matchMode":"in"},"Overall P&L":{"value":null,"matchMode":"in"}});
         const [columns] = useState([{"field":"Scrip","header":"Scrip Name"},{"field":"Quantity","header":"Quantity"},{"field":"AvgBuyPrice","header":"AverageBuyPrice"},{"field":"MTM","header":"Current Mkt Price"},{"field":"TodaysGain","header":"Todays Gain"},{"field":"CurrentValue","header":"Current Value"},{"field":"InvestedValue","header":"Invested Value"},{"field":"Overall P&L","header":"Overall P&L"}]);  // Dynamic columns from JSON input
 
@@ -91,34 +105,24 @@ const Container1 = () => {
         );
         
 
-      const toast = useRef(null);
-
-  useEffect(() => {
-    if (error) {
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Something went wrong',
-        life: 3000,
-      });
-    }
-  }, [error]);
-
+    undefined
     
 
     return (
         <Card id="RportPortfolioForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
-
-                <div className="card flex justify-content-center">
-                <Toast
-                    ref={toast}
-                    position="bottom-center"
-                    className="small-toast"
-                />
-                </div>
-
                 
+            
+            <div className="card flex justify-content-center">
+            <Toast
+                ref={toast}
+                position="bottom-center"
+                className="small-toast"
+            />
+            </div>
+        
+        
+
             
     <Grid item lg={2} md={6} sm={12} xs={12}>
       <FormControl error={Boolean(errors.segment)}>
@@ -226,11 +230,11 @@ const Container1 = () => {
         
 
             
-        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
-      <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
+    <Grid item lg={12} md={12} sm={12} style={{"paddingTop":"5px","paddingBottom":"0"}}>
+      <Box sx={{"display":"flex","flexDirection":"row","fontSize":"10px"}}>
         {total && Object.keys(total).length > 0 && (
           Object.entries(total).map(([key, value]) => (
-            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
+            <Card variant="outlined" key={key} sx={{"padding":"10px","marginRight":"5px","fontWeight":"900","background":"#F9FAFB"}}>
               {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
             </Card>
           ))

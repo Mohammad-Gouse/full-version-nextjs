@@ -12,7 +12,7 @@ const Marquee = () => {
     background:'#25335C',
     left:0,
     bottom:0,
-    zIndex: 1233,
+    zIndex: 9999,
     fontSize: '10px'
 
   };

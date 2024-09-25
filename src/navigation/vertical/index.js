@@ -11,27 +11,27 @@ const navigation = () => {
       children: [
         {
           title: 'Client Ledger',
-          path: '/ledgerreport'
+          path: '/reportledger'
         },
         {
           title: 'Client Brokerage',
-          path: '/brokeragereport'
+          path: '/reportbrokerage'
         },
         {
           title: 'Holding Report',
-          path: '/holdingreport'
+          path: '/reportholding'
         },
         {
           title: 'Net Position',
-          path: '/netpositionreport'
+          path: '/reportnetposition'
         },
         {
           title: 'Client Wise Financial Statement',
-          path: '/financialreport'
+          path: '/reportfinancial'
         },
         {
           title: 'Transaction Statement',
-          path: '/transactionreport'
+          path: '/reporttransaction'
         },
         {
           title: 'Portfolio',

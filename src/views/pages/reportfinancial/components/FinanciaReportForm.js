@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useClientSearch } from 'src/hooks/ClientSearchHook';
+import { useReportFinancial } from 'src/hooks/ReportFinancialHook';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
@@ -20,7 +20,7 @@ import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, total, loading, error, fetchData } = useClientSearch();
+     const { data, total, loading, error, fetchData } = useReportFinancial();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -33,26 +33,12 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'ClientSearch.xlsx');
+      XLSX.writeFile(workbook, 'ReportFinancial.xlsx');
     };
 
     
-            const toast = useRef(null);
-
-            useEffect(() => {
-            if (error) {
-            toast.current.show({
-            severity: 'error',
-            summary: 'error',
-            detail: 'Something Went Wrong',
-            life: 3000,
-            });
-            }
-            }, [error]);
-        
-
-        const [filters, setFilters] = useState({"Segment":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"EmailId":{"value":null,"matchMode":"in"},"EmailRelation":{"value":null,"matchMode":"in"},"Mobile":{"value":null,"matchMode":"in"},"MobileRelation":{"value":null,"matchMode":"in"},"DOB":{"value":null,"matchMode":"in"},"FieldMatch":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"Segment","header":"Segment"},{"field":"ClientCode","header":"Client Code"},{"field":"ClientName","header":"Client Name"},{"field":"EmailId","header":"Email ID"},{"field":"EmailRelation","header":"Email Relation"},{"field":"Mobile","header":"Mobile Number"},{"field":"MobileRelation","header":"Mobile Relation"},{"field":"DOB","header":"Date of Birth"},{"field":"FieldMatch","header":"Field Match"}]);  // Dynamic columns from JSON input
+        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"DebitAmount":{"value":null,"matchMode":"in"},"CreditAmount":{"value":null,"matchMode":"in"},"NetAmount":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"ClientCode","header":"Client Code"},{"field":"ClientName","header":"Client Name"},{"field":"DebitAmount","header":"Debit Amount"},{"field":"CreditAmount","header":"Credit Amount"},{"field":"NetAmount","header":"Net Amount"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -109,52 +95,82 @@ const Container1 = () => {
     
 
     return (
-        <Card id="ClientSearchForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
+        <Card id="FinanciaReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
             
-            <div className="card flex justify-content-center">
-            <Toast
-                ref={toast}
-                position="bottom-center"
-                className="small-toast"
-            />
-            </div>
-        
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
+      <FormControl fullWidth>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="FinancialYear">Financial Year</InputLabel>
+        <Controller
+          name="FinancialYear"
+          control={control}
+          render={({ field }) => (
+          <Select
+          {...field}
+            sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              
+            }}
+            labelId = "FinancialYear"
+            label='Financial Year'
+            defaultValue="2022"
+            disabled={false}
+            id='FinancialYear'
+            size="small"
+            fullWidth
+            error={!!errors.FinancialYear}
+          >
+          <MenuItem sx={{ 'font-size': '10px' }} value="2022">2022-23</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="2021">2021-22</MenuItem>
+          </Select>
+            )}
+          />
+            {errors.FinancialYear && (
+            <FormHelperText sx={{ color: 'error.main' }}>
+              {errors.FinancialYear.message}
+            </FormHelperText>
+          )}
+        </FormControl>
+      </Grid>
+    
         
 
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Segment">Segment</InputLabel>
         <Controller
-                  name="PAN"
-                  control={control}
-                  render={({ field }) => (
-                      <TextField
-                        {...field}
-                        id='PAN'
-                        defaultValue=""
-                        label={'Enter Pan No'}
-                        size="small"
-                        fullWidth
-                        error={!!errors?.PAN }
-                        helperText={errors?.PAN?.message}
-                        InputProps={{
-                          style:
-                            { 'font-size': '10px' }
-                          ,
-                        }}
-                        InputLabelProps={{
-                          style: 
-                            { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }
-                          ,
-                        }}
-                      />
-                  )}
+          name="Segment"
+          control={control}
+          render={({ field }) => (
+          <Select
+          {...field}
+            sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              handleSegmentChange(e)
+            }}
+            labelId = "Segment"
+            label='Segment'
+            defaultValue="Equity"
+            disabled={false}
+            id='Segment'
+            size="small"
+            fullWidth
+            error={!!errors.Segment}
+          >
+          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commodity">Commodity</MenuItem>
+          </Select>
+            )}
           />
-      </FormControl>
-    </Grid>
-     
+            {errors.Segment && (
+            <FormHelperText sx={{ color: 'error.main' }}>
+              {errors.Segment.message}
+            </FormHelperText>
+          )}
+        </FormControl>
+      </Grid>
     
         
 
@@ -162,53 +178,18 @@ const Container1 = () => {
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
         <Controller
-                  name="Email"
+                  name="ClientCode"
                   control={control}
                   render={({ field }) => (
                       <TextField
                         {...field}
-                        id='Email'
+                        id='ClientCode'
                         defaultValue=""
-                        label={'Enter Email ID'}
+                        label={'Client Code'}
                         size="small"
                         fullWidth
-                        error={!!errors?.Email }
-                        helperText={errors?.Email?.message}
-                        InputProps={{
-                          style:
-                            { 'font-size': '10px' }
-                          ,
-                        }}
-                        InputLabelProps={{
-                          style: 
-                            { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }
-                          ,
-                        }}
-                      />
-                  )}
-          />
-      </FormControl>
-    </Grid>
-     
-    
-        
-
-            
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <Controller
-                  name="Mobile"
-                  control={control}
-                  render={({ field }) => (
-                      <TextField
-                        {...field}
-                        id='Mobile'
-                        defaultValue=""
-                        label={'Enter Mobile No'}
-                        size="small"
-                        fullWidth
-                        error={!!errors?.Mobile }
-                        helperText={errors?.Mobile?.message}
+                        error={!!errors?.ClientCode }
+                        helperText={errors?.ClientCode?.message}
                         InputProps={{
                           style:
                             { 'font-size': '10px' }
@@ -250,6 +231,19 @@ const Container1 = () => {
     </Tooltip>
 </Grid>
 
+        
+
+            
+    <Grid item lg={12} md={12} sm={12} >
+        <Typography component="div">
+            <Box sx={{ 'font-size': '10px', 'color': 'red' }}>
+            Financial Statement of Client's as on Date:- Sep 25 2024 4:32:29:950PM
+            </Box>
+        </Typography>
+    
+    </Grid>
+     
+    
         
 
             

@@ -2,9 +2,9 @@
 import React, { createContext, useState, useEffect } from 'react';
 import createAxiosInstance from 'src/configs/axiosConfig';
 
-const ClientSearchContext = createContext();
+const ReportNetpositionContext = createContext();
 
-const ClientSearchProvider = ({ children }) => {
+const ReportNetpositionProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ const ClientSearchProvider = ({ children }) => {
       console.log("Fetching data...");
       setLoading(true);
       try {
-          const response = await axiosInstance.post(`http://175.184.255.158:5555/api/v1/clients/search`, payload);
+          const response = await axiosInstance.post(`http://175.184.255.158:5555/api/v1/reports/netposition`, payload);
           console.log(response);
           setData(response.data.data);
           setTotal(response.data.total)
@@ -32,10 +32,10 @@ const ClientSearchProvider = ({ children }) => {
   const values = { data, total, loading, error, fetchData };
 
   return (
-      <ClientSearchContext.Provider value={values}>
+      <ReportNetpositionContext.Provider value={values}>
           {children}
-      </ClientSearchContext.Provider>
+      </ReportNetpositionContext.Provider>
   );
 };
 
-export { ClientSearchContext, ClientSearchProvider };
+export { ReportNetpositionContext, ReportNetpositionProvider };

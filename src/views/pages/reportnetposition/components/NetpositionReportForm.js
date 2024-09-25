@@ -8,7 +8,7 @@ import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useAllotmentData } from 'src/hooks/AllotmentDataHook';
+import { useReportNetposition } from 'src/hooks/ReportNetpositionHook';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
@@ -21,7 +21,7 @@ import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, total, loading, error, fetchData } = useAllotmentData();
+     const { data, total, loading, error, fetchData } = useReportNetposition();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -34,39 +34,55 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'AllotmentData.xlsx');
+      XLSX.writeFile(workbook, 'ReportNetposition.xlsx');
     };
 
     
-    const [ScripOptions, setScripOptions] = useState([]);  // Dynamic state for options
-    const [loadingScrip, setloadingScrip] = useState(true);  // Dynamic state for loading
+useEffect(() => {
+    if (watch('FinancialYear')) {
+      const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
+      const updatedFirstDate = moment(`01/04/${selectedYear} `, "DD/MM/YYYY").toDate(); // Create April 1st date
+      setValue('StartDate', updatedFirstDate); 
+    }
+  }, [watch('FinancialYear')]);
+
+
+    const [selectedSegment, setSelectedSegment] = useState('Equity'); 
+        
+    const handleSegmentChange = (event) => {
+      setSelectedSegment(event.target.value);
+    };
+
+
+    const [ExchangeOptions, setExchangeOptions] = useState([]);  // Dynamic state for options
+    const [loadingExchange, setloadingExchange] = useState(true);  // Dynamic state for loading
 
     useEffect(() => {
-        const fetchScripOptions = async () => {  // Dynamic fetch function
+        const fetchExchangeOptions = async (segment='equity}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/ipo/allotment/list', undefined,
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/exchange/segment', {Segment : segment },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
                         },
                     }
                 );
-                const data = response.data.data.map((item) => item.Scrip);  // Extract specific field values
-                setScripOptions(data);  // Set options for Autocomplete
-                setloadingScrip(false);  // Disable loading state
+                const data = response.data.data.map((item) => item.Exchange);  // Extract specific field values
+                setExchangeOptions(data);  // Set options for Autocomplete
+                setloadingExchange(false);  // Disable loading state
             } catch (error) {
-                console.error('Error fetching options for Scrip:', error);
-                setloadingScrip(false);  // Disable loading state on error
+                console.error('Error fetching options for Exchange:', error);
+                setloadingExchange(false);  // Disable loading state on error
             }
         };
 
-        fetchScripOptions();  // Fetch options
-    }, []);
+        fetchExchangeOptions(selectedSegment);  // Fetch options
+    }, [selectedSegment]);
     
 
-        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Symbol":{"value":null,"matchMode":"in"},"Quantity":{"value":null,"matchMode":"in"},"Price":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"ClientCode","header":"Client Code"},{"field":"ClientName","header":"Client Name"},{"field":"Symbol","header":"Symbol"},{"field":"Quantity","header":"Quantity"},{"field":"Price","header":"Price"}]);  // Dynamic columns from JSON input
+        const [filters, setFilters] = useState({"Scrip":{"value":null,"matchMode":"in"},"BuyQty":{"value":null,"matchMode":"in"},"AvgBuyPrice":{"value":null,"matchMode":"in"},"BuyAmount":{"value":null,"matchMode":"in"},"SellQty":{"value":null,"matchMode":"in"},"AvgSellPrice":{"value":null,"matchMode":"in"},"SellAmount":{"value":null,"matchMode":"in"},"NetAmount":{"value":null,"matchMode":"in"},"OpenQty":{"value":null,"matchMode":"in"},"BPL":{"value":null,"matchMode":"in"},"MTM":{"value":null,"matchMode":"in"},"ClosingPrice":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"Scrip","header":"ScripName"},{"field":"BuyQty","header":"BuyQty"},{"field":"AvgBuyPrice","header":"AverageBuyPrice"},{"field":"BuyAmount","header":"BuyAmount"},{"field":"SellQty","header":"SellQty"},{"field":"AvgSellPrice","header":"AverageSellPrice"},{"field":"SellAmount","header":"SellAmount"},{"field":"NetAmount","header":"NetAmount"},{"field":"OpenQty","header":"OpenQty"},{"field":"BPL","header":"BPL"},{"field":"MTM","header":"MTM"},{"field":"ClosingPrice","header":"ClosingPrice"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -119,46 +135,106 @@ const Container1 = () => {
         );
         
 
-      const toast = useRef(null);
+    
+            
+        
 
-  useEffect(() => {
-    if (error) {
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Something went wrong',
-        life: 3000,
-      });
-    }
-  }, [error]);
-
+            
+        
     
 
     return (
-        <Card id="AllotmentDetailsForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
+        <Card id="NetpositionReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
-
-                <div className="card flex justify-content-center">
-                <Toast
-                    ref={toast}
-                    position="bottom-center"
-                    className="small-toast"
-                />
-                </div>
-
                 
+            
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
+      <FormControl fullWidth>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }} id="FinancialYear">Financial Year</InputLabel>
+        <Controller
+          name="FinancialYear"
+          control={control}
+          render={({ field }) => (
+          <Select
+          {...field}
+            sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              
+            }}
+            labelId = "FinancialYear"
+            label='Financial Year'
+            defaultValue="2024"
+            disabled={true}
+            id='FinancialYear'
+            size="small"
+            fullWidth
+            error={!!errors.FinancialYear}
+          >
+          <MenuItem sx={{ 'font-size': '10px' }} value="2024">2024-2025</MenuItem>
+          </Select>
+            )}
+          />
+            {errors.FinancialYear && (
+            <FormHelperText sx={{ color: 'error.main' }}>
+              {errors.FinancialYear.message}
+            </FormHelperText>
+          )}
+        </FormControl>
+      </Grid>
+    
+        
+
+            
+    <Grid item lg={1.5} md={6} sm={12} xs={12} >
+      <FormControl fullWidth>
+        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Segment">Segment</InputLabel>
+        <Controller
+          name="Segment"
+          control={control}
+          render={({ field }) => (
+          <Select
+          {...field}
+            sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              handleSegmentChange(e)
+            }}
+            labelId = "Segment"
+            label='Segment'
+            defaultValue="Equity"
+            disabled={false}
+            id='Segment'
+            size="small"
+            fullWidth
+            error={!!errors.Segment}
+          >
+          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commodity">Commodity</MenuItem>
+          </Select>
+            )}
+          />
+            {errors.Segment && (
+            <FormHelperText sx={{ color: 'error.main' }}>
+              {errors.Segment.message}
+            </FormHelperText>
+          )}
+        </FormControl>
+      </Grid>
+    
+        
+
             
     <Grid item lg={1.5} md={6} sm={12} xs={12}>
         <FormControl fullWidth>
             <Controller
-                name="Scrip"
+                name="Exchange"
                 control={control}
                 render={({ field }) => (
                     <Autocomplete
                         {...field}
-                        id="Scrip"
-                        options={ScripOptions}
-                        loading={loadingScrip}
+                        id="Exchange"
+                        options={ExchangeOptions}
+                        loading={loadingExchange}
                         size="small"
                         fullWidth
                         getOptionLabel={(option) => option}
@@ -167,9 +243,9 @@ const Container1 = () => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Select Scrip"
-                                error={!!errors?.Scrip}
-                                helperText={errors?.Scrip?.message}
+                                label="Select Exchange"
+                                error={!!errors?.Exchange}
+                                helperText={errors?.Exchange?.message}
                                 size="small"
                                 InputProps={{
                                     ...params.InputProps,
@@ -181,7 +257,7 @@ const Container1 = () => {
                             />
                         )}
                         ListboxProps={{
-                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"300px"},
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
                         }}
                         sx={{"fontSize":"10px"}}
                     />
@@ -224,6 +300,52 @@ const Container1 = () => {
       </FormControl>
     </Grid>
      
+    
+        
+
+            
+ <Grid item lg={1.5} md={6} sm={12} xs={12} >
+    <FormControl fullWidth>
+      <Controller
+        name="StartDate"
+        control={control}
+        render={({ field }) => (
+        <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
+          <DatePicker
+            {...field}
+            dateFormat="dd-MMM-yyyy"
+            selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
+            placeholderText="Select From Date"
+            customInput={<CustomTimeInput label='From Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }, }}  />}
+          />
+        </DatePickerWrapper>
+        )}
+        />
+    </FormControl>
+  </Grid>    
+    
+        
+
+            
+ <Grid item lg={1.5} md={6} sm={12} xs={12} >
+    <FormControl fullWidth>
+      <Controller
+        name="EndDate"
+        control={control}
+        render={({ field }) => (
+        <DatePickerWrapper sx={{ '& .MuiFormControl-root': { width: '100%' } }}>
+          <DatePicker
+            {...field}
+            dateFormat="dd-MMM-yyyy"
+            selected={field.value && new Date(moment(field.value,"DD/MM/YYYY"))}
+            placeholderText="Select To Date"
+            customInput={<CustomTimeInput label='To Date' InputLabelProps={{style: { 'font-size': '10px', 'font-weight': 'bold', 'color': '#818589' }, }}  />}
+          />
+        </DatePickerWrapper>
+        )}
+        />
+    </FormControl>
+  </Grid>    
     
         
 

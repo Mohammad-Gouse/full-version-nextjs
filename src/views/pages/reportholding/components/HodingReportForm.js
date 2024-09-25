@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useClientSearch } from 'src/hooks/ClientSearchHook';
+import { useReportHolding } from 'src/hooks/ReportHoldingHook';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
@@ -20,7 +20,7 @@ import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, total, loading, error, fetchData } = useClientSearch();
+     const { data, total, loading, error, fetchData } = useReportHolding();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -33,26 +33,12 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'ClientSearch.xlsx');
+      XLSX.writeFile(workbook, 'ReportHolding.xlsx');
     };
 
     
-            const toast = useRef(null);
-
-            useEffect(() => {
-            if (error) {
-            toast.current.show({
-            severity: 'error',
-            summary: 'error',
-            detail: 'Something Went Wrong',
-            life: 3000,
-            });
-            }
-            }, [error]);
-        
-
-        const [filters, setFilters] = useState({"Segment":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"EmailId":{"value":null,"matchMode":"in"},"EmailRelation":{"value":null,"matchMode":"in"},"Mobile":{"value":null,"matchMode":"in"},"MobileRelation":{"value":null,"matchMode":"in"},"DOB":{"value":null,"matchMode":"in"},"FieldMatch":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"Segment","header":"Segment"},{"field":"ClientCode","header":"Client Code"},{"field":"ClientName","header":"Client Name"},{"field":"EmailId","header":"Email ID"},{"field":"EmailRelation","header":"Email Relation"},{"field":"Mobile","header":"Mobile Number"},{"field":"MobileRelation","header":"Mobile Relation"},{"field":"DOB","header":"Date of Birth"},{"field":"FieldMatch","header":"Field Match"}]);  // Dynamic columns from JSON input
+        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"Scrip":{"value":null,"matchMode":"in"},"ISIN":{"value":null,"matchMode":"in"},"VAR":{"value":null,"matchMode":"in"},"PledgeQty":{"value":null,"matchMode":"in"},"PledgeValuation":{"value":null,"matchMode":"in"},"DPQty":{"value":null,"matchMode":"in"},"DPValuation":{"value":null,"matchMode":"in"},"TransitStockQty":{"value":null,"matchMode":"in"},"TransitStockValuation":{"value":null,"matchMode":"in"},"TotalQty":{"value":null,"matchMode":"in"},"TotalRate":{"value":null,"matchMode":"in"},"TotalValuation":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"ClientCode","header":"ClientCode"},{"field":"Scrip","header":"ScripName"},{"field":"ISIN","header":"IsinNo"},{"field":"VAR","header":"VAR"},{"field":"PledgeQty","header":"PledgeQty"},{"field":"PledgeValuation","header":"PledgeValuation"},{"field":"DPQty","header":"DPQty"},{"field":"DPValuation","header":"DPValuation"},{"field":"TransitStockQty","header":"TransitStockQty"},{"field":"TransitStockValuation","header":"TransitStockValuation"},{"field":"TotalQty","header":"TotalQty"},{"field":"TotalRate","header":"TotalRate"},{"field":"TotalValuation","header":"TotalValuation"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -109,106 +95,25 @@ const Container1 = () => {
     
 
     return (
-        <Card id="ClientSearchForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
+        <Card id="HodingReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
             
-            <div className="card flex justify-content-center">
-            <Toast
-                ref={toast}
-                position="bottom-center"
-                className="small-toast"
-            />
-            </div>
-        
-        
-
-            
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
         <Controller
-                  name="PAN"
+                  name="ClientCode"
                   control={control}
                   render={({ field }) => (
                       <TextField
                         {...field}
-                        id='PAN'
+                        id='ClientCode'
                         defaultValue=""
-                        label={'Enter Pan No'}
+                        label={'Client Code'}
                         size="small"
                         fullWidth
-                        error={!!errors?.PAN }
-                        helperText={errors?.PAN?.message}
-                        InputProps={{
-                          style:
-                            { 'font-size': '10px' }
-                          ,
-                        }}
-                        InputLabelProps={{
-                          style: 
-                            { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }
-                          ,
-                        }}
-                      />
-                  )}
-          />
-      </FormControl>
-    </Grid>
-     
-    
-        
-
-            
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <Controller
-                  name="Email"
-                  control={control}
-                  render={({ field }) => (
-                      <TextField
-                        {...field}
-                        id='Email'
-                        defaultValue=""
-                        label={'Enter Email ID'}
-                        size="small"
-                        fullWidth
-                        error={!!errors?.Email }
-                        helperText={errors?.Email?.message}
-                        InputProps={{
-                          style:
-                            { 'font-size': '10px' }
-                          ,
-                        }}
-                        InputLabelProps={{
-                          style: 
-                            { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }
-                          ,
-                        }}
-                      />
-                  )}
-          />
-      </FormControl>
-    </Grid>
-     
-    
-        
-
-            
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <Controller
-                  name="Mobile"
-                  control={control}
-                  render={({ field }) => (
-                      <TextField
-                        {...field}
-                        id='Mobile'
-                        defaultValue=""
-                        label={'Enter Mobile No'}
-                        size="small"
-                        fullWidth
-                        error={!!errors?.Mobile }
-                        helperText={errors?.Mobile?.message}
+                        error={!!errors?.ClientCode }
+                        helperText={errors?.ClientCode?.message}
                         InputProps={{
                           style:
                             { 'font-size': '10px' }
@@ -250,6 +155,21 @@ const Container1 = () => {
     </Tooltip>
 </Grid>
 
+        
+
+            
+    <Grid item lg={12} md={12} sm={12} style={{"paddingTop":"5px","paddingBottom":"0"}}>
+      <Box sx={{"display":"flex","flexDirection":"row","fontSize":"10px"}}>
+        {total && Object.keys(total).length > 0 && (
+          Object.entries(total).map(([key, value]) => (
+            <Card variant="outlined" key={key} sx={{"padding":"10px","marginRight":"5px","fontWeight":"900","background":"#F9FAFB"}}>
+              {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
+            </Card>
+          ))
+        ) }
+      </Box>
+    </Grid>
+        
         
 
             
