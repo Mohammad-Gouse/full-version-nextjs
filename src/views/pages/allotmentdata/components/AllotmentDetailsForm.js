@@ -38,14 +38,28 @@ const Container1 = () => {
     };
 
     
+            const toast = useRef(null);
+
+            useEffect(() => {
+            if (error) {
+            toast.current.show({
+            severity: 'error',
+            summary: 'error',
+            detail: 'Something Went Wrong',
+            life: 3000,
+            });
+            }
+            }, [error]);
+        
+
     const [ScripOptions, setScripOptions] = useState([]);  // Dynamic state for options
     const [loadingScrip, setloadingScrip] = useState(true);  // Dynamic state for loading
 
     useEffect(() => {
-        const fetchScripOptions = async () => {  // Dynamic fetch function
+        const fetchScripOptions = async (segment='Scrip}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/ipo/allotment/list', undefined,
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/ipo/allotment/list', {Segment : segment },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
@@ -61,7 +75,7 @@ const Container1 = () => {
             }
         };
 
-        fetchScripOptions();  // Fetch options
+        fetchScripOptions('null');  // Fetch options
     }, []);
     
 
@@ -119,34 +133,24 @@ const Container1 = () => {
         );
         
 
-      const toast = useRef(null);
-
-  useEffect(() => {
-    if (error) {
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Something went wrong',
-        life: 3000,
-      });
-    }
-  }, [error]);
-
+    undefined
     
 
     return (
         <Card id="AllotmentDetailsForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
-
-                <div className="card flex justify-content-center">
-                <Toast
-                    ref={toast}
-                    position="bottom-center"
-                    className="small-toast"
-                />
-                </div>
-
                 
+            
+            <div className="card flex justify-content-center">
+            <Toast
+                ref={toast}
+                position="bottom-center"
+                className="small-toast"
+            />
+            </div>
+        
+        
+
             
     <Grid item lg={1.5} md={6} sm={12} xs={12}>
         <FormControl fullWidth>
@@ -181,7 +185,7 @@ const Container1 = () => {
                             />
                         )}
                         ListboxProps={{
-                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"300px"},
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
                         }}
                         sx={{"fontSize":"10px"}}
                     />

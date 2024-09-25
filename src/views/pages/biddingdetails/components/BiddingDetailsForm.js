@@ -1,9 +1,9 @@
 
 import Autocomplete from '@mui/material/Autocomplete';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -17,7 +17,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
-import zIndex from '@mui/material/styles/zIndex';
+import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -38,14 +38,28 @@ const Container1 = () => {
     };
 
     
+            const toast = useRef(null);
+
+            useEffect(() => {
+            if (error) {
+            toast.current.show({
+            severity: 'error',
+            summary: 'error',
+            detail: 'Something Went Wrong',
+            life: 3000,
+            });
+            }
+            }, [error]);
+        
+
     const [ScripOptions, setScripOptions] = useState([]);  // Dynamic state for options
     const [loadingScrip, setloadingScrip] = useState(true);  // Dynamic state for loading
 
     useEffect(() => {
-        const fetchScripOptions = async () => {  // Dynamic fetch function
+        const fetchScripOptions = async (segment='Scrip}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/ipo/bidding/list', {},
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/ipo/bidding/list', {Segment : segment },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
@@ -61,11 +75,12 @@ const Container1 = () => {
             }
         };
 
-        fetchScripOptions();  // Fetch options
+        fetchScripOptions('null');  // Fetch options
     }, []);
     
 
         const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Symbol":{"value":null,"matchMode":"in"},"ApplicationNumber":{"value":null,"matchMode":"in"},"BidAmount":{"value":null,"matchMode":"in"},"BidQuantity":{"value":null,"matchMode":"in"},"BidPrice":{"value":null,"matchMode":"in"},"BidReferenceNumber":{"value":null,"matchMode":"in"},"Status":{"value":null,"matchMode":"in"},"BiddingDate":{"value":null,"matchMode":"in"},"Reason":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"ClientCode","header":"Client Code"},{"field":"ClientName","header":"Client Name"},{"field":"Symbol","header":"Symbol"},{"field":"ApplicationNumber","header":"Application Number"},{"field":"BidAmount","header":"Bid Amount"},{"field":"BidQuantity","header":"Bid Quantity"},{"field":"BidPrice","header":"Bid Price"},{"field":"BidReferenceNumber","header":"Bid Reference Number"},{"field":"Status","header":"Status"},{"field":"BiddingDate","header":"Bidding Date"},{"field":"Reason","header":"Reason"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -108,39 +123,34 @@ const Container1 = () => {
             height: '4vh !important'
         };
 
-        const emptyMessage= <div
-       style={{
-         display: 'flex',
-         justifyContent: 'start',
-         alignItems: 'center',
-         paddingLeft: '35vw',
-         minHeight:'60vh'
-       }}
-     >
-       <div className='w-[100%] text-center font-bold'>
-         <img
-           src='/images/datagrid/nodata.gif'
-           alt='No data found'
-           style={{
-             width: '200px',
-             height: '200px'
-           }}
-         />
-         <div style={{
-             textAlign:"center"
-           }} className='w-[100%] text-center  font-bold'>No data found</div>
-       </div>
-     </div>
-
-     
+        const emptyMessage = (
+            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+                <div className='w-[100%] text-center font-bold'>
+                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                </div>
+            </div>
+        );
         
 
+    undefined
     
 
     return (
         <Card id="BiddingDetailsForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
+            
+            <div className="card flex justify-content-center">
+            <Toast
+                ref={toast}
+                position="bottom-center"
+                className="small-toast"
+            />
+            </div>
+        
+        
+
             
     <Grid item lg={1.5} md={6} sm={12} xs={12}>
         <FormControl fullWidth>
@@ -167,17 +177,17 @@ const Container1 = () => {
                                 size="small"
                                 InputProps={{
                                     ...params.InputProps,
-                                    style: { fontSize: '10px' },
+                                    style: {"fontSize":"10px"},
                                 }}
                                 InputLabelProps={{
-                                    style: { fontSize: '10px', fontWeight: '600', color: '#818589' },
+                                    style: {"fontSize":"10px","fontWeight":"600","color":"#818589"},
                                 }}
                             />
                         )}
                         ListboxProps={{
-                            sx: { fontSize: '10px', zIndex:-100 }
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
                         }}
-                        sx={{ fontSize: '10px' }}
+                        sx={{"fontSize":"10px"}}
                     />
                 )}
             />
@@ -222,8 +232,8 @@ const Container1 = () => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
+<Grid item lg={0.8} md={6} sm={12} xs={12}>
+    <Button fullWidth sx={{"fontSize":"10px","padding":"7px 0px"}} type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
@@ -231,18 +241,16 @@ const Container1 = () => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px", fontWeight:'700', padding:'5px 10px'}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
-    Export <img
-                          src='/images/logos/excel.png'
-                          alt='Excel'
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            marginLeft:'10px'
-                          }}
-                        />
-    </Button> 
+<Grid item lg={0.2} md={6} sm={12} xs={12}>
+    <Tooltip title='Export'>
+      <Button fullWidth sx={{"fontSize":"10px","fontWeight":"700","padding":"5px 10px"}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
+       <img
+                            src='/images/logos/excel.png'
+                            alt='Excel'
+                            style={{"width":"20px","height":"20px"}}
+                          />
+      </Button> 
+    </Tooltip>
 </Grid>
 
         
@@ -258,10 +266,7 @@ const Container1 = () => {
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1
                 }}>
-
                 <CircularProgress />
-
-                     
                 </div>
             )}
             <DataTable 
@@ -274,116 +279,20 @@ const Container1 = () => {
                 scrollable={true}
                 scrollHeight='390px'
             >
-                <Column 
-            field="ClientCode" 
-            header="Client Code" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ClientCode', 'Client Code')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="ClientName" 
-            header="Client Name" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ClientName', 'Client Name')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Symbol" 
-            header="Symbol" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Symbol', 'Symbol')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="ApplicationNumber" 
-            header="Application Number" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ApplicationNumber', 'Application Number')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BidAmount" 
-            header="Bid Amount" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BidAmount', 'Bid Amount')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BidQuantity" 
-            header="Bid Quantity" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BidQuantity', 'Bid Quantity')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BidPrice" 
-            header="Bid Price" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BidPrice', 'Bid Price')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BidReferenceNumber" 
-            header="Bid Reference Number" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BidReferenceNumber', 'Bid Reference Number')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Status" 
-            header="Status" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Status', 'Status')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BiddingDate" 
-            header="Bidding Date" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BiddingDate', 'Bidding Date')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Reason" 
-            header="Reason" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Reason', 'Reason')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
+                {/* Dynamically render columns based on the columns array */}
+                {columns.map((col, index) => (
+                    <Column
+                        key={index}
+                        field={col.field}
+                        header={col.header}
+                        filter
+                        showFilterMenu={false}
+                        filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+                        bodyStyle={rowStyle}
+                        headerStyle={headerStyle}
+                        body={loading ? <Skeleton /> : null}  // Show skeleton while loading
+                    />
+                ))}
             </DataTable>
         </Box>
         </Grid>
