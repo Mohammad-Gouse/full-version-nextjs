@@ -1,6 +1,7 @@
 
+import Autocomplete from '@mui/material/Autocomplete';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
@@ -16,6 +17,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
+import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -36,6 +38,90 @@ const Container1 = () => {
     };
 
     
+useEffect(() => {
+    if (watch('FinancialYear')) {
+      const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
+      const updatedFirstDate = moment(`01/04/${selectedYear} `, "DD/MM/YYYY").toDate(); // Create April 1st date
+      setValue('StartDate', updatedFirstDate); 
+    }
+  }, [watch('FinancialYear')]);
+
+
+    const [selectedSegment, setSelectedSegment] = useState('Equity'); 
+        
+    const handleSegmentChange = (event) => {
+      setSelectedSegment(event.target.value);
+    };
+
+
+            const toast = useRef(null);
+
+            useEffect(() => {
+            if (error) {
+            toast.current.show({
+            severity: 'error',
+            summary: 'error',
+            detail: 'Something Went Wrong',
+            life: 3000,
+            });
+            }
+            }, [error]);
+        
+
+    const [ExchangeOptions, setExchangeOptions] = useState([]);  // Dynamic state for options
+    const [loadingExchange, setloadingExchange] = useState(true);  // Dynamic state for loading
+
+    useEffect(() => {
+        const fetchExchangeOptions = async (segment='equity}') => {  // Dynamic fetch function
+            try {
+                const accessToken = window.localStorage.getItem('accessToken');
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/exchange/segment', {Segment : segment },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+                const data = response.data.data.map((item) => item.Exchange);  // Extract specific field values
+                setExchangeOptions(data);  // Set options for Autocomplete
+                setloadingExchange(false);  // Disable loading state
+            } catch (error) {
+                console.error('Error fetching options for Exchange:', error);
+                setloadingExchange(false);  // Disable loading state on error
+            }
+        };
+
+        fetchExchangeOptions(selectedSegment);  // Fetch options
+    }, [selectedSegment]);
+    
+
+    const [RegionOptions, setRegionOptions] = useState([]);  // Dynamic state for options
+    const [loadingRegion, setloadingRegion] = useState(true);  // Dynamic state for loading
+
+    useEffect(() => {
+        const fetchRegionOptions = async (segment='equity}') => {  // Dynamic fetch function
+            try {
+                const accessToken = window.localStorage.getItem('accessToken');
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/region', {Segment : segment },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+                const data = response.data.data;  // Extract specific field values
+                setRegionOptions(data);  // Set options for Autocomplete
+                setloadingRegion(false);  // Disable loading state
+            } catch (error) {
+                console.error('Error fetching options for Region:', error);
+                setloadingRegion(false);  // Disable loading state on error
+            }
+        };
+
+        fetchRegionOptions(selectedSegment);  // Fetch options
+    }, [selectedSegment]);
+    
+
         const [filters, setFilters] = useState({"Region":{"value":null,"matchMode":"in"},"Branch":{"value":null,"matchMode":"in"},"FamilyCode":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"BuyVolume":{"value":null,"matchMode":"in"},"SellVolume":{"value":null,"matchMode":"in"},"TotalTurnOver":{"value":null,"matchMode":"in"},"NoOfClientsTraded":{"value":null,"matchMode":"in"},"NoOfTrades":{"value":null,"matchMode":"in"}});
         const [columns] = useState([{"field":"Region","header":"Region"},{"field":"Branch","header":"Branch"},{"field":"FamilyCode","header":"Family Code"},{"field":"ClientCode","header":"Client Code"},{"field":"BuyVolume","header":"Buy Volume"},{"field":"SellVolume","header":"Sell Volume"},{"field":"TotalTurnOver","header":"Total Turnover"},{"field":"NoOfClientsTraded","header":"Number of Clients Traded"},{"field":"NoOfTrades","header":"Number of Trades"}]);  // Dynamic columns from JSON input
 
@@ -91,11 +177,28 @@ const Container1 = () => {
         
 
     
+            
+        
+
+            
+        
+    
 
     return (
         <Card id="ReadTimeTurnOverForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
+            
+            <div className="card flex justify-content-center">
+            <Toast
+                ref={toast}
+                position="bottom-center"
+                className="small-toast"
+            />
+            </div>
+        
+        
+
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
@@ -107,6 +210,10 @@ const Container1 = () => {
           <Select
           {...field}
             sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              
+            }}
             labelId = "FinancialYear"
             label='Financial Year'
             defaultValue="2024"
@@ -141,6 +248,10 @@ const Container1 = () => {
           <Select
           {...field}
             sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              handleSegmentChange(e)
+            }}
             labelId = "Segment"
             label='Segment'
             defaultValue="Equity"
@@ -150,7 +261,7 @@ const Container1 = () => {
             fullWidth
             error={!!errors.Segment}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commudity">Commudity</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commodity">Commodity</MenuItem>
           </Select>
             )}
           />
@@ -165,70 +276,93 @@ const Container1 = () => {
         
 
             
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Exchange">Exchange</InputLabel>
-        <Controller
-          name="Exchange"
-          control={control}
-          render={({ field }) => (
-          <Select
-          {...field}
-            sx={{ 'font-size': '10px' }}
-            labelId = "Exchange"
-            label='Exchange'
-            defaultValue="ALL"
-            disabled={false}
-            id='Exchange'
-            size="small"
-            fullWidth
-            error={!!errors.Exchange}
-          >
-          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="BSE">BSE</MenuItem>
-          </Select>
-            )}
-          />
-            {errors.Exchange && (
-            <FormHelperText sx={{ color: 'error.main' }}>
-              {errors.Exchange.message}
-            </FormHelperText>
-          )}
+    <Grid item lg={1.5} md={6} sm={12} xs={12}>
+        <FormControl fullWidth>
+            <Controller
+                name="Exchange"
+                control={control}
+                render={({ field }) => (
+                    <Autocomplete
+                        {...field}
+                        id="Exchange"
+                        options={ExchangeOptions}
+                        loading={loadingExchange}
+                        size="small"
+                        fullWidth
+                        getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option, value) => option === value}
+                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Select Exchange"
+                                error={!!errors?.Exchange}
+                                helperText={errors?.Exchange?.message}
+                                size="small"
+                                InputProps={{
+                                    ...params.InputProps,
+                                    style: {"fontSize":"10px"},
+                                }}
+                                InputLabelProps={{
+                                    style: {"fontSize":"10px","fontWeight":"600","color":"#818589"},
+                                }}
+                            />
+                        )}
+                        ListboxProps={{
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
+                        }}
+                        sx={{"fontSize":"10px"}}
+                    />
+                )}
+            />
         </FormControl>
-      </Grid>
+    </Grid>
     
         
 
             
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Region">Region</InputLabel>
-        <Controller
-          name="Region"
-          control={control}
-          render={({ field }) => (
-          <Select
-          {...field}
-            sx={{ 'font-size': '10px' }}
-            labelId = "Region"
-            label='Region'
-            defaultValue="ALL"
-            disabled={false}
-            id='Region'
-            size="small"
-            fullWidth
-            error={!!errors.Region}
-          >
-          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="AHMEDABAD">AHMEDABAD</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="KERALA">KERALA</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="DELHI">DELHI</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="KARNATAKA">KARNATAKA</MenuItem>
-          </Select>
-            )}
-          />
-            {errors.Region && (
-            <FormHelperText sx={{ color: 'error.main' }}>
-              {errors.Region.message}
-            </FormHelperText>
-          )}
+    <Grid item lg={1.5} md={6} sm={12} xs={12}>
+        <FormControl fullWidth>
+            <Controller
+                name="Region"
+                control={control}
+                render={({ field }) => (
+                    <Autocomplete
+                        {...field}
+                        id="Region"
+                        options={RegionOptions}
+                        loading={loadingRegion}
+                        size="small"
+                        fullWidth
+                        getOptionLabel={(option) => option.ZoneName}
+                        // getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option, value) => option.Code === value.Code}  // Compare by Code
+                        onChange={(_, data) => field.onChange(data?.Code || '')}  // Set Code as the value
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Select Region"
+                                error={!!errors?.Region}
+                                helperText={errors?.Region?.message}
+                                size="small"
+                                InputProps={{
+                                    ...params.InputProps,
+                                    style: {"fontSize":"10px"},
+                                }}
+                                InputLabelProps={{
+                                    style: {"fontSize":"10px","fontWeight":"600","color":"#818589"},
+                                }}
+                            />
+                        )}
+                        ListboxProps={{
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
+                        }}
+                        sx={{"fontSize":"10px"}}
+                    />
+                )}
+            />
         </FormControl>
-      </Grid>
+    </Grid>
     
         
 
@@ -243,6 +377,10 @@ const Container1 = () => {
           <Select
           {...field}
             sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              
+            }}
             labelId = "Branch"
             label='Branch'
             defaultValue="ALL"
@@ -277,6 +415,10 @@ const Container1 = () => {
           <Select
           {...field}
             sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              
+            }}
             labelId = "Franchise"
             label='Franchise'
             defaultValue="ALL"
@@ -346,11 +488,6 @@ const Container1 = () => {
 
             
 <Grid item lg={0.2} md={6} sm={12} xs={12}>
-  <Grid item lg={0.2} md={6} sm={12} xs={12}>
-
-
-
-</Grid>
     <Tooltip title='Export'>
       <Button fullWidth sx={{"fontSize":"10px","fontWeight":"700","padding":"5px 10px"}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
        <img
@@ -365,11 +502,11 @@ const Container1 = () => {
         
 
             
-        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
-      <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
-        {total && Object.keys(total).length > 0 && (
-          Object.entries(total).map(([key, value]) => (
-            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
+    <Grid item lg={12} md={12} sm={12} style={undefined}>
+      <Box sx={undefined}>
+        {undefined && Object.keys(undefined).length > 0 && (
+          Object.entries(undefined).map(([key, value]) => (
+            <Card variant="outlined" key={key} sx={undefined}>
               {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
             </Card>
           ))
