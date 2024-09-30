@@ -103,7 +103,7 @@ code[class*='language-'] {
 .p-datatable > .p-datatable-wrapper {
   overflow: auto;
   /* scrollbar-width: thin; */
-  min-height: 71.5vh;
+  min-height: 65.5vh;
 }
 /* 
 /* WebKit browsers */

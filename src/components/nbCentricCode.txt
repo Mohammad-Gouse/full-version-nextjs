@@ -5,3 +5,16 @@ useEffect(() => {
       setValue('StartDate', aprilFirstDate); // Set StartDate to April 1st
     }
   }, [watch('FinancialYear')]);
+
+
+
+useEffect(() => {
+if (data?.length == 0) {
+toast.current.show({
+severity: 'info',
+summary: 'Info',
+detail: 'No data available',
+life: 3000,
+});
+}
+}, [data]);

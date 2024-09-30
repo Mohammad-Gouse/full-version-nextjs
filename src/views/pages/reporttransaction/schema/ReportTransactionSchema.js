@@ -19,7 +19,7 @@ const defaultValues = {
                 Segment: "Equity",
                 Exchange: "ALL",
                 ClientCode: "",
-                OrderPlacedBy: "Beyond",
+                OrderPlacedBy: "Dealer",
                 StartDate: new Date(moment(moment().subtract(1, 'days').toDate(),'dd-MMM-yyyy')),
                 EndDate: new Date(moment(moment().toDate(),'dd-MMM-yyyy')),
 };

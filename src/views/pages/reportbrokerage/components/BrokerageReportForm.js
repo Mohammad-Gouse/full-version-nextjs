@@ -96,7 +96,7 @@ useEffect(() => {
     
 
         const [filters, setFilters] = useState({"Exchange":{"value":null,"matchMode":"in"},"BuyValue":{"value":null,"matchMode":"in"},"SellValue":{"value":null,"matchMode":"in"},"Turnover":{"value":null,"matchMode":"in"},"Brokerage":{"value":null,"matchMode":"in"},"TransactionDate":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"Exchange","header":"Exchange"},{"field":"BuyValue","header":"Buy Value"},{"field":"SellValue","header":"Sell Value"},{"field":"Turnover","header":"Total Turnover"},{"field":"Brokerage","header":"Brokerage"},{"field":"TransactionDate","header":"Date"}]);  // Dynamic columns from JSON input
+        const [columns] = useState([{"field":"Exchange","header":"Exchange","width":"15rem"},{"field":"BuyValue","header":"Buy Value","width":"15rem"},{"field":"SellValue","header":"Sell Value","width":"15rem"},{"field":"Turnover","header":"Total Turnover","width":"15rem"},{"field":"Brokerage","header":"Brokerage","width":"15rem"},{"field":"TransactionDate","header":"Date","width":"15rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -127,23 +127,15 @@ useEffect(() => {
             );
         };
 
-        const headerStyle = {
-            padding: '3px 6px',
-            fontSize: '9px',
-            height: '9px'
-        };
+        const headerStyle = {"padding":"3px 6px","fontSize":"9px","height":"9px"}
 
-        const rowStyle = {
-            padding: '5px 4px',
-            fontSize: '10px',
-            height: '4vh !important'
-        };
+        const rowStyle = {"padding":"5px 4px","fontSize":"10px","height":"4vh !important"}
 
         const emptyMessage = (
-            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+            <div style={{"display":"flex","justifyContent":"start","alignItems":"center","paddingLeft":"35vw","minHeight":"60vh"}}>
                 <div className='w-[100%] text-center font-bold'>
-                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
-                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                    <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div>
                 </div>
             </div>
         );
@@ -158,9 +150,16 @@ useEffect(() => {
     
 
     return (
-        <Card id="BrokerageReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
-            <Grid container spacing={5}>
-                
+            <div>
+            
+                <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
+                    <div>Client Brokerage</div>
+                </div>
+            
+                <Card id="BrokerageReportForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                 
+                    <Grid container spacing={5}>
+                        
             
             <div className="card flex justify-content-center">
             <Toast
@@ -268,7 +267,7 @@ useEffect(() => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Select Exchange"
+                                label="Exchange"
                                 error={!!errors?.Exchange}
                                 helperText={errors?.Exchange?.message}
                                 size="small"
@@ -399,11 +398,11 @@ useEffect(() => {
         
 
             
-        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
-      <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
+    <Grid item lg={12} md={12} sm={12} style={{"paddingTop":"5px","paddingBottom":"0"}}>
+      <Box sx={{"display":"flex","flexDirection":"row","fontSize":"10px"}}>
         {total && Object.keys(total).length > 0 && (
           Object.entries(total).map(([key, value]) => (
-            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
+            <Card variant="outlined" key={key} sx={{"padding":"10px","marginRight":"5px","fontWeight":"900","background":"#F9FAFB"}}>
               {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
             </Card>
           ))
@@ -435,7 +434,7 @@ useEffect(() => {
                 filterDisplay="row"
                 emptyMessage={emptyMessage}
                 scrollable={true}
-                scrollHeight='390px'
+                scrollHeight='1rem'
             >
                 {/* Dynamically render columns based on the columns array */}
                 {columns.map((col, index) => (
@@ -443,6 +442,7 @@ useEffect(() => {
                         key={index}
                         field={col.field}
                         header={col.header}
+                        style={{ minWidth: col.width || 'auto' }}
                         filter
                         showFilterMenu={false}
                         filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
@@ -456,8 +456,9 @@ useEffect(() => {
         </Grid>
         
         
-            </Grid>
-        </Card>
+                    </Grid>
+                </Card>
+            </div>
     );
 }
 

@@ -9,19 +9,18 @@ const RealTimeTurnOverSchema = Yup.object().shape({
                 Segment: Yup.string(),
                 Exchange: Yup.mixed(),
                 Region: Yup.mixed(),
-                Branch: Yup.string(),
-                Franchise: Yup.string(),
-                ClientCode: Yup.string().matches(new RegExp('^[a-zA-Z0-9]{5,20}$'), 'clientCode must be between 5 and 20 alphanumeric characters.'),
+                Branch: Yup.mixed(),
+                Franchise: Yup.mixed(),
+                ClientCode: Yup.mixed(),
 });
 
 const defaultValues = {
                 FinancialYear: "2024",
                 Segment: "Equity",
                 Exchange: "ALL",
-                Region: "",
                 Branch: "ALL",
                 Franchise: "ALL",
-                ClientCode: "",
+                ClientCode: "ALL",
 };
 
 export { RealTimeTurnOverSchema, defaultValues };

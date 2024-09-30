@@ -101,6 +101,16 @@ const navigation = () => {
         },
       ]
     },
+    {
+      title: 'KYC',
+      icon: 'fluent:gift-16-regular',
+      children: [
+        {
+          title: 'Form Tracking',
+          path: '/kycformtracking'
+        }
+      ]
+    },
     // {
     //   title: 'menu1',
     //   icon: 'mdi:contact-outline',

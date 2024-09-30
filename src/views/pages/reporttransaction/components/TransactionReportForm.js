@@ -96,7 +96,7 @@ useEffect(() => {
     
 
         const [filters, setFilters] = useState({"Exchange":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"OpeningDate":{"value":null,"matchMode":"in"},"Scrip":{"value":null,"matchMode":"in"},"StrikePrice":{"value":null,"matchMode":"in"},"OptionType":{"value":null,"matchMode":"in"},"Quantity":{"value":null,"matchMode":"in"},"BuySell":{"value":null,"matchMode":"in"},"MarketPrice":{"value":null,"matchMode":"in"},"NetPrice":{"value":null,"matchMode":"in"},"GrossAmount":{"value":null,"matchMode":"in"},"NetAmount":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"Exchange","header":"Exchange"},{"field":"ClientCode","header":" ClientCode"},{"field":"OpeningDate","header":"TransactionDate"},{"field":"Scrip","header":"ScripName"},{"field":"StrikePrice","header":"STRIKEPRICE"},{"field":"OptionType","header":"OptionType"},{"field":"Quantity","header":"Quantity"},{"field":"BuySell","header":"BuySell"},{"field":"MarketPrice","header":"MarketPrice"},{"field":"NetPrice","header":"NetPrice"},{"field":"GrossAmount","header":"GrossAmount"},{"field":"NetAmount","header":"NetAmount"}]);  // Dynamic columns from JSON input
+        const [columns] = useState([{"field":"Exchange","header":"Exchange","width":"15rem"},{"field":"ClientCode","header":"ClientCode","width":"15rem"},{"field":"OpeningDate","header":"TransactionDate","width":"15rem"},{"field":"Scrip","header":"ScripName","width":"15rem"},{"field":"StrikePrice","header":"STRIKEPRICE","width":"15rem"},{"field":"OptionType","header":"OptionType","width":"15rem"},{"field":"Quantity","header":"Quantity","width":"15rem"},{"field":"BuySell","header":"BuySell","width":"15rem"},{"field":"MarketPrice","header":"MarketPrice","width":"15rem"},{"field":"NetPrice","header":"NetPrice","width":"15rem"},{"field":"GrossAmount","header":"GrossAmount","width":"15rem"},{"field":"NetAmount","header":"NetAmount","width":"15rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -127,23 +127,15 @@ useEffect(() => {
             );
         };
 
-        const headerStyle = {
-            padding: '3px 6px',
-            fontSize: '9px',
-            height: '9px'
-        };
+        const headerStyle = {"padding":"3px 6px","fontSize":"9px","height":"9px"}
 
-        const rowStyle = {
-            padding: '5px 4px',
-            fontSize: '10px',
-            height: '4vh !important'
-        };
+        const rowStyle = {"padding":"5px 4px","fontSize":"10px","height":"4vh !important"}
 
         const emptyMessage = (
-            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+            <div style={{"display":"flex","justifyContent":"start","alignItems":"center","paddingLeft":"35vw","minHeight":"60vh"}}>
                 <div className='w-[100%] text-center font-bold'>
-                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
-                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                    <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div>
                 </div>
             </div>
         );
@@ -158,9 +150,16 @@ useEffect(() => {
     
 
     return (
-        <Card id="TransactionReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
-            <Grid container spacing={5}>
-                
+            <div>
+            
+                <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
+                    <div>Transaction Statement</div>
+                </div>
+            
+                <Card id="TransactionReportForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                 
+                    <Grid container spacing={5}>
+                        
             
             <div className="card flex justify-content-center">
             <Toast
@@ -268,7 +267,7 @@ useEffect(() => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Select Exchange"
+                                label="Exchange"
                                 error={!!errors?.Exchange}
                                 helperText={errors?.Exchange?.message}
                                 size="small"
@@ -345,7 +344,7 @@ useEffect(() => {
             }}
             labelId = "OrderPlacedBy"
             label='Order Placed By'
-            defaultValue="Beyond"
+            defaultValue="Dealer"
             disabled={false}
             id='OrderPlacedBy'
             size="small"
@@ -458,7 +457,7 @@ useEffect(() => {
                 filterDisplay="row"
                 emptyMessage={emptyMessage}
                 scrollable={true}
-                scrollHeight='390px'
+                scrollHeight='1rem'
             >
                 {/* Dynamically render columns based on the columns array */}
                 {columns.map((col, index) => (
@@ -466,6 +465,7 @@ useEffect(() => {
                         key={index}
                         field={col.field}
                         header={col.header}
+                        style={{ minWidth: col.width || 'auto' }}
                         filter
                         showFilterMenu={false}
                         filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
@@ -479,8 +479,9 @@ useEffect(() => {
         </Grid>
         
         
-            </Grid>
-        </Card>
+                    </Grid>
+                </Card>
+            </div>
     );
 }
 

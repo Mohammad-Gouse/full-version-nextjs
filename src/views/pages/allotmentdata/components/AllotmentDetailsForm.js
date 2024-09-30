@@ -185,7 +185,7 @@ const Container1 = () => {
                             />
                         )}
                         ListboxProps={{
-                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"300px","width":"auto"},
                         }}
                         sx={{"fontSize":"10px"}}
                     />

@@ -18,6 +18,7 @@ import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
+import { da } from 'date-fns/locale';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -48,25 +49,19 @@ useEffect(() => {
 
 
     const [selectedSegment, setSelectedSegment] = useState('Equity'); 
+    const [selectedExchange, setSelectedExchange] = useState('Equity');
+    const [selectedRegion, setSelectedRegion] = useState('Equity');
+    const [selectedBranch, setSelectedBranch] = useState('Equity');
+    const [selectedFranchise, setSelectedFranchise] = useState('Equity');
         
     const handleSegmentChange = (event) => {
       setSelectedSegment(event.target.value);
     };
 
+    const handleRegionChange = (code) => {
+      setSelectedRegion(code);
+    };
 
-            const toast = useRef(null);
-
-            useEffect(() => {
-            if (error) {
-            toast.current.show({
-            severity: 'error',
-            summary: 'error',
-            detail: 'Something Went Wrong',
-            life: 3000,
-            });
-            }
-            }, [error]);
-        
 
     const [ExchangeOptions, setExchangeOptions] = useState([]);  // Dynamic state for options
     const [loadingExchange, setloadingExchange] = useState(true);  // Dynamic state for loading
@@ -99,17 +94,17 @@ useEffect(() => {
     const [loadingRegion, setloadingRegion] = useState(true);  // Dynamic state for loading
 
     useEffect(() => {
-        const fetchRegionOptions = async (segment='equity}') => {  // Dynamic fetch function
+        const fetchRegionOptions = async (exchange='ALL}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/region', {Segment : segment },
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/region', {Exchange : exchange },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
                         },
                     }
                 );
-                const data = response.data.data;  // Extract specific field values
+                const data = response.data.data  // Extract specific field values
                 setRegionOptions(data);  // Set options for Autocomplete
                 setloadingRegion(false);  // Disable loading state
             } catch (error) {
@@ -118,8 +113,89 @@ useEffect(() => {
             }
         };
 
-        fetchRegionOptions(selectedSegment);  // Fetch options
-    }, [selectedSegment]);
+        fetchRegionOptions(selectedExchange);  // Fetch options
+    }, [selectedExchange]);
+    
+
+    const [BranchOptions, setBranchOptions] = useState([]);  // Dynamic state for options
+    const [loadingBranch, setloadingBranch] = useState(true);  // Dynamic state for loading
+
+    useEffect(() => {
+        const fetchBranchOptions = async (code='all}') => {  // Dynamic fetch function
+            try {
+                const accessToken = window.localStorage.getItem('accessToken');
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/branch', {Code : code },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+                const data = response.data.data.map((item) => item.BranchName);  // Extract specific field values
+                setBranchOptions(data);  // Set options for Autocomplete
+                setloadingBranch(false);  // Disable loading state
+            } catch (error) {
+                console.error('Error fetching options for Branch:', error);
+                setloadingBranch(false);  // Disable loading state on error
+            }
+        };
+
+        fetchBranchOptions(selectedRegion);  // Fetch options
+    }, [selectedRegion]);
+    
+
+    const [FranchiseOptions, setFranchiseOptions] = useState([]);  // Dynamic state for options
+    const [loadingFranchise, setloadingFranchise] = useState(true);  // Dynamic state for loading
+
+    useEffect(() => {
+        const fetchFranchiseOptions = async (code='all}') => {  // Dynamic fetch function
+            try {
+                const accessToken = window.localStorage.getItem('accessToken');
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/franchise', {Code : code },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+                const data = response.data.data.map((item) => item.Code);  // Extract specific field values
+                setFranchiseOptions(data);  // Set options for Autocomplete
+                setloadingFranchise(false);  // Disable loading state
+            } catch (error) {
+                console.error('Error fetching options for Franchise:', error);
+                setloadingFranchise(false);  // Disable loading state on error
+            }
+        };
+
+        fetchFranchiseOptions(selectedBranch);  // Fetch options
+    }, [selectedBranch]);
+    
+
+    const [ClientCodeOptions, setClientCodeOptions] = useState([]);  // Dynamic state for options
+    const [loadingClientCode, setloadingClientCode] = useState(true);  // Dynamic state for loading
+
+    useEffect(() => {
+        const fetchClientCodeOptions = async (code='all}') => {  // Dynamic fetch function
+            try {
+                const accessToken = window.localStorage.getItem('accessToken');
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/client', {Code : code },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+                const data = response.data.data;  // Extract specific field values
+                setClientCodeOptions(data);  // Set options for Autocomplete
+                setloadingClientCode(false);  // Disable loading state
+            } catch (error) {
+                console.error('Error fetching options for ClientCode:', error);
+                setloadingClientCode(false);  // Disable loading state on error
+            }
+        };
+
+        fetchClientCodeOptions(selectedFranchise);  // Fetch options
+    }, [selectedFranchise]);
     
 
         const [filters, setFilters] = useState({"Region":{"value":null,"matchMode":"in"},"Branch":{"value":null,"matchMode":"in"},"FamilyCode":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"BuyVolume":{"value":null,"matchMode":"in"},"SellVolume":{"value":null,"matchMode":"in"},"TotalTurnOver":{"value":null,"matchMode":"in"},"NoOfClientsTraded":{"value":null,"matchMode":"in"},"NoOfTrades":{"value":null,"matchMode":"in"}});
@@ -188,17 +264,6 @@ useEffect(() => {
         <Card id="ReadTimeTurnOverForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
-            
-            <div className="card flex justify-content-center">
-            <Toast
-                ref={toast}
-                position="bottom-center"
-                className="small-toast"
-            />
-            </div>
-        
-        
-
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
@@ -335,9 +400,15 @@ useEffect(() => {
                         size="small"
                         fullWidth
                         getOptionLabel={(option) => option.ZoneName}
-                        // getOptionLabel={(option) => option}
-                        isOptionEqualToValue={(option, value) => option.Code === value.Code}  // Compare by Code
-                        onChange={(_, data) => field.onChange(data?.Code || '')}  // Set Code as the value
+                        // isOptionEqualToValue={(option, value) => option === value}
+                        // onChange={(_, data) => field.onChange(data)}
+                        onChange={(_, data) => {
+                          field.onChange(data);
+                          if (data) {
+                            console.log(data)
+                              handleRegionChange(data.Code);  // Trigger Branch API with Region Code
+                          }
+                      }}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -367,113 +438,137 @@ useEffect(() => {
         
 
             
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Branch">Branch</InputLabel>
-        <Controller
-          name="Branch"
-          control={control}
-          render={({ field }) => (
-          <Select
-          {...field}
-            sx={{ 'font-size': '10px' }}
-            onChange={(e) => {
-              field.onChange(e);  
-              
-            }}
-            labelId = "Branch"
-            label='Branch'
-            defaultValue="ALL"
-            disabled={false}
-            id='Branch'
-            size="small"
-            fullWidth
-            error={!!errors.Branch}
-          >
-          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem>
-          </Select>
-            )}
-          />
-            {errors.Branch && (
-            <FormHelperText sx={{ color: 'error.main' }}>
-              {errors.Branch.message}
-            </FormHelperText>
-          )}
-        </FormControl>
-      </Grid>
-    
-        
-
-            
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Franchise">Franchise</InputLabel>
-        <Controller
-          name="Franchise"
-          control={control}
-          render={({ field }) => (
-          <Select
-          {...field}
-            sx={{ 'font-size': '10px' }}
-            onChange={(e) => {
-              field.onChange(e);  
-              
-            }}
-            labelId = "Franchise"
-            label='Franchise'
-            defaultValue="ALL"
-            disabled={false}
-            id='Franchise'
-            size="small"
-            fullWidth
-            error={!!errors.Franchise}
-          >
-          <MenuItem sx={{ 'font-size': '10px' }} value="ALL">ALL</MenuItem>
-          </Select>
-            )}
-          />
-            {errors.Franchise && (
-            <FormHelperText sx={{ color: 'error.main' }}>
-              {errors.Franchise.message}
-            </FormHelperText>
-          )}
-        </FormControl>
-      </Grid>
-    
-        
-
-            
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <Controller
-                  name="ClientCode"
-                  control={control}
-                  render={({ field }) => (
-                      <TextField
+    <Grid item lg={1.5} md={6} sm={12} xs={12}>
+        <FormControl fullWidth>
+            <Controller
+                name="Branch"
+                control={control}
+                render={({ field }) => (
+                    <Autocomplete
                         {...field}
-                        id='ClientCode'
-                        defaultValue=""
-                        label={'Client Code'}
+                        id="Branch"
+                        options={BranchOptions}
+                        loading={loadingBranch}
                         size="small"
                         fullWidth
-                        error={!!errors?.ClientCode }
-                        helperText={errors?.ClientCode?.message}
-                        InputProps={{
-                          style:
-                            { 'font-size': '10px' }
-                          ,
+                        getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option, value) => option === value}
+                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Select Branch"
+                                error={!!errors?.Branch}
+                                helperText={errors?.Branch?.message}
+                                size="small"
+                                InputProps={{
+                                    ...params.InputProps,
+                                    style: {"fontSize":"10px"},
+                                }}
+                                InputLabelProps={{
+                                    style: {"fontSize":"10px","fontWeight":"600","color":"#818589"},
+                                }}
+                            />
+                        )}
+                        ListboxProps={{
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
                         }}
-                        InputLabelProps={{
-                          style: 
-                            { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }
-                          ,
-                        }}
-                      />
-                  )}
-          />
-      </FormControl>
+                        sx={{"fontSize":"10px"}}
+                    />
+                )}
+            />
+        </FormControl>
     </Grid>
-     
+    
+        
+
+            
+    <Grid item lg={1.5} md={6} sm={12} xs={12}>
+        <FormControl fullWidth>
+            <Controller
+                name="Franchise"
+                control={control}
+                render={({ field }) => (
+                    <Autocomplete
+                        {...field}
+                        id="Franchise"
+                        options={FranchiseOptions}
+                        loading={loadingFranchise}
+                        size="small"
+                        fullWidth
+                        getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option, value) => option === value}
+                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Select Franchise"
+                                error={!!errors?.Franchise}
+                                helperText={errors?.Franchise?.message}
+                                size="small"
+                                InputProps={{
+                                    ...params.InputProps,
+                                    style: {"fontSize":"10px"},
+                                }}
+                                InputLabelProps={{
+                                    style: {"fontSize":"10px","fontWeight":"600","color":"#818589"},
+                                }}
+                            />
+                        )}
+                        ListboxProps={{
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
+                        }}
+                        sx={{"fontSize":"10px"}}
+                    />
+                )}
+            />
+        </FormControl>
+    </Grid>
+    
+        
+
+            
+    <Grid item lg={1.5} md={6} sm={12} xs={12}>
+        <FormControl fullWidth>
+            <Controller
+                name="ClientCode"
+                control={control}
+                render={({ field }) => (
+                    <Autocomplete
+                        {...field}
+                        id="ClientCode"
+                        options={ClientCodeOptions}
+                        loading={loadingClientCode}
+                        size="small"
+                        fullWidth
+                        getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option, value) => option === value}
+                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Select Client Code"
+                                error={!!errors?.ClientCode}
+                                helperText={errors?.ClientCode?.message}
+                                size="small"
+                                InputProps={{
+                                    ...params.InputProps,
+                                    style: {"fontSize":"10px"},
+                                }}
+                                InputLabelProps={{
+                                    style: {"fontSize":"10px","fontWeight":"600","color":"#818589"},
+                                }}
+                            />
+                        )}
+                        ListboxProps={{
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
+                        }}
+                        sx={{"fontSize":"10px"}}
+                    />
+                )}
+            />
+        </FormControl>
+    </Grid>
     
         
 

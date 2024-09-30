@@ -54,6 +54,20 @@ useEffect(() => {
     };
 
 
+            const toast = useRef(null);
+
+            useEffect(() => {
+            if (error) {
+            toast.current.show({
+            severity: 'error',
+            summary: 'error',
+            detail: 'Something Went Wrong',
+            life: 3000,
+            });
+            }
+            }, [error]);
+        
+
     const [ExchangeOptions, setExchangeOptions] = useState([]);  // Dynamic state for options
     const [loadingExchange, setloadingExchange] = useState(true);  // Dynamic state for loading
 
@@ -82,7 +96,7 @@ useEffect(() => {
     
 
         const [filters, setFilters] = useState({"Scrip":{"value":null,"matchMode":"in"},"BuyQty":{"value":null,"matchMode":"in"},"AvgBuyPrice":{"value":null,"matchMode":"in"},"BuyAmount":{"value":null,"matchMode":"in"},"SellQty":{"value":null,"matchMode":"in"},"AvgSellPrice":{"value":null,"matchMode":"in"},"SellAmount":{"value":null,"matchMode":"in"},"NetAmount":{"value":null,"matchMode":"in"},"OpenQty":{"value":null,"matchMode":"in"},"BPL":{"value":null,"matchMode":"in"},"MTM":{"value":null,"matchMode":"in"},"ClosingPrice":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"Scrip","header":"ScripName"},{"field":"BuyQty","header":"BuyQty"},{"field":"AvgBuyPrice","header":"AverageBuyPrice"},{"field":"BuyAmount","header":"BuyAmount"},{"field":"SellQty","header":"SellQty"},{"field":"AvgSellPrice","header":"AverageSellPrice"},{"field":"SellAmount","header":"SellAmount"},{"field":"NetAmount","header":"NetAmount"},{"field":"OpenQty","header":"OpenQty"},{"field":"BPL","header":"BPL"},{"field":"MTM","header":"MTM"},{"field":"ClosingPrice","header":"ClosingPrice"}]);  // Dynamic columns from JSON input
+        const [columns] = useState([{"field":"Scrip","header":"ScripName","width":"15rem"},{"field":"BuyQty","header":"BuyQty","width":"15rem"},{"field":"AvgBuyPrice","header":"AverageBuyPrice","width":"15rem"},{"field":"BuyAmount","header":"BuyAmount","width":"15rem"},{"field":"SellQty","header":"SellQty","width":"15rem"},{"field":"AvgSellPrice","header":"AverageSellPrice","width":"15rem"},{"field":"SellAmount","header":"SellAmount","width":"15rem"},{"field":"NetAmount","header":"NetAmount","width":"15rem"},{"field":"OpenQty","header":"OpenQty","width":"15rem"},{"field":"BPL","header":"BPL","width":"15rem"},{"field":"MTM","header":"MTM","width":"15rem"},{"field":"ClosingPrice","header":"ClosingPrice","width":"15rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -113,23 +127,15 @@ useEffect(() => {
             );
         };
 
-        const headerStyle = {
-            padding: '3px 6px',
-            fontSize: '9px',
-            height: '9px'
-        };
+        const headerStyle = {"padding":"3px 6px","fontSize":"9px","height":"9px"}
 
-        const rowStyle = {
-            padding: '5px 4px',
-            fontSize: '10px',
-            height: '4vh !important'
-        };
+        const rowStyle = {"padding":"5px 4px","fontSize":"10px","height":"4vh !important"}
 
         const emptyMessage = (
-            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+            <div style={{"display":"flex","justifyContent":"start","alignItems":"center","paddingLeft":"35vw","minHeight":"60vh"}}>
                 <div className='w-[100%] text-center font-bold'>
-                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
-                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                    <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div>
                 </div>
             </div>
         );
@@ -144,9 +150,27 @@ useEffect(() => {
     
 
     return (
-        <Card id="NetpositionReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
-            <Grid container spacing={5}>
-                
+            <div>
+            
+                <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
+                    <div>Net position</div>
+                </div>
+            
+                <Card id="NetpositionReportForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                 
+                    <Grid container spacing={5}>
+                        
+            
+            <div className="card flex justify-content-center">
+            <Toast
+                ref={toast}
+                position="bottom-center"
+                className="small-toast"
+            />
+            </div>
+        
+        
+
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
@@ -243,7 +267,7 @@ useEffect(() => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Select Exchange"
+                                label="Exchange"
                                 error={!!errors?.Exchange}
                                 helperText={errors?.Exchange?.message}
                                 size="small"
@@ -395,7 +419,7 @@ useEffect(() => {
                 filterDisplay="row"
                 emptyMessage={emptyMessage}
                 scrollable={true}
-                scrollHeight='390px'
+                scrollHeight='1rem'
             >
                 {/* Dynamically render columns based on the columns array */}
                 {columns.map((col, index) => (
@@ -403,6 +427,7 @@ useEffect(() => {
                         key={index}
                         field={col.field}
                         header={col.header}
+                        style={{ minWidth: col.width || 'auto' }}
                         filter
                         showFilterMenu={false}
                         filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
@@ -416,8 +441,9 @@ useEffect(() => {
         </Grid>
         
         
-            </Grid>
-        </Card>
+                    </Grid>
+                </Card>
+            </div>
     );
 }
 

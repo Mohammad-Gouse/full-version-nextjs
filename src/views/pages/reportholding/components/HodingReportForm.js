@@ -37,8 +37,22 @@ const Container1 = () => {
     };
 
     
+            const toast = useRef(null);
+
+            useEffect(() => {
+            if (error) {
+            toast.current.show({
+            severity: 'error',
+            summary: 'error',
+            detail: 'Something Went Wrong',
+            life: 3000,
+            });
+            }
+            }, [error]);
+        
+
         const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"Scrip":{"value":null,"matchMode":"in"},"ISIN":{"value":null,"matchMode":"in"},"VAR":{"value":null,"matchMode":"in"},"PledgeQty":{"value":null,"matchMode":"in"},"PledgeValuation":{"value":null,"matchMode":"in"},"DPQty":{"value":null,"matchMode":"in"},"DPValuation":{"value":null,"matchMode":"in"},"TransitStockQty":{"value":null,"matchMode":"in"},"TransitStockValuation":{"value":null,"matchMode":"in"},"TotalQty":{"value":null,"matchMode":"in"},"TotalRate":{"value":null,"matchMode":"in"},"TotalValuation":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"ClientCode","header":"ClientCode"},{"field":"Scrip","header":"ScripName"},{"field":"ISIN","header":"IsinNo"},{"field":"VAR","header":"VAR"},{"field":"PledgeQty","header":"PledgeQty"},{"field":"PledgeValuation","header":"PledgeValuation"},{"field":"DPQty","header":"DPQty"},{"field":"DPValuation","header":"DPValuation"},{"field":"TransitStockQty","header":"TransitStockQty"},{"field":"TransitStockValuation","header":"TransitStockValuation"},{"field":"TotalQty","header":"TotalQty"},{"field":"TotalRate","header":"TotalRate"},{"field":"TotalValuation","header":"TotalValuation"}]);  // Dynamic columns from JSON input
+        const [columns] = useState([{"field":"ClientCode","header":"ClientCode","width":"15rem"},{"field":"Scrip","header":"ScripName","width":"15rem"},{"field":"ISIN","header":"IsinNo","width":"15rem"},{"field":"VAR","header":"VAR","width":"15rem"},{"field":"PledgeQty","header":"PledgeQty","width":"15rem"},{"field":"PledgeValuation","header":"PledgeValuation","width":"15rem"},{"field":"DPQty","header":"DPQty","width":"15rem"},{"field":"DPValuation","header":"DPValuation","width":"15rem"},{"field":"TransitStockQty","header":"TransitStockQty","width":"15rem"},{"field":"TransitStockValuation","header":"TransitStockValuation","width":"15rem"},{"field":"TotalQty","header":"TotalQty","width":"15rem"},{"field":"TotalRate","header":"TotalRate","width":"15rem"},{"field":"TotalValuation","header":"TotalValuation","width":"15rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -69,23 +83,15 @@ const Container1 = () => {
             );
         };
 
-        const headerStyle = {
-            padding: '3px 6px',
-            fontSize: '9px',
-            height: '9px'
-        };
+        const headerStyle = {"padding":"3px 6px","fontSize":"9px","height":"9px"}
 
-        const rowStyle = {
-            padding: '5px 4px',
-            fontSize: '10px',
-            height: '4vh !important'
-        };
+        const rowStyle = {"padding":"5px 4px","fontSize":"10px","height":"4vh !important"}
 
         const emptyMessage = (
-            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+            <div style={{"display":"flex","justifyContent":"start","alignItems":"center","paddingLeft":"35vw","minHeight":"60vh"}}>
                 <div className='w-[100%] text-center font-bold'>
-                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
-                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                    <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div>
                 </div>
             </div>
         );
@@ -95,9 +101,27 @@ const Container1 = () => {
     
 
     return (
-        <Card id="HodingReportForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
-            <Grid container spacing={5}>
-                
+            <div>
+            
+                <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
+                    <div>Holding Report</div>
+                </div>
+            
+                <Card id="HodingReportForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                 
+                    <Grid container spacing={5}>
+                        
+            
+            <div className="card flex justify-content-center">
+            <Toast
+                ref={toast}
+                position="bottom-center"
+                className="small-toast"
+            />
+            </div>
+        
+        
+
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
@@ -194,7 +218,7 @@ const Container1 = () => {
                 filterDisplay="row"
                 emptyMessage={emptyMessage}
                 scrollable={true}
-                scrollHeight='390px'
+                scrollHeight='1rem'
             >
                 {/* Dynamically render columns based on the columns array */}
                 {columns.map((col, index) => (
@@ -202,6 +226,7 @@ const Container1 = () => {
                         key={index}
                         field={col.field}
                         header={col.header}
+                        style={{ minWidth: col.width || 'auto' }}
                         filter
                         showFilterMenu={false}
                         filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
@@ -215,8 +240,9 @@ const Container1 = () => {
         </Grid>
         
         
-            </Grid>
-        </Card>
+                    </Grid>
+                </Card>
+            </div>
     );
 }
 
