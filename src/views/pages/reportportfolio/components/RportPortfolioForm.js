@@ -49,6 +49,17 @@ const Container1 = () => {
             });
             }
             }, [error]);
+
+            useEffect(() => {
+              if (data?.length == 0) {
+                  toast.current.show({
+                  severity: 'info',
+                  summary: 'Info',
+                  detail: 'No data available',
+                  life: 3000,
+                  });
+              }
+          }, [data]);
         
 
         const [filters, setFilters] = useState({"Scrip":{"value":null,"matchMode":"in"},"Quantity":{"value":null,"matchMode":"in"},"AvgBuyPrice":{"value":null,"matchMode":"in"},"MTM":{"value":null,"matchMode":"in"},"TodaysGain":{"value":null,"matchMode":"in"},"CurrentValue":{"value":null,"matchMode":"in"},"InvestedValue":{"value":null,"matchMode":"in"},"Overall P&L":{"value":null,"matchMode":"in"}});

@@ -17,33 +17,45 @@ import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
 
 const transformData = (data) => {
-  // console.log(data)
-  const client = data ? data[0] : [];
+  const client = data ? data[0] : {};
+  
   return [
-    { label: 'Client Name', value: client?.ClientName ?? '' },
-    { label: 'Mobile Number (Trading/DP)', value: client?.Mobile ?? '' },
-    { label: 'Email Id (Trading/DP)', value: client?.EmailId ?? '' },
-    { label: 'Account Opening Date', value: client?.AccountOpeningDate ?? '' },
-    { label: 'DP ID', value: client?.DPId ?? '' },
-    { label: 'DP Code', value: client?.DPCode ?? '' },
-    { label: 'Address', value: client?.Address ?? '' },
-    { label: 'Country', value: client?.Country ?? '' },
-    { label: 'State', value: client?.State  ?? ''},
-    { label: 'City', value: client?.City ?? '' },
-    { label: 'Pincode', value: client?.Pincode ?? '' },
-    { label: 'Exchange', value: client?.Exchange ?? '' },
-    { label: 'PAN', value: client?.PAN ?? '' },
-    { label: 'Online Scheme', value: client?.OnlineScheme ?? '' },
-    { label: 'Introducer Code', value: client?.IntroducerCode ?? '' },
-    { label: 'Introducer Name', value: client?.IntroducerName ?? '' },
-    { label: 'POA Status', value: client?.POAStatus ?? '' },
-    { label: 'IPO POA Status', value: client?.IPOPOAStatus ?? '' },
-    { label: 'FATCA', value: client?.FATCA ?? '' },
-    { label: 'Family Code', value: client?.FamilyCode ?? '' },
-    { label: 'Date of Birth', value: client?.DOB ?? '' },
-    { label: 'Nominee Name', value: client?.NomineeName ?? '' }
+      { label: 'Client Name', value: client?.ClientName?.trim() ?? '' },
+      { label: 'Mobile Number (Trading/DP)', value: client?.Mobile?.trim() ?? '' },
+      { label: 'Email Id (Trading/DP)', value: client?.EmailId?.trim() ?? '' },
+      { label: 'Active', value: client?.Active?.trim() ?? '' }, // Added Active field
+      { label: 'Account Opening Date', value: client?.AccountOpeningDate ?? '' },
+      { label: 'DP ID', value: client?.DPId?.trim() ?? '' },
+      { label: 'DP Code', value: client?.DPCode?.trim() ?? '' },
+      { label: 'Address', value: client?.Address?.trim() ?? '' },
+      { label: 'Country', value: client?.Country?.trim() ?? '' },
+      { label: 'State', value: client?.State?.trim() ?? '' },
+      { label: 'City', value: client?.City?.trim() ?? '' },
+      { label: 'Pincode', value: client?.Pincode?.trim() ?? '' },
+      { label: 'Aadhar Number', value: (client?.AadharNumber && client.AadharNumber.length > 0) ? client.AadharNumber.join(', ').trim() : '' },
+      { label: 'Exchange', value: client?.Exchange?.trim() ?? '' },
+      { label: 'PAN', value: client?.PAN?.trim() ?? '' },
+      { label: 'Online Scheme', value: client?.OnlineScheme?.trim() ?? '' },
+      { label: 'Introducer Code', value: client?.IntroducerCode?.trim() ?? '' },
+      { label: 'Introducer Name', value: client?.IntroducerName?.trim() ?? '' },
+      { label: 'Team Leader Code', value: client?.TeamLeaderCode?.trim() ?? '' },
+      { label: 'Team Leader Name', value: client?.TeamLeaderName?.trim() ?? '' },
+      { label: 'POA Status', value: client?.POAStatus?.trim() ?? '' },
+      { label: 'IPO POA Status', value: client?.IPOPOAStatus?.trim() ?? '' },
+      { label: 'FATCA', value: client?.FATCA?.trim() ?? '' },
+      { label: 'Family Code', value: client?.FamilyCode?.trim() ?? '' },
+      { label: 'Remarks', value: client?.Remarks ?? '' },
+      { label: 'KRA', value: client?.KRA ?? '' },
+      { label: 'CKYC', value: client?.CKYC ?? '' },
+      { label: 'Date of Birth', value: client?.DOB ?? '' },
+      { label: 'Branch Code', value: client?.BranchCode?.trim() ?? '' }, // Added Branch Code
+      { label: 'AMC', value: client?.AMC?.trim() ?? '' }, // Added AMC
+      { label: 'CBSDA', value: client?.CBSDA?.trim() ?? '' }, // Added CBSDA
+      { label: 'Nominee Name', value: client?.NomineeName?.trim() ?? '' }
   ];
 };
+
+
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -87,6 +99,10 @@ const Container1 = () => {
     
 
     return (
+      <div>
+                        <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
+                    <div>Client Details</div>
+                </div>
         <Card id="ClientDetailsForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
             <Grid container spacing={5}>
                 
@@ -231,6 +247,7 @@ const Container1 = () => {
         
             </Grid>
         </Card>
+        </div>
     );
 }
 

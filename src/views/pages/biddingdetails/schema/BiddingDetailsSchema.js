@@ -10,7 +10,7 @@ const BiddingDetailsSchema = Yup.object().shape({
 });
 
 const defaultValues = {
-                Scrip: "3CIT",
+                Scrip: "",
                 ClientCode: "",
 };
 

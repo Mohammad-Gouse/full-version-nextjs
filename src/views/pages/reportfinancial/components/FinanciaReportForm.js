@@ -40,15 +40,39 @@ const Container1 = () => {
             const toast = useRef(null);
 
             useEffect(() => {
-            if (error) {
-            toast.current.show({
-            severity: 'error',
-            summary: 'error',
-            detail: 'Something Went Wrong',
-            life: 3000,
-            });
-            }
+                if (error) {
+                    toast.current.show({
+                    severity: 'error',
+                    summary: 'error',
+                    detail: 'Something Went Wrong',
+                    life: 3000,
+                    });
+                }
             }, [error]);
+
+            useEffect(() => {
+                if (data?.length == 0) {
+                    toast.current.show({
+                    severity: 'info',
+                    summary: 'Info',
+                    detail: 'No data available',
+                    life: 3000,
+                    });
+                }
+            }, [data]);
+        
+
+        const currentDate = new Date();
+
+        const formattedDate = currentDate.toLocaleString('en-US', {
+            month: 'short', // Short month name (e.g., "Sep")
+            day: '2-digit', // 2-digit day (e.g., "25")
+            year: 'numeric', // Full year (e.g., "2024")
+            hour: 'numeric', // Hour in 12-hour format (e.g., "4")
+            minute: '2-digit', // 2-digit minute (e.g., "32")
+            second: '2-digit', // 2-digit second (e.g., "29")
+            hour12: true // Use 12-hour format with AM/PM
+        });
         
 
         const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"DebitAmount":{"value":null,"matchMode":"in"},"CreditAmount":{"value":null,"matchMode":"in"},"NetAmount":{"value":null,"matchMode":"in"}});
@@ -258,16 +282,14 @@ const Container1 = () => {
         
 
             
-    <Grid item lg={12} md={12} sm={12} >
-        <Typography component="div">
-            <Box sx={{ 'font-size': '10px', 'color': 'red' }}>
-            Financial Statement of Client's as on Date:- Sep 25 2024 4:32:29:950PM
-            </Box>
-        </Typography>
-    
-    </Grid>
-     
-    
+      <Grid item lg={12} md={12} sm={12} style={{"paddingTop":"3px"}}>
+            <Typography component="div">
+                <Box sx={{"fontSize":"10px","color":"red"}}>
+                    Financial Statement of Client's as on Date:- {formattedDate}
+                </Box>
+            </Typography>
+        </Grid>
+        
         
 
             

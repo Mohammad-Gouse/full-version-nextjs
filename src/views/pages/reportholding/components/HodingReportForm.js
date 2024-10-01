@@ -49,6 +49,17 @@ const Container1 = () => {
             });
             }
             }, [error]);
+
+            useEffect(() => {
+              if (data?.length == 0) {
+                  toast.current.show({
+                  severity: 'info',
+                  summary: 'Info',
+                  detail: 'No data available',
+                  life: 3000,
+                  });
+              }
+          }, [data]);
         
 
         const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"Scrip":{"value":null,"matchMode":"in"},"ISIN":{"value":null,"matchMode":"in"},"VAR":{"value":null,"matchMode":"in"},"PledgeQty":{"value":null,"matchMode":"in"},"PledgeValuation":{"value":null,"matchMode":"in"},"DPQty":{"value":null,"matchMode":"in"},"DPValuation":{"value":null,"matchMode":"in"},"TransitStockQty":{"value":null,"matchMode":"in"},"TransitStockValuation":{"value":null,"matchMode":"in"},"TotalQty":{"value":null,"matchMode":"in"},"TotalRate":{"value":null,"matchMode":"in"},"TotalValuation":{"value":null,"matchMode":"in"}});

@@ -67,6 +67,17 @@ useEffect(() => {
             });
             }
             }, [error]);
+
+            useEffect(() => {
+              if (data?.length == 0) {
+                  toast.current.show({
+                  severity: 'info',
+                  summary: 'Info',
+                  detail: 'No data available',
+                  life: 3000,
+                  });
+              }
+          }, [data]);
         
 
     const [ExchangeOptions, setExchangeOptions] = useState([]);  // Dynamic state for options

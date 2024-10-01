@@ -18,7 +18,6 @@ import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
-import { da } from 'date-fns/locale';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -59,9 +58,42 @@ useEffect(() => {
     };
 
     const handleRegionChange = (code) => {
-      setSelectedRegion(code);
-    };
+        setSelectedRegion(code);
+      };
 
+      const handleBranchChange = (code) => {
+        setSelectedBranch(code);
+      };
+
+      const handleFranchiseChange = (code) => {
+        setSelectedFranchise(code);
+      };
+
+
+            const toast = useRef(null);
+
+            useEffect(() => {
+                if (error) {
+                    toast.current.show({
+                    severity: 'error',
+                    summary: 'error',
+                    detail: 'Something Went Wrong',
+                    life: 3000,
+                    });
+                }
+            }, [error]);
+
+            useEffect(() => {
+                if (data?.length == 0) {
+                    toast.current.show({
+                    severity: 'info',
+                    summary: 'Info',
+                    detail: 'No data available',
+                    life: 3000,
+                    });
+                }
+            }, [data]);
+        
 
     const [ExchangeOptions, setExchangeOptions] = useState([]);  // Dynamic state for options
     const [loadingExchange, setloadingExchange] = useState(true);  // Dynamic state for loading
@@ -80,6 +112,9 @@ useEffect(() => {
                 const data = response.data.data.map((item) => item.Exchange);  // Extract specific field values
                 setExchangeOptions(data);  // Set options for Autocomplete
                 setloadingExchange(false);  // Disable loading state
+                if (data.length > 0) {
+                    setValue('Exchange', data[0]);
+                }
             } catch (error) {
                 console.error('Error fetching options for Exchange:', error);
                 setloadingExchange(false);  // Disable loading state on error
@@ -107,6 +142,9 @@ useEffect(() => {
                 const data = response.data.data  // Extract specific field values
                 setRegionOptions(data);  // Set options for Autocomplete
                 setloadingRegion(false);  // Disable loading state
+                if (data.length > 0) {
+                    setValue('Region', data[0]);
+                }
             } catch (error) {
                 console.error('Error fetching options for Region:', error);
                 setloadingRegion(false);  // Disable loading state on error
@@ -131,9 +169,12 @@ useEffect(() => {
                         },
                     }
                 );
-                const data = response.data.data.map((item) => item.BranchName);  // Extract specific field values
+                const data = response.data.data  // Extract specific field values
                 setBranchOptions(data);  // Set options for Autocomplete
                 setloadingBranch(false);  // Disable loading state
+                if (data.length > 0) {
+                    setValue('Branch', data[0]);
+                }
             } catch (error) {
                 console.error('Error fetching options for Branch:', error);
                 setloadingBranch(false);  // Disable loading state on error
@@ -158,9 +199,12 @@ useEffect(() => {
                         },
                     }
                 );
-                const data = response.data.data.map((item) => item.Code);  // Extract specific field values
+                const data = response.data.data  // Extract specific field values
                 setFranchiseOptions(data);  // Set options for Autocomplete
                 setloadingFranchise(false);  // Disable loading state
+                if (data.length > 0) {
+                    setValue('Franchise', data[0]);
+                }
             } catch (error) {
                 console.error('Error fetching options for Franchise:', error);
                 setloadingFranchise(false);  // Disable loading state on error
@@ -185,9 +229,12 @@ useEffect(() => {
                         },
                     }
                 );
-                const data = response.data.data;  // Extract specific field values
+                const data = response.data.data  // Extract specific field values
                 setClientCodeOptions(data);  // Set options for Autocomplete
                 setloadingClientCode(false);  // Disable loading state
+                if (data.length > 0) {
+                    setValue('ClientCode', data[0]);
+                }
             } catch (error) {
                 console.error('Error fetching options for ClientCode:', error);
                 setloadingClientCode(false);  // Disable loading state on error
@@ -199,7 +246,7 @@ useEffect(() => {
     
 
         const [filters, setFilters] = useState({"Region":{"value":null,"matchMode":"in"},"Branch":{"value":null,"matchMode":"in"},"FamilyCode":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"BuyVolume":{"value":null,"matchMode":"in"},"SellVolume":{"value":null,"matchMode":"in"},"TotalTurnOver":{"value":null,"matchMode":"in"},"NoOfClientsTraded":{"value":null,"matchMode":"in"},"NoOfTrades":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"Region","header":"Region"},{"field":"Branch","header":"Branch"},{"field":"FamilyCode","header":"Family Code"},{"field":"ClientCode","header":"Client Code"},{"field":"BuyVolume","header":"Buy Volume"},{"field":"SellVolume","header":"Sell Volume"},{"field":"TotalTurnOver","header":"Total Turnover"},{"field":"NoOfClientsTraded","header":"Number of Clients Traded"},{"field":"NoOfTrades","header":"Number of Trades"}]);  // Dynamic columns from JSON input
+        const [columns] = useState([{"field":"Region","header":"Region","width":"15rem"},{"field":"Branch","header":"Branch","width":"15rem"},{"field":"FamilyCode","header":"Family Code","width":"15rem"},{"field":"ClientCode","header":"Client Code","width":"15rem"},{"field":"BuyVolume","header":"Buy Volume","width":"15rem"},{"field":"SellVolume","header":"Sell Volume","width":"15rem"},{"field":"TotalTurnOver","header":"Total Turnover","width":"15rem"},{"field":"NoOfClientsTraded","header":"Number of Clients Traded","width":"15rem"},{"field":"NoOfTrades","header":"Number of Trades","width":"15rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -230,29 +277,31 @@ useEffect(() => {
             );
         };
 
-        const headerStyle = {
-            padding: '3px 6px',
-            fontSize: '9px',
-            height: '9px'
-        };
+        const headerStyle = {"padding":"3px 6px","fontSize":"9px","height":"9px"}
 
-        const rowStyle = {
-            padding: '5px 4px',
-            fontSize: '10px',
-            height: '4vh !important'
-        };
+        const rowStyle = {"padding":"5px 4px","fontSize":"10px","height":"4vh !important"}
 
         const emptyMessage = (
-            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+            <div style={{"display":"flex","justifyContent":"start","alignItems":"center","paddingLeft":"35vw","minHeight":"60vh"}}>
                 <div className='w-[100%] text-center font-bold'>
-                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
-                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                    <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div>
                 </div>
             </div>
         );
         
 
-    
+        const currentDate = new Date();
+
+        const formattedDate = currentDate.toLocaleString('en-US', {
+            month: 'short', // Short month name (e.g., "Sep")
+            day: '2-digit', // 2-digit day (e.g., "25")
+            year: 'numeric', // Full year (e.g., "2024")
+            hour: 'numeric', // Hour in 12-hour format (e.g., "4")
+            minute: '2-digit', // 2-digit minute (e.g., "32")
+            second: '2-digit', // 2-digit second (e.g., "29")
+            hour12: true // Use 12-hour format with AM/PM
+        });
             
         
 
@@ -261,9 +310,27 @@ useEffect(() => {
     
 
     return (
-        <Card id="ReadTimeTurnOverForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
-            <Grid container spacing={5}>
-                
+            <div>
+            
+                <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
+                    <div>Real Time Turnover</div>
+                </div>
+            
+                <Card id="ReadTimeTurnOverForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                 
+                    <Grid container spacing={5}>
+                        
+            
+            <div className="card flex justify-content-center">
+            <Toast
+                ref={toast}
+                position="bottom-center"
+                className="small-toast"
+            />
+            </div>
+        
+        
+
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
@@ -319,14 +386,14 @@ useEffect(() => {
             }}
             labelId = "Segment"
             label='Segment'
-            defaultValue="Equity"
+            defaultValue="equity"
             disabled={false}
             id='Segment'
             size="small"
             fullWidth
             error={!!errors.Segment}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commodity">Commodity</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="commodity">Commodity</MenuItem>
           </Select>
             )}
           />
@@ -356,11 +423,12 @@ useEffect(() => {
                         fullWidth
                         getOptionLabel={(option) => option}
                         isOptionEqualToValue={(option, value) => option === value}
-                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        onChange={(_, data) => field.onChange(data)}
+                        value={field.value || null}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Select Exchange"
+                                label="Exchange"
                                 error={!!errors?.Exchange}
                                 helperText={errors?.Exchange?.message}
                                 size="small"
@@ -400,15 +468,15 @@ useEffect(() => {
                         size="small"
                         fullWidth
                         getOptionLabel={(option) => option.ZoneName}
-                        // isOptionEqualToValue={(option, value) => option === value}
-                        // onChange={(_, data) => field.onChange(data)}
                         onChange={(_, data) => {
-                          field.onChange(data);
-                          if (data) {
-                            console.log(data)
-                              handleRegionChange(data.Code);  // Trigger Branch API with Region Code
-                          }
-                      }}
+                            field.onChange(data);
+                            if (data) {
+                              console.log(data)
+                                handleRegionChange(data.Code);  // Trigger Branch API with Region Code
+                            }
+                        }}
+  
+                        value={field.value || null}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -451,9 +519,15 @@ useEffect(() => {
                         loading={loadingBranch}
                         size="small"
                         fullWidth
-                        getOptionLabel={(option) => option}
-                        isOptionEqualToValue={(option, value) => option === value}
-                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        getOptionLabel={(option) => option.BranchName}
+                        onChange={(_, data) => {
+                            field.onChange(data);
+                            if (data) {
+                              console.log(data)
+                              handleBranchChange(data.Code);
+                            }
+                        }}
+                        value={field.value || null}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -496,9 +570,15 @@ useEffect(() => {
                         loading={loadingFranchise}
                         size="small"
                         fullWidth
-                        getOptionLabel={(option) => option}
-                        isOptionEqualToValue={(option, value) => option === value}
-                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        getOptionLabel={(option) => option.Code}
+                        onChange={(_, data) => {
+                            field.onChange(data);
+                            if (data) {
+                              console.log(data)
+                              handleFranchiseChange(data.Code);
+                            }
+                        }}
+                        value={field.value || null}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -541,9 +621,15 @@ useEffect(() => {
                         loading={loadingClientCode}
                         size="small"
                         fullWidth
-                        getOptionLabel={(option) => option}
-                        isOptionEqualToValue={(option, value) => option === value}
-                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        getOptionLabel={(option) => option.Code}
+                        onChange={(_, data) => {
+                            field.onChange(data);
+                            if (data) {
+                              console.log(data)
+                            //   handleFranchiseChange(data.Code);
+                            }
+                        }}
+                        value={field.value || null}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -597,17 +683,25 @@ useEffect(() => {
         
 
             
-    <Grid item lg={12} md={12} sm={12} style={undefined}>
-      <Box sx={undefined}>
-        {undefined && Object.keys(undefined).length > 0 && (
-          Object.entries(undefined).map(([key, value]) => (
-            <Card variant="outlined" key={key} sx={undefined}>
+    <Grid item lg={12} md={12} sm={12} style={{"paddingTop":"5px","paddingBottom":"0"}}>
+      <Box sx={{"display":"flex","flexDirection":"row","fontSize":"10px"}}>
+        {total && Object.keys(total).length > 0 && (
+          Object.entries(total).map(([key, value]) => (
+            <Card variant="outlined" key={key} sx={{"padding":"10px","marginRight":"5px","fontWeight":"900","background":"#F9FAFB"}}>
               {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
             </Card>
           ))
         ) }
       </Box>
     </Grid>
+
+    <Grid item lg={12} md={12} sm={12} style={{paddingTop:"0px"}}>
+            <Typography component="div">
+                <Box sx={{"fontSize":"10px","color":"red"}}>
+                Data for the Date:- {formattedDate}
+                </Box>
+            </Typography>
+        </Grid>
         
         
 
@@ -633,7 +727,7 @@ useEffect(() => {
                 filterDisplay="row"
                 emptyMessage={emptyMessage}
                 scrollable={true}
-                scrollHeight='390px'
+                scrollHeight='1rem'
             >
                 {/* Dynamically render columns based on the columns array */}
                 {columns.map((col, index) => (
@@ -641,6 +735,7 @@ useEffect(() => {
                         key={index}
                         field={col.field}
                         header={col.header}
+                        style={{ minWidth: col.width || 'auto' }}
                         filter
                         showFilterMenu={false}
                         filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
@@ -654,8 +749,9 @@ useEffect(() => {
         </Grid>
         
         
-            </Grid>
-        </Card>
+                    </Grid>
+                </Card>
+            </div>
     );
 }
 

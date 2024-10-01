@@ -16,8 +16,9 @@ const RealTimeTurnOverSchema = Yup.object().shape({
 
 const defaultValues = {
                 FinancialYear: "2024",
-                Segment: "Equity",
+                Segment: "equity",
                 Exchange: "ALL",
+                Region: "ALL",
                 Branch: "ALL",
                 Franchise: "ALL",
                 ClientCode: "ALL",

@@ -41,15 +41,26 @@ const Container1 = () => {
             const toast = useRef(null);
 
             useEffect(() => {
-            if (error) {
-            toast.current.show({
-            severity: 'error',
-            summary: 'error',
-            detail: 'Something Went Wrong',
-            life: 3000,
-            });
-            }
+                if (error) {
+                    toast.current.show({
+                    severity: 'error',
+                    summary: 'error',
+                    detail: 'Something Went Wrong',
+                    life: 3000,
+                    });
+                }
             }, [error]);
+
+            useEffect(() => {
+                if (data?.length == 0) {
+                    toast.current.show({
+                    severity: 'info',
+                    summary: 'Info',
+                    detail: 'No data available',
+                    life: 3000,
+                    });
+                }
+            }, [data]);
         
 
     const [ScripOptions, setScripOptions] = useState([]);  // Dynamic state for options
@@ -69,6 +80,9 @@ const Container1 = () => {
                 const data = response.data.data.map((item) => item.Scrip);  // Extract specific field values
                 setScripOptions(data);  // Set options for Autocomplete
                 setloadingScrip(false);  // Disable loading state
+                if (data.length > 0) {
+                    setValue('Scrip', data[0]);
+                }
             } catch (error) {
                 console.error('Error fetching options for Scrip:', error);
                 setloadingScrip(false);  // Disable loading state on error
@@ -80,7 +94,7 @@ const Container1 = () => {
     
 
         const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Symbol":{"value":null,"matchMode":"in"},"Quantity":{"value":null,"matchMode":"in"},"Price":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"ClientCode","header":"Client Code"},{"field":"ClientName","header":"Client Name"},{"field":"Symbol","header":"Symbol"},{"field":"Quantity","header":"Quantity"},{"field":"Price","header":"Price"}]);  // Dynamic columns from JSON input
+        const [columns] = useState([{"field":"ClientCode","header":"Client Code","width":"15rem"},{"field":"ClientName","header":"Client Name","width":"15rem"},{"field":"Symbol","header":"Symbol","width":"15rem"},{"field":"Quantity","header":"Quantity","width":"15rem"},{"field":"Price","header":"Price","width":"15rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -111,23 +125,15 @@ const Container1 = () => {
             );
         };
 
-        const headerStyle = {
-            padding: '3px 6px',
-            fontSize: '9px',
-            height: '9px'
-        };
+        const headerStyle = {"padding":"3px 6px","fontSize":"9px","height":"9px"}
 
-        const rowStyle = {
-            padding: '5px 4px',
-            fontSize: '10px',
-            height: '4vh !important'
-        };
+        const rowStyle = {"padding":"5px 4px","fontSize":"10px","height":"4vh !important"}
 
         const emptyMessage = (
-            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+            <div style={{"display":"flex","justifyContent":"start","alignItems":"center","paddingLeft":"35vw","minHeight":"60vh"}}>
                 <div className='w-[100%] text-center font-bold'>
-                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
-                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                    <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div>
                 </div>
             </div>
         );
@@ -137,9 +143,16 @@ const Container1 = () => {
     
 
     return (
-        <Card id="AllotmentDetailsForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
-            <Grid container spacing={5}>
-                
+            <div>
+            
+                <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
+                    <div>IPO Allotment Data</div>
+                </div>
+            
+                <Card id="AllotmentDetailsForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                 
+                    <Grid container spacing={5}>
+                        
             
             <div className="card flex justify-content-center">
             <Toast
@@ -167,7 +180,8 @@ const Container1 = () => {
                         fullWidth
                         getOptionLabel={(option) => option}
                         isOptionEqualToValue={(option, value) => option === value}
-                        onChange={(_, data) => field.onChange(data)}  // Handle onChange
+                        onChange={(_, data) => field.onChange(data)}
+                        value={field.value || null}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -277,7 +291,7 @@ const Container1 = () => {
                 filterDisplay="row"
                 emptyMessage={emptyMessage}
                 scrollable={true}
-                scrollHeight='390px'
+                scrollHeight='1rem'
             >
                 {/* Dynamically render columns based on the columns array */}
                 {columns.map((col, index) => (
@@ -285,6 +299,7 @@ const Container1 = () => {
                         key={index}
                         field={col.field}
                         header={col.header}
+                        style={{ minWidth: col.width || 'auto' }}
                         filter
                         showFilterMenu={false}
                         filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
@@ -298,8 +313,9 @@ const Container1 = () => {
         </Grid>
         
         
-            </Grid>
-        </Card>
+                    </Grid>
+                </Card>
+            </div>
     );
 }
 

@@ -36,6 +36,12 @@
             fetchData(formData)
         };
 
+        // const onReset = () => {
+        //     methods.reset(defaultValues); // Resets the form to the initial values
+        //     setFormValues(defaultValues); // Optionally reset the form values state as well
+        // };
+
+
         return (
             <FormProvider {...methods}>
                 <Box sx={{ padding: 2 }}>

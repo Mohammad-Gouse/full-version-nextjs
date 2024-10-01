@@ -1,6 +1,6 @@
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
@@ -16,6 +16,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
+import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -36,8 +37,33 @@ const Container1 = () => {
     };
 
     
+            const toast = useRef(null);
+
+            useEffect(() => {
+                if (error) {
+                    toast.current.show({
+                    severity: 'error',
+                    summary: 'error',
+                    detail: 'Something Went Wrong',
+                    life: 3000,
+                    });
+                }
+            }, [error]);
+
+            useEffect(() => {
+                if (data?.length == 0) {
+                    toast.current.show({
+                    severity: 'info',
+                    summary: 'Info',
+                    detail: 'No data available',
+                    life: 3000,
+                    });
+                }
+            }, [data]);
+        
+
         const [filters, setFilters] = useState({"FormStatus":{"value":null,"matchMode":"in"},"Form Number":{"value":null,"matchMode":"in"},"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Objection":{"value":null,"matchMode":"in"},"Status":{"value":null,"matchMode":"in"},"Intime":{"value":null,"matchMode":"in"},"PunchedTime":{"value":null,"matchMode":"in"},"RecievedBy":{"value":null,"matchMode":"in"},"EmailId":{"value":null,"matchMode":"in"},"Exchange":{"value":null,"matchMode":"in"},"ZoneName":{"value":null,"matchMode":"in"},"eSignTime":{"value":null,"matchMode":"in"},"EditMode":{"value":null,"matchMode":"in"},"RMCode":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"FormStatus","header":"Form Status"},{"field":"Form Number","header":"Form Number"},{"field":"ClientCode","header":"Client Code"},{"field":"ClientName","header":"Client Name"},{"field":"Objection","header":"Objection"},{"field":"Status","header":"Status"},{"field":"Intime","header":"In Time"},{"field":"PunchedTime","header":"Punched Time"},{"field":"RecievedBy","header":"Received By"},{"field":"EmailId","header":"Email ID"},{"field":"Exchange","header":"Exchange"},{"field":"ZoneName","header":"Zone Name"},{"field":"eSignTime","header":"eSign Time"},{"field":"EditMode","header":"Edit Mode"},{"field":"RMCode","header":"RM Code"}]);  // Dynamic columns from JSON input
+        const [columns] = useState([{"field":"FormStatus","header":"Form Status","width":"15rem"},{"field":"Form Number","header":"Form Number","width":"15rem"},{"field":"ClientCode","header":"Client Code","width":"15rem"},{"field":"ClientName","header":"Client Name","width":"15rem"},{"field":"Objection","header":"Objection","width":"15rem"},{"field":"Status","header":"Status","width":"15rem"},{"field":"Intime","header":"In Time","width":"15rem"},{"field":"PunchedTime","header":"Punched Time","width":"15rem"},{"field":"RecievedBy","header":"Received By","width":"15rem"},{"field":"EmailId","header":"Email ID","width":"15rem"},{"field":"Exchange","header":"Exchange","width":"15rem"},{"field":"ZoneName","header":"Zone Name","width":"15rem"},{"field":"eSignTime","header":"eSign Time","width":"15rem"},{"field":"EditMode","header":"Edit Mode","width":"15rem"},{"field":"RMCode","header":"RM Code","width":"15rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -68,34 +94,45 @@ const Container1 = () => {
             );
         };
 
-        const headerStyle = {
-            padding: '3px 6px',
-            fontSize: '9px',
-            height: '9px'
-        };
+        const headerStyle = {"padding":"3px 6px","fontSize":"9px","height":"9px"}
 
-        const rowStyle = {
-            padding: '5px 4px',
-            fontSize: '10px',
-            height: '4vh !important'
-        };
+        const rowStyle = {"padding":"5px 4px","fontSize":"10px","height":"4vh !important"}
 
         const emptyMessage = (
-            <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}>
+            <div style={{"display":"flex","justifyContent":"start","alignItems":"center","paddingLeft":"35vw","minHeight":"60vh"}}>
                 <div className='w-[100%] text-center font-bold'>
-                    <img src='/images/datagrid/nodata.gif' alt='No data found' style={{ width: '200px', height: '200px' }} />
-                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No data found</div>
+                    <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div>
                 </div>
             </div>
         );
         
 
+    undefined
     
 
     return (
-        <Card id="FormTrackingForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
-            <Grid container spacing={5}>
-                
+            <div>
+            
+                <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
+                    <div>Form Tracking</div>
+                </div>
+            
+                <Card id="FormTrackingForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                 
+                    <Grid container spacing={5}>
+                        
+            
+            <div className="card flex justify-content-center">
+            <Toast
+                ref={toast}
+                position="bottom-center"
+                className="small-toast"
+            />
+            </div>
+        
+        
+
             
     <Grid item lg={0.7} md={6} sm={12} xs={12}>
       <FormControl error={Boolean(errors.Client)}>
@@ -142,7 +179,7 @@ const Container1 = () => {
                         {...field}
                         id='ClientCode'
                         defaultValue=""
-                        label={'Client'}
+                        label={'Client Code'}
                         size="small"
                         fullWidth
                         error={!!errors?.ClientCode }
@@ -258,7 +295,7 @@ const Container1 = () => {
                 filterDisplay="row"
                 emptyMessage={emptyMessage}
                 scrollable={true}
-                scrollHeight='390px'
+                scrollHeight='1rem'
             >
                 {/* Dynamically render columns based on the columns array */}
                 {columns.map((col, index) => (
@@ -266,6 +303,7 @@ const Container1 = () => {
                         key={index}
                         field={col.field}
                         header={col.header}
+                        style={{ minWidth: col.width || 'auto' }}
                         filter
                         showFilterMenu={false}
                         filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
@@ -279,8 +317,9 @@ const Container1 = () => {
         </Grid>
         
         
-            </Grid>
-        </Card>
+                    </Grid>
+                </Card>
+            </div>
     );
 }
 

@@ -1,8 +1,8 @@
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -15,6 +15,8 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
   import * as XLSX from 'xlsx';
 import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
+import axios from 'axios';
+import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -35,7 +37,46 @@ const Container1 = () => {
     };
 
     
+            const toast = useRef(null);
+
+            useEffect(() => {
+                if (error) {
+                    toast.current.show({
+                    severity: 'error',
+                    summary: 'error',
+                    detail: 'Something Went Wrong',
+                    life: 3000,
+                    });
+                }
+            }, [error]);
+
+            useEffect(() => {
+                if (data?.length == 0) {
+                    toast.current.show({
+                    severity: 'info',
+                    summary: 'Info',
+                    detail: 'No data available',
+                    life: 3000,
+                    });
+                }
+            }, [data]);
+        
+
+        const currentDate = new Date();
+
+        const formattedDate = currentDate.toLocaleString('en-US', {
+            month: 'short', // Short month name (e.g., "Sep")
+            day: '2-digit', // 2-digit day (e.g., "25")
+            year: 'numeric', // Full year (e.g., "2024")
+            hour: 'numeric', // Hour in 12-hour format (e.g., "4")
+            minute: '2-digit', // 2-digit minute (e.g., "32")
+            second: '2-digit', // 2-digit second (e.g., "29")
+            hour12: true // Use 12-hour format with AM/PM
+        });
+        
+
         const [filters, setFilters] = useState({"ScripName":{"value":null,"matchMode":"in"},"Expiry":{"value":null,"matchMode":"in"},"BuyQty":{"value":null,"matchMode":"in"},"AvgBuyPrice":{"value":null,"matchMode":"in"},"BuyAmount":{"value":null,"matchMode":"in"},"SellQty":{"value":null,"matchMode":"in"},"AvgSellPrice":{"value":null,"matchMode":"in"},"SellAmount":{"value":null,"matchMode":"in"},"NetAmount":{"value":null,"matchMode":"in"},"OpenQty":{"value":null,"matchMode":"in"},"MTM":{"value":null,"matchMode":"in"},"BPL":{"value":null,"matchMode":"in"},"LTP":{"value":null,"matchMode":"in"},"LastTradeTime":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"ScripName","header":"Scrip Name","width":"15rem"},{"field":"Expiry","header":"Expiry Date","width":"15rem"},{"field":"BuyQty","header":"Buy Quantity","width":"15rem"},{"field":"AvgBuyPrice","header":"Average Buy Price","width":"15rem"},{"field":"BuyAmount","header":"Buy Amount","width":"15rem"},{"field":"SellQty","header":"Sell Quantity","width":"15rem"},{"field":"AvgSellPrice","header":"Average Sell Price","width":"15rem"},{"field":"SellAmount","header":"Sell Amount","width":"15rem"},{"field":"NetAmount","header":"Net Amount","width":"15rem"},{"field":"OpenQty","header":"Open Quantity","width":"15rem"},{"field":"MTM","header":"MTM","width":"15rem"},{"field":"BPL","header":"BPL","width":"15rem"},{"field":"LTP","header":"Last Traded Price","width":"15rem"},{"field":"LastTradeTime","header":"Last Trade Time","width":"15rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -66,51 +107,45 @@ const Container1 = () => {
             );
         };
 
-        const headerStyle = {
-            padding: '3px 6px',
-            fontSize: '9px',
-            height: '9px'
-        };
+        const headerStyle = {"padding":"3px 6px","fontSize":"9px","height":"9px"}
 
-        const rowStyle = {
-            padding: '5px 4px',
-            fontSize: '10px',
-            height: '4vh !important'
-        };
+        const rowStyle = {"padding":"5px 4px","fontSize":"10px","height":"4vh !important"}
 
-        const emptyMessage= <div
-       style={{
-         display: 'flex',
-         justifyContent: 'start',
-         alignItems: 'center',
-         paddingLeft: '35vw',
-         minHeight:'60vh'
-       }}
-     >
-       <div className='w-[100%] text-center font-bold'>
-         <img
-           src='/images/datagrid/nodata.gif'
-           alt='No data found'
-           style={{
-             width: '200px',
-             height: '200px'
-           }}
-         />
-         <div style={{
-             textAlign:"center"
-           }} className='w-[100%] text-center  font-bold'>No data found</div>
-       </div>
-     </div>
-
-     
+        const emptyMessage = (
+            <div style={{"display":"flex","justifyContent":"start","alignItems":"center","paddingLeft":"35vw","minHeight":"60vh"}}>
+                <div className='w-[100%] text-center font-bold'>
+                    <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+                    <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div>
+                </div>
+            </div>
+        );
         
 
+    undefined
     
 
     return (
-        <Card id="RealTimeNetPositionForm" sx={{padding:'15px 5px 5px 5px', minHeight:'87vh'}}>
-            <Grid container spacing={5}>
-                
+            <div>
+            
+                <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
+                    <div>Net Position</div>
+                </div>
+            
+                <Card id="RealTimeNetPositionForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                 
+                    <Grid container spacing={5}>
+                        
+            
+            <div className="card flex justify-content-center">
+            <Toast
+                ref={toast}
+                position="bottom-center"
+                className="small-toast"
+            />
+            </div>
+        
+        
+
             
     <Grid item lg={1.5} md={6} sm={12} xs={12} >
       <FormControl fullWidth>
@@ -122,6 +157,10 @@ const Container1 = () => {
           <Select
           {...field}
             sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              
+            }}
             labelId = "Segment"
             label='Segment'
             defaultValue="Equity"
@@ -131,7 +170,7 @@ const Container1 = () => {
             fullWidth
             error={!!errors.Segment}
           >
-          <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Commudity">Commudity</MenuItem>
+          <MenuItem sx={{ 'font-size': '10px' }} value="equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="commodity">Commodity</MenuItem>
           </Select>
             )}
           />
@@ -156,6 +195,10 @@ const Container1 = () => {
           <Select
           {...field}
             sx={{ 'font-size': '10px' }}
+            onChange={(e) => {
+              field.onChange(e);  
+              
+            }}
             labelId = "Exchange"
             label='Exchange'
             defaultValue="ALL"
@@ -215,8 +258,8 @@ const Container1 = () => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px",  padding:'7px 10px'}} type="submit" variant="contained" color="primary">
+<Grid item lg={0.8} md={6} sm={12} xs={12}>
+    <Button fullWidth sx={{"fontSize":"10px","padding":"7px 0px"}} type="submit" variant="contained" color="primary">
         search
     </Button> 
 </Grid>
@@ -224,34 +267,43 @@ const Container1 = () => {
         
 
             
-<Grid item lg={1.5} md={6} sm={12}>
-    <Button fullWidth sx={{fontSize:"10px", fontWeight:'700', padding:'5px 10px'}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
-    Export <img
-                          src='/images/logos/excel.png'
-                          alt='Excel'
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            marginLeft:'10px'
-                          }}
-                        />
-    </Button> 
+<Grid item lg={0.2} md={6} sm={12} xs={12}>
+    <Tooltip title='Export'>
+      <Button fullWidth sx={{"fontSize":"10px","fontWeight":"700","padding":"5px 10px"}} onClick={exportToExcel} type="button" variant="outlined" color="secondary">
+       <img
+                            src='/images/logos/excel.png'
+                            alt='Excel'
+                            style={{"width":"20px","height":"20px"}}
+                          />
+      </Button> 
+    </Tooltip>
 </Grid>
 
         
 
             
-        <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px", paddingBottom:'0' }}>
-      <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
+    <Grid item lg={12} md={12} sm={12} style={{"paddingTop":"5px","paddingBottom":"0"}}>
+      <Box sx={{"display":"flex","flexDirection":"row","fontSize":"10px"}}>
         {total && Object.keys(total).length > 0 && (
           Object.entries(total).map(([key, value]) => (
-            <Card variant="outlined" key={key} sx={{ padding: "10px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
+            <Card variant="outlined" key={key} sx={{"padding":"10px","marginRight":"5px","fontWeight":"900","background":"#F9FAFB"}}>
               {key.replace(/([A-Z])/g, ' $1').trim()}: {value}
             </Card>
           ))
         ) }
       </Box>
     </Grid>
+        
+        
+
+            
+      <Grid item lg={12} md={12} sm={12} style={{"paddingTop":"3px"}}>
+            <Typography component="div">
+                <Box sx={{"fontSize":"10px","color":"red"}}>
+                    Data for the Date:- {formattedDate}
+                </Box>
+            </Typography>
+        </Grid>
         
         
 
@@ -266,10 +318,7 @@ const Container1 = () => {
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1
                 }}>
-
                 <CircularProgress />
-
-                     
                 </div>
             )}
             <DataTable 
@@ -280,155 +329,31 @@ const Container1 = () => {
                 filterDisplay="row"
                 emptyMessage={emptyMessage}
                 scrollable={true}
-                scrollHeight='390px'
+                scrollHeight='1rem'
             >
-                <Column 
-            field="ScripName" 
-            header="Scrip Name" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'ScripName', 'Scrip Name')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="Expiry" 
-            header="Expiry Date" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'Expiry', 'Expiry Date')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BuyQty" 
-            header="Buy Quantity" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BuyQty', 'Buy Quantity')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="AvgBuyPrice" 
-            header="Average Buy Price" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'AvgBuyPrice', 'Average Buy Price')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BuyAmount" 
-            header="Buy Amount" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BuyAmount', 'Buy Amount')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="SellQty" 
-            header="Sell Quantity" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'SellQty', 'Sell Quantity')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="AvgSellPrice" 
-            header="Average Sell Price" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'AvgSellPrice', 'Average Sell Price')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="SellAmount" 
-            header="Sell Amount" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'SellAmount', 'Sell Amount')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="NetAmount" 
-            header="Net Amount" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'NetAmount', 'Net Amount')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="OpenQty" 
-            header="Open Quantity" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'OpenQty', 'Open Quantity')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="MTM" 
-            header="MTM" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'MTM', 'MTM')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="BPL" 
-            header="BPL" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'BPL', 'BPL')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="LTP" 
-            header="Last Traded Price" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'LTP', 'Last Traded Price')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
-<Column 
-            field="LastTradeTime" 
-            header="Last Trade Time" 
-            filter 
-            showFilterMenu={false} 
-            filterElement={(options) => multiSelectFilterTemplate(options, 'LastTradeTime', 'Last Trade Time')}
-            bodyStyle={rowStyle}
-            headerStyle={headerStyle}
-            body={loading && <Skeleton />}
-        />
+                {/* Dynamically render columns based on the columns array */}
+                {columns.map((col, index) => (
+                    <Column
+                        key={index}
+                        field={col.field}
+                        header={col.header}
+                        style={{ minWidth: col.width || 'auto' }}
+                        filter
+                        showFilterMenu={false}
+                        filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+                        bodyStyle={rowStyle}
+                        headerStyle={headerStyle}
+                        body={loading ? <Skeleton /> : null}  // Show skeleton while loading
+                    />
+                ))}
             </DataTable>
         </Box>
         </Grid>
         
         
-            </Grid>
-        </Card>
+                    </Grid>
+                </Card>
+            </div>
     );
 }
 

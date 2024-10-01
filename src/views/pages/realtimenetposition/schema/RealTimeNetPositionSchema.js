@@ -5,15 +5,15 @@ import moment from 'moment';
 
 
 const RealTimeNetPositionSchema = Yup.object().shape({
-                Segment: Yup.string().required('Segment is required'),
-                Exchange: Yup.string().required('Exchange is required'),
-                ClientCode: Yup.string().min(5, 'Client Code must be at least 5 characters long').max(20, 'Client Code must be no more than 20 characters long').matches(new RegExp('^[a-zA-Z0-9]{5,20}$'), 'clientCode must be between 5 and 20 alphanumeric characters.').required('ClientCode is required'),
+                Segment: Yup.string(),
+                Exchange: Yup.string(),
+                ClientCode: Yup.string().required('Client Code is required').min(5, 'Client Code must be at least 5 characters long').max(20, 'Client Code must be no more than 20 characters long').matches(new RegExp('^[a-zA-Z0-9]+$'), 'Client Code is invalid.'),
 });
 
 const defaultValues = {
-                Segment: "Equity",
+                Segment: "equity",
                 Exchange: "ALL",
-                ClientCode: undefined,
+                ClientCode: "",
 };
 
 export { RealTimeNetPositionSchema, defaultValues };
