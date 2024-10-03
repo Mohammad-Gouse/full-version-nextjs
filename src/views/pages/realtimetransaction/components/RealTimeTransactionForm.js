@@ -38,13 +38,6 @@ const Container1 = () => {
   };
 
 
-  useEffect(() => {
-    if (watch('FinancialYear')) {
-      const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
-      const updatedFirstDate = moment(`01/04/${selectedYear} `, "DD/MM/YYYY").toDate(); // Create April 1st date
-      setValue('StartDate', updatedFirstDate);
-    }
-  }, [watch('FinancialYear')]);
 
 
   const [selectedSegment, setSelectedSegment] = useState('Equity');
@@ -157,37 +150,74 @@ const Container1 = () => {
 
 
 
-  const [timer, setTimer] = useState(60);
+  // const [timer, setTimer] = useState(60);
 
-  const refreshData = () => {
-    fetchData(control._formValues);
+  // const refreshData = () => {
+  //   const payload = control._formValues;
+  //   payload.Branch = "HO"
+  //   payload.Role = "11"
+  //   fetchData(payload);
+  // };
+
+  // useEffect(() => {
+  //   // Start fetching data every 60 seconds
+  //   const intervalId = setInterval(() => {
+  //     refreshData(); // Refresh data
+  //     setTimer(60); // Reset timer to 60 seconds
+  //   }, 60000); // 60 seconds
+
+  //   // Countdown timer
+  //   const countdownId = setInterval(() => {
+  //     setTimer(prev => {
+  //       if (prev <= 1) {
+  //         return 60; // Reset timer to 60 seconds when it reaches 0
+  //       }
+  //       return prev - 1; // Decrease timer by 1
+  //     });
+  //   }, 1000); // 1 second
+
+  //   // Cleanup on unmount
+  //   return () => {
+  //     clearInterval(intervalId);
+  //     clearInterval(countdownId);
+  //   };
+  // }, []); // Empty dependency array to run effect only once
+
+
+
+  const TIMER_INTERVAL = 60; // Change this to 10 for a 10-second timer
+const [timer, setTimer] = useState(TIMER_INTERVAL);
+
+const refreshData = () => {
+  const payload = control._formValues;
+  payload.Branch = "HO";
+  payload.Role = "11";
+  fetchData(payload);
+};
+
+useEffect(() => {
+  // Start fetching data every TIMER_INTERVAL seconds
+  const intervalId = setInterval(() => {
+    refreshData(); // Refresh data
+    setTimer(TIMER_INTERVAL); // Reset timer to TIMER_INTERVAL seconds
+  }, TIMER_INTERVAL * 1000); // TIMER_INTERVAL seconds
+
+  // Countdown timer
+  const countdownId = setInterval(() => {
+    setTimer((prev) => {
+      if (prev <= 1) {
+        return TIMER_INTERVAL; // Reset timer to TIMER_INTERVAL seconds when it reaches 0
+      }
+      return prev - 1; // Decrease timer by 1
+    });
+  }, 1000); // 1 second
+
+  // Cleanup on unmount
+  return () => {
+    clearInterval(intervalId);
+    clearInterval(countdownId);
   };
-
-  useEffect(() => {
-    // Start fetching data every 60 seconds
-    const intervalId = setInterval(() => {
-      refreshData(); // Refresh data
-      setTimer(60); // Reset timer to 60 seconds
-    }, 60000); // 60 seconds
-
-    // Countdown timer
-    const countdownId = setInterval(() => {
-      setTimer(prev => {
-        if (prev <= 1) {
-          return 60; // Reset timer to 60 seconds when it reaches 0
-        }
-        return prev - 1; // Decrease timer by 1
-      });
-    }, 1000); // 1 second
-
-    // Cleanup on unmount
-    return () => {
-      clearInterval(intervalId);
-      clearInterval(countdownId);
-    };
-  }, []); // Empty dependency array to run effect only once
-
-
+}, []); // Empty dependency array to run effect only once
 
 
 

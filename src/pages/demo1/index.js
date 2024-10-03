@@ -77,8 +77,8 @@
 import React, { useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 
-import ChequeSplitter from 'src/views/pages/chequeSplitter/ChequeSplitter';
-import Menu1 from 'src/views/pages/menu1/Menu1';
+import PageSplitter from '../demoSideSplitter';
+import Index from '../reportholding';
 
 function CustomTabs() {
   const [value, setValue] = useState(0);
@@ -89,15 +89,15 @@ function CustomTabs() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Tabs value={value} onChange={handleChange} aria-label="custom tabs">
-        <Tab label="chequeSplitter" />
-        <Tab label="Menu1" />
+      <Tabs  value={value} onChange={handleChange} aria-label="custom tabs">
+        <Tab  sx={{ fontSize:"10px" }} label="Fill Cheque Details" />
+        <Tab sx={{ fontSize:"10px" }} label="View Cheque List" />
       </Tabs>
 
       {/* Render the selected component based on the current tab index */}
       <Box sx={{ padding: 2 }}>
-        {value === 0 && <ChequeSplitter />}
-        {value === 1 && <Menu1 />}
+        {value === 0 && <PageSplitter />}
+        {value === 1 && <Index />}
       </Box>
     </Box>
   );

@@ -26,6 +26,7 @@ const RealTimeTurnOver = () => {
 
 
     const onSubmit = (formData) => {
+        console.log(formData)
         for (const key in formData) {
             // Check if the key contains 'date' and format the date
             if (key.toLowerCase().includes('date')) {
@@ -35,13 +36,13 @@ const RealTimeTurnOver = () => {
     
         // Store ZoneName and BranchName in temporary variables to prevent overwriting
         const zoneName = formData.Region?.ZoneName ?? 'ALL'; // Save ZoneName
-        const branchName = formData.Branch?.BranchName ?? 'ALL'; // Save BranchName
+        const branchName = formData.Branch?.BranchName ?? ''; // Save BranchName
     
         // Update formData
         formData.Region = zoneName;  // Set Region as ZoneName
         formData.Branch = branchName; // Set Branch as BranchName
-        formData.Franchise = formData.Franchise?.Code ?? 'ALL';  // Set Franchise Code
-        formData.ClientCode = formData.ClientCode?.Code ?? 'ALL';  // Set Client Code
+        formData.Franchise = formData.Franchise?.Code ?? '';  // Set Franchise Code
+        formData.ClientCode = formData.ClientCode?.Code ?? '';  // Set Client Code
     
         // Set additional properties
         formData.Role = "11";

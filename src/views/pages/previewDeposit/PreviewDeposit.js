@@ -60,6 +60,8 @@ const PreviewDeposit = () => {
 
   useEffect(() => {
     const file = sharedData.fileUpload;
+
+    console.log(sharedData)
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onloadend = () => {

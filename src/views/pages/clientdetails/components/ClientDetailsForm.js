@@ -163,7 +163,7 @@ const Container1 = () => {
                       <TextField
                         {...field}
                         id='ClientCode'
-                        label={'Client'}
+                        label={'Client Code'}
                         size="small"
                         fullWidth
                         error={!!errors?.ClientCode }
@@ -228,7 +228,7 @@ const Container1 = () => {
         value={clientData} 
         showGridlines
         scrollable={true}
-        scrollHeight='390px'
+        scrollHeight='1rem'
       >
         <Column 
           bodyStyle={rowStyle}

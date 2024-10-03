@@ -38,13 +38,7 @@ const Container1 = () => {
     };
 
     
-useEffect(() => {
-    if (watch('FinancialYear')) {
-      const selectedYear = watch('FinancialYear').split('-')[0]; // Extract the first year from the value
-      const updatedFirstDate = moment(`01/04/${selectedYear} `, "DD/MM/YYYY").toDate(); // Create April 1st date
-      setValue('StartDate', updatedFirstDate); 
-    }
-  }, [watch('FinancialYear')]);
+
 
 
     const [selectedSegment, setSelectedSegment] = useState('Equity'); 
@@ -172,9 +166,9 @@ useEffect(() => {
                 const data = response.data.data  // Extract specific field values
                 setBranchOptions(data);  // Set options for Autocomplete
                 setloadingBranch(false);  // Disable loading state
-                if (data.length > 0) {
-                    setValue('Branch', data[0]);
-                }
+                // if (data.length > 0) {
+                //     setValue('Branch', data[0]);
+                // }
             } catch (error) {
                 console.error('Error fetching options for Branch:', error);
                 setloadingBranch(false);  // Disable loading state on error
@@ -202,9 +196,9 @@ useEffect(() => {
                 const data = response.data.data  // Extract specific field values
                 setFranchiseOptions(data);  // Set options for Autocomplete
                 setloadingFranchise(false);  // Disable loading state
-                if (data.length > 0) {
-                    setValue('Franchise', data[0]);
-                }
+                // if (data.length > 0) {
+                //     setValue('Franchise', data[0]);
+                // }
             } catch (error) {
                 console.error('Error fetching options for Franchise:', error);
                 setloadingFranchise(false);  // Disable loading state on error
@@ -232,9 +226,9 @@ useEffect(() => {
                 const data = response.data.data  // Extract specific field values
                 setClientCodeOptions(data);  // Set options for Autocomplete
                 setloadingClientCode(false);  // Disable loading state
-                if (data.length > 0) {
-                    setValue('ClientCode', data[0]);
-                }
+                // if (data.length > 0) {
+                //     setValue('ClientCode', data[0]);
+                // }
             } catch (error) {
                 console.error('Error fetching options for ClientCode:', error);
                 setloadingClientCode(false);  // Disable loading state on error

@@ -19,9 +19,9 @@ const defaultValues = {
                 Segment: "equity",
                 Exchange: "ALL",
                 Region: "ALL",
-                Branch: "ALL",
-                Franchise: "ALL",
-                ClientCode: "ALL",
+                Branch: "",
+                Franchise: "",
+                ClientCode: "",
 };
 
 export { RealTimeTurnOverSchema, defaultValues };

@@ -3,12 +3,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip, Paper } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useAllotmentData } from 'src/hooks/AllotmentDataHook';
+import { useReportsScripwise } from 'src/hooks/ReportsScripwiseHook';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
@@ -21,7 +21,7 @@ import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, total, loading, error, fetchData } = useAllotmentData();
+     const { data, total, loading, error, fetchData } = useReportsScripwise();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -34,7 +34,7 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'AllotmentData.xlsx');
+      XLSX.writeFile(workbook, 'ReportsScripwise.xlsx');
     };
 
     
@@ -70,7 +70,7 @@ const Container1 = () => {
         const fetchScripOptions = async (segment='Scrip}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/ipo/allotment/list', {Segment : segment },
+                const response = await axios.post('http://175.184.255.158:5555/api/v1/reports/scrip-list', {Segment : segment },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
@@ -93,8 +93,8 @@ const Container1 = () => {
     }, []);
     
 
-        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Symbol":{"value":null,"matchMode":"in"},"Quantity":{"value":null,"matchMode":"in"},"Price":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"ClientCode","header":"Client Code","width":"15rem"},{"field":"ClientName","header":"Client Name","width":"15rem"},{"field":"Symbol","header":"Symbol","width":"15rem"},{"field":"Quantity","header":"Quantity","width":"15rem"},{"field":"Price","header":"Price","width":"15rem"}]);  // Dynamic columns from JSON input
+        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Quantity":{"value":null,"matchMode":"in"},"Price":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"ClientCode","header":"Client Code","width":"15rem"},{"field":"ClientName","header":"Client Name","width":"20rem"},{"field":"Quantity","header":"Quantity","width":"10rem"},{"field":"Price","header":"Price","width":"10rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -146,10 +146,10 @@ const Container1 = () => {
             <div>
             
                 <div style={{"display":"flex","alignItems":"center","justifyContent":"start","background":"#25335C","fontSize":"0.7rem","padding":"5px","color":"#F5F5F5","width":"100%","minHeight":"4vh","margin":"0px 0px 5px 0px"}}>
-                    <div>IPO Allotment Data</div>
+                    <div>Scripwise Holding</div>
                 </div>
             
-                <Card id="AllotmentDetailsForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                <Card id="ReportsScripwiseForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
                  
                     <Grid container spacing={5}>
                         
@@ -199,61 +199,14 @@ const Container1 = () => {
                             />
                         )}
                         ListboxProps={{
-                            sx: {"fontSize":"10px","whiteSpace":"nowrap","width":"auto"},
+                            sx: {"fontSize":"10px","whiteSpace":"nowrap","minWidth":"100px","width":"auto"},
                         }}
                         sx={{"fontSize":"10px"}}
-                        PaperComponent={(props) => (
-                            <Paper
-                                {...props}
-                                style={{
-                                    width: "auto", // Paper expands to fit content
-                                    minWidth: "350px", // Ensures a minimum width
-                                    maxWidth: "fit-content", // Ensures Paper doesn't limit width
-                                }}
-                            />
-                        )}
                     />
                 )}
             />
         </FormControl>
-    </Grid> 
-
-
-    
-        
-
-            
-    <Grid item lg={1.5} md={6} sm={12} xs={12} >
-      <FormControl fullWidth>
-        <Controller
-                  name="ClientCode"
-                  control={control}
-                  render={({ field }) => (
-                      <TextField
-                        {...field}
-                        id='ClientCode'
-                        defaultValue=""
-                        label={'Client Code'}
-                        size="small"
-                        fullWidth
-                        error={!!errors?.ClientCode }
-                        helperText={errors?.ClientCode?.message}
-                        InputProps={{
-                          style:
-                            { 'font-size': '10px' }
-                          ,
-                        }}
-                        InputLabelProps={{
-                          style: 
-                            { 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }
-                          ,
-                        }}
-                      />
-                  )}
-          />
-      </FormControl>
     </Grid>
-     
     
         
 

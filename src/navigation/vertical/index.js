@@ -40,21 +40,21 @@ const navigation = () => {
 
       ]
     },
-    {
-      title: 'Trade Confirmation',
-      icon: 'fluent:gift-16-regular',
-      children: [
-        {
-          title: 'Status Report History',
-          path: '/tradehistory'
-        },
-        {
-          title: 'Block Data',
-          path: '/tradeblockdata'
-        },
+    // {
+    //   title: 'Trade Confirmation',
+    //   icon: 'fluent:gift-16-regular',
+    //   children: [
+    //     {
+    //       title: 'Status Report History',
+    //       path: '/tradehistory'
+    //     },
+    //     {
+    //       title: 'Block Data',
+    //       path: '/tradeblockdata'
+    //     },
 
-      ]
-    },
+    //   ]
+    // },
     {
       title: 'Client Profile',
       icon: 'fluent:gift-16-regular',
@@ -85,6 +85,10 @@ const navigation = () => {
           title: 'Net Position',
           path: '/realtimenetposition'
         },
+        {
+          title: 'Live Margin',
+          path: '/realtimelivemargin'
+        },
       ]
     },
     {
@@ -110,32 +114,7 @@ const navigation = () => {
           path: '/kycformtracking'
         }
       ]
-    },
-    // {
-    //   title: 'menu1',
-    //   icon: 'mdi:contact-outline',
-    //   path: '/menu1'
-    // },
-    // {
-    //   title: 'menu2',
-    //   icon: 'mdi:contact-outline',
-    //   path: '/menu2'
-    // },
-    // {
-    //   title: 'menu3',
-    //   icon: 'mdi:contact-outline',
-    //   path: '/menu3'
-    // },
-    // {
-    //   title: 'create task',
-    //   icon: 'mdi:email-outline',
-    //   path: '/createtask'
-    // },
-    // {
-    //   title: 'User Info',
-    //   icon: 'mdi:email-outline',
-    //   path: '/userinfo'
-    // },
+    }
   
   ]
 }

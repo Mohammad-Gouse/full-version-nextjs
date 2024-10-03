@@ -23,7 +23,7 @@ const Container1 = () => {
      const { data, total, loading, error, fetchData } = useClientSearch();
 
      const onReset = () => {
-         reset(); // This will reset the form to default values
+         reset(); 
      };
 
         const exportToExcel = () => {

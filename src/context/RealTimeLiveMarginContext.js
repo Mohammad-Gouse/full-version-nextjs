@@ -2,9 +2,9 @@
 import React, { createContext, useState, useEffect } from 'react';
 import createAxiosInstance from 'src/configs/axiosConfig';
 
-const RealTimeTurnOverContext = createContext();
+const RealTimeLiveMarginContext = createContext();
 
-const RealTimeTurnOverProvider = ({ children }) => {
+const RealTimeLiveMarginProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,11 +13,11 @@ const RealTimeTurnOverProvider = ({ children }) => {
   // Create Axios instance
   const axiosInstance = createAxiosInstance();
 
-  const fetchData = async (payload,endPoint) => {
+  const fetchData = async (payload) => {
       console.log("Fetching data...");
       setLoading(true);
       try {
-          const response = await axiosInstance.post(`http://175.184.255.158:5555/api/v1/realtime/turnover/${endPoint}`, payload);
+          const response = await axiosInstance.post(`http://175.184.255.158:5555/api/v1/realtime/livemargin`, payload);
           console.log(response);
           setData(response.data.data);
           setTotal(response.data.total)
@@ -32,10 +32,10 @@ const RealTimeTurnOverProvider = ({ children }) => {
   const values = { data, total, loading, error, fetchData };
 
   return (
-      <RealTimeTurnOverContext.Provider value={values}>
+      <RealTimeLiveMarginContext.Provider value={values}>
           {children}
-      </RealTimeTurnOverContext.Provider>
+      </RealTimeLiveMarginContext.Provider>
   );
 };
 
-export { RealTimeTurnOverContext, RealTimeTurnOverProvider };
+export { RealTimeLiveMarginContext, RealTimeLiveMarginProvider };

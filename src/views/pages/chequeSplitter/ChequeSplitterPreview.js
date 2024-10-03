@@ -7,6 +7,7 @@ import { Box, Typography } from '@mui/material';
 const ChequeSplitter = () => {
   const { sharedData } = useDataSharing();
   const [imagePreviewUrl, setImagePreviewUrl] = useState('');
+  const [imagePreviewUrl2, setImagePreviewUrl2] = useState('');
 
   useEffect(() => {
     const file = sharedData.fileUpload;
@@ -19,6 +20,18 @@ const ChequeSplitter = () => {
     }
   }, [sharedData.fileUpload]);
 
+  useEffect(() => {
+    const file = sharedData.fileUpload2;
+
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreviewUrl2(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, [sharedData.fileUpload2]);
+
   const formatValue = (key, value) => {
     if (key.toLowerCase().includes('date')) {
       return moment(value).format('DD-MMM-YYYY');
@@ -29,7 +42,7 @@ const ChequeSplitter = () => {
   return (
       <div>
         <Typography component="div">
-            <Box sx={{ 'font-size': '20px', 'margin':"10px", 'font-weight': 'bold' }}>
+            <Box sx={{ 'font-size': '10px', 'margin':"10px", 'font-weight': 'bold' }}>
            ChequeSplitter Preview
             </Box>
         </Typography>
@@ -42,13 +55,13 @@ const ChequeSplitter = () => {
         padding: '10px',
       }}
     >
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto auto auto', gap: '8px' }}>
+      <div style={{ display: 'grid', fontSize:"10px", gridTemplateColumns: '1fr 0.05fr 1.8fr', gap: '8px' }}>
         {Object.entries(sharedData).map(([key, value]) => (
           value !== undefined && value !== null && value !== '' && (
             <React.Fragment key={key}>
               <div>{key}</div>
               <div>:</div>
-              <div style={{ fontWeight: '500' }}>
+              <div style={{ fontWeight: '600' }}>
                 {key.toLowerCase().includes('file') && value instanceof File
                   ? value.name
                   : formatValue(key, value)}
@@ -57,7 +70,8 @@ const ChequeSplitter = () => {
           )
         ))}
       </div>
-      {imagePreviewUrl && <img src={imagePreviewUrl} alt="Preview" style={{ maxWidth: '100%', height: 'auto' }} />}
+      {imagePreviewUrl && <img src={imagePreviewUrl} alt="Preview" style={{ maxWidth: '100%', height: 'auto', display:"block", marginBottom:"5px" }} />}
+      {imagePreviewUrl2 && <img src={imagePreviewUrl2} alt="Preview" style={{ maxWidth: '100%', height: 'auto' }} />}
     </div>
      </div>
   );
