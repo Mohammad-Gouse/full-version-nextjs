@@ -10,7 +10,7 @@ const ChequeSplitter = () => {
   const [imagePreviewUrl2, setImagePreviewUrl2] = useState('');
 
   useEffect(() => {
-    const file = sharedData.fileUpload;
+    const file = sharedData.File1;
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -18,10 +18,10 @@ const ChequeSplitter = () => {
       };
       reader.readAsDataURL(file);
     }
-  }, [sharedData.fileUpload]);
+  }, [sharedData.File1]);
 
   useEffect(() => {
-    const file = sharedData.fileUpload2;
+    const file = sharedData.File2;
 
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
@@ -30,7 +30,7 @@ const ChequeSplitter = () => {
       };
       reader.readAsDataURL(file);
     }
-  }, [sharedData.fileUpload2]);
+  }, [sharedData.File2]);
 
   const formatValue = (key, value) => {
     if (key.toLowerCase().includes('date')) {
@@ -43,7 +43,7 @@ const ChequeSplitter = () => {
       <div>
         <Typography component="div">
             <Box sx={{ 'font-size': '10px', 'margin':"10px", 'font-weight': 'bold' }}>
-           ChequeSplitter Preview
+           Preview of Cheque Deposit Details
             </Box>
         </Typography>
     <div
@@ -57,7 +57,7 @@ const ChequeSplitter = () => {
     >
       <div style={{ display: 'grid', fontSize:"10px", gridTemplateColumns: '1fr 0.05fr 1.8fr', gap: '8px' }}>
         {Object.entries(sharedData).map(([key, value]) => (
-          value !== undefined && value !== null && value !== '' && (
+          value !== undefined && value !== null && value !== '' && (typeof value != 'object') && (
             <React.Fragment key={key}>
               <div>{key}</div>
               <div>:</div>

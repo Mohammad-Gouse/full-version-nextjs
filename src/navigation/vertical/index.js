@@ -37,6 +37,10 @@ const navigation = () => {
           title: 'Portfolio',
           path: '/reportportfolio'
         },
+        {
+          title: 'Scripwise Position',
+          path: '/reportsscripwise'
+        },
 
       ]
     },
@@ -112,6 +116,16 @@ const navigation = () => {
         {
           title: 'Form Tracking',
           path: '/kycformtracking'
+        }
+      ]
+    },
+    {
+      title: 'Accounts',
+      icon: 'fluent:gift-16-regular',
+      children: [
+        {
+          title: 'Margin Cheque',
+          path: '/accountdeposit'
         }
       ]
     }

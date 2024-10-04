@@ -78,7 +78,7 @@ import React, { useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 
 import PageSplitter from '../demoSideSplitter';
-import Index from '../reportholding';
+import Index from '../accountsdepositlist';
 
 function CustomTabs() {
   const [value, setValue] = useState(0);

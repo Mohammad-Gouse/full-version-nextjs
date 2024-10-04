@@ -90,7 +90,7 @@ const PreviewDeposit = () => {
     >
       <div style={{ display: 'grid', gridTemplateColumns: 'auto auto auto', gap: '8px' }}>
         {Object.entries(sharedData).map(([key, value]) => (
-          value !== undefined && (
+          value !== undefined && (typeof value) !== "object" && (
             <React.Fragment key={key}>
               <div>{key}</div>
               <div>:</div>

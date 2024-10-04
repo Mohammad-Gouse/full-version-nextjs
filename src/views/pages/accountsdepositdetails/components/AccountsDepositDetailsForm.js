@@ -31,7 +31,13 @@ const Container1 = () => {
 
   useEffect(() => {
     console.log(watchformValues)
-    setSharedData(watchformValues)
+    const formData = {
+      ...watchformValues,
+      IssuingBankName: watchformValues.SelectedBank?.IssuingBankName, // Send IssuingBankName separately
+      issuingBankAccountNumber: watchformValues.SelectedBank?.issuingBankAccountNumber // Send BankAccountNumber separately
+    };
+    console.log(formData)
+    setSharedData(formData)
   }, [watchformValues])
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState('');
@@ -87,31 +93,31 @@ const Container1 = () => {
   const [IssuingBankNameOptions, setIssuingBankNameOptions] = useState([]);  // Dynamic state for options
   const [loadingIssuingBankName, setloadingIssuingBankName] = useState(true);  // Dynamic state for loading
 
-  useEffect(() => {
-    const fetchIssuingBankNameOptions = async (segment = 'equity}') => {  // Dynamic fetch function
-      try {
-        const accessToken = window.localStorage.getItem('accessToken');
-        const response = await axios.post('http://175.184.255.158:5555/api/v1/client/bankdetails', { Segment: segment },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        const data = response.data.data.map((item) => item.BankName);  // Extract specific field values
-        setIssuingBankNameOptions(data);  // Set options for Autocomplete
-        setloadingIssuingBankName(false);  // Disable loading state
-        if (data.length > 0) {
-          setValue('IssuingBankName', data[0]);
-        }
-      } catch (error) {
-        console.error('Error fetching options for IssuingBankName:', error);
-        setloadingIssuingBankName(false);  // Disable loading state on error
-      }
-    };
+  // useEffect(() => {
+  //   const fetchIssuingBankNameOptions = async (segment = 'equity}') => {  // Dynamic fetch function
+  //     try {
+  //       const accessToken = window.localStorage.getItem('accessToken');
+  //       const response = await axios.post('http://175.184.255.158:5555/api/v1/client/bankdetails', { Segment: segment },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //           },
+  //         }
+  //       );
+  //       const data = response.data.data.map((item) => item.BankName);  // Extract specific field values
+  //       setIssuingBankNameOptions(data);  // Set options for Autocomplete
+  //       setloadingIssuingBankName(false);  // Disable loading state
+  //       // if (data.length > 0) {
+  //       //   setValue('IssuingBankName', data[0]);
+  //       // }
+  //     } catch (error) {
+  //       console.error('Error fetching options for IssuingBankName:', error);
+  //       setloadingIssuingBankName(false);  // Disable loading state on error
+  //     }
+  //   };
 
-    fetchIssuingBankNameOptions(selectedSegment);  // Fetch options
-  }, [selectedSegment]);
+  //   fetchIssuingBankNameOptions(selectedSegment);  // Fetch options
+  // }, [selectedSegment]);
 
 
   const [DepositBankNameOptions, setDepositBankNameOptions] = useState([]);  // Dynamic state for options
@@ -131,9 +137,9 @@ const Container1 = () => {
         const data = response.data.data.map((item) => item.BankName);  // Extract specific field values
         setDepositBankNameOptions(data);  // Set options for Autocomplete
         setloadingDepositBankName(false);  // Disable loading state
-        if (data.length > 0) {
-          setValue('DepositBankName', data[0]);
-        }
+        // if (data.length > 0) {
+        //   setValue('DepositBankName', data[0]);
+        // }
       } catch (error) {
         console.error('Error fetching options for DepositBankName:', error);
         setloadingDepositBankName(false);  // Disable loading state on error
@@ -143,11 +149,109 @@ const Container1 = () => {
     fetchDepositBankNameOptions(selectedSegment);  // Fetch options
   }, [selectedSegment]);
 
+  const fetchBankDetails = async () => {
+    console.log("fech band details")
+    setloadingIssuingBankName(true);
+    const accessToken = window.localStorage.getItem('accessToken');
+    try {
+      const response = await axios.post('http://175.184.255.158:5555/api/v1/client/bankdetails', {
+        "ClientCode": control._formValues.ClientCode,
+        "Branch": "HO",
+        "Role": "11"
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const data = response.data.data;
 
 
 
+      // Extract ClientName and Bank from the first object in the response
+      const clientName = data[0].ClientName.trim();
+      // const bankName = data[0].Bank.trim();
+
+      // Update the form fields with the fetched data
+      setValue('ClientName', clientName);
+      // setValue('IssuingBankName', bankName);
+
+      // Set options for IssuingBankName Autocomplete
+      const bankOptions = data.map(item => ({
+        IssuingBankName: item.BankName,
+        issuingBankAccountNumber: item.BankAccountNumber
+      }));
+
+      console.log(bankOptions)
+      setIssuingBankNameOptions(bankOptions);
+
+    } catch (error) {
+      console.error('Error fetching bank details:', error);
+    } finally {
+      setloadingIssuingBankName(false);
+    }
+  };
 
 
+  const [segmentOptions, setSegmentOptions] = useState([]); // State to store Equity options
+  const [modeOptions, setModeOptions] = useState([]); // State to store Equity options
+
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      const accessToken = window.localStorage.getItem('accessToken');
+      try {
+        const response = await axios.post('http://175.184.255.158:5555/api/v1/combo/values', {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        // const response = await axios.get('{{BASE_URL}}/client/bankdetails'); // Adjust endpoint as needed
+        const equityData = response.data.data[0].Equity; // Extract the Equity array from response
+        setSegmentOptions(equityData); // Set the options for the dropdown
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array ensures it runs once on mount
+
+
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      const accessToken = window.localStorage.getItem('accessToken');
+      try {
+        const response = await axios.post('http://175.184.255.158:5555/api/v1/combo/values', {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        // const response = await axios.get('{{BASE_URL}}/client/bankdetails'); // Adjust endpoint as needed
+        const ModeData = response.data.data[0].Mode; // Extract the Equity array from response
+        setModeOptions(ModeData); // Set the options for the dropdown
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array ensures it runs once on mount
+
+
+  const selectedMode = watch("ModeofDeposit");
+
+  const [age, setAge] = React.useState('');
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
 
   return (
     <div>
@@ -182,7 +286,7 @@ const Container1 = () => {
 
 
 
-          <Grid item lg={6} md={6} sm={12} xs={12} >
+          {/* <Grid item lg={6} md={6} sm={12} xs={12} >
             <FormControl fullWidth>
               <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Segment">Segment</InputLabel>
               <Controller
@@ -205,7 +309,46 @@ const Container1 = () => {
                     fullWidth
                     error={!!errors.Segment}
                   >
-                    <MenuItem sx={{ 'font-size': '10px' }} value="Equity">Equity</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="NBFC">NBFC</MenuItem>
+                    <MenuItem sx={{ 'font-size': '10px' }} value="BSE">BSE</MenuItem>
+                    <MenuItem sx={{ 'font-size': '10px' }} value="NSE">NSE</MenuItem>
+                  </Select>
+                )}
+              />
+              {errors.Segment && (
+                <FormHelperText sx={{ color: 'error.main' }}>
+                  {errors.Segment.message}
+                </FormHelperText>
+              )}
+            </FormControl>
+          </Grid> */}
+
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <FormControl size="small" fullWidth>
+              <InputLabel sx={{ fontSize: '10px', fontWeight: '600', color: '#818589' }} id="Segment">Segment</InputLabel>
+              <Controller
+                name="Segment"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    sx={{ fontSize: '10px' }}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleSegmentChange(e)
+                    }}
+                    labelId="Segment"
+                    label="Segment"
+                    defaultValue=""
+                    id="Segment"
+                    size="small"
+                    fullWidth
+                    error={!!errors.Segment}
+                  >
+                    {segmentOptions.map((segment, index) => (
+                      <MenuItem key={index} sx={{ fontSize: '10px' }} value={segment}>
+                        {segment}
+                      </MenuItem>
+                    ))}
                   </Select>
                 )}
               />
@@ -216,6 +359,7 @@ const Container1 = () => {
               )}
             </FormControl>
           </Grid>
+
 
 
 
@@ -249,6 +393,12 @@ const Container1 = () => {
                 )}
               />
             </FormControl>
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <Button onClick={fetchBankDetails} sx={{ "fontSize": "10px", "padding": "7px 0px" }} type="button" variant="contained" color="primary">
+              search
+            </Button>
           </Grid>
 
 
@@ -293,19 +443,21 @@ const Container1 = () => {
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
               <Controller
-                name="IssuingBankName"
+                name="SelectedBank"
                 control={control}
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    id="IssuingBankName"
+                    id="SelectedBank"
                     options={IssuingBankNameOptions}
                     loading={loadingIssuingBankName}
                     size="small"
                     fullWidth
-                    getOptionLabel={(option) => option}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    onChange={(_, data) => field.onChange(data)}
+                    getOptionLabel={(option) => option?.IssuingBankName}
+                    // isOptionEqualToValue={(option, value) => option === value}
+                    onChange={(_, data) => {
+                      field.onChange(data);
+                    }}
                     value={field.value || null}
                     renderInput={(params) => (
                       <TextField
@@ -337,7 +489,7 @@ const Container1 = () => {
 
 
           <Grid item lg={6} md={6} sm={12} xs={12} >
-            <FormControl fullWidth>
+            <FormControl size="small" fullWidth>
               <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="ModeofDeposit">Mode of Payment</InputLabel>
               <Controller
                 name="ModeofDeposit"
@@ -348,7 +500,7 @@ const Container1 = () => {
                     sx={{ 'font-size': '10px' }}
                     onChange={(e) => {
                       field.onChange(e);
-                      handleModeChange(e)
+                      // handleModeChange(e)
                     }}
                     labelId="ModeofDeposit"
                     label='Mode of Payment'
@@ -359,7 +511,12 @@ const Container1 = () => {
                     fullWidth
                     error={!!errors.ModeofDeposit}
                   >
-                    <MenuItem sx={{ 'font-size': '10px' }} value="cheque">Cheque</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="dd">DD</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Fund Transfer/NEFT">Fund Transfer/NEFT</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="RTGS">RTGS</MenuItem>
+                    {modeOptions.map((mode, index) => (
+                      <MenuItem key={index} sx={{ fontSize: '10px' }} value={mode}>
+                        {mode}
+                      </MenuItem>
+                    ))}
+                    {/* <MenuItem sx={{ 'font-size': '10px' }} value="cheque">Cheque</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="dd">DD</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="Fund Transfer/NEFT">Fund Transfer/NEFT</MenuItem><MenuItem sx={{ 'font-size': '10px' }} value="RTGS">RTGS</MenuItem> */}
                   </Select>
                 )}
               />
@@ -512,11 +669,11 @@ const Container1 = () => {
 
 
           <Grid item lg={6} md={12} sm={12}>
-          <Typography style={{ fontSize: "10px" }} variant="body2" color="textSecondary">
-                    Upload Cheque
+            <Typography style={{ fontSize: "10px" }} variant="body2" color="textSecondary">
+              Upload Cheque
             </Typography>
             <Controller
-              name="fileUpload"
+              name="File1"
               control={control}
               defaultValue={null}
               render={({ field }) => (
@@ -547,12 +704,12 @@ const Container1 = () => {
             />
           </Grid>
 
-          <Grid item lg={6} md={12} sm={12}>
-          <Typography style={{ fontSize: "10px" }} variant="body2" color="textSecondary">
-                    Upload Slip
+          {selectedMode === 'Cheque' && (<Grid item lg={6} md={12} sm={12}>
+            <Typography style={{ fontSize: "10px" }} variant="body2" color="textSecondary">
+              Upload Slip
             </Typography>
             <Controller
-              name="fileUpload2"
+              name="File2"
               control={control}
               defaultValue={null}
               render={({ field }) => (
@@ -581,10 +738,10 @@ const Container1 = () => {
                 </Box>
               )}
             />
-          </Grid>
+          </Grid>)}
 
-          <Grid item lg={0.8} md={6} sm={12} xs={12}>
-            <Button fullWidth sx={{ "fontSize": "10px", "padding": "7px 0px" }} type="submit" variant="contained" color="primary">
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <Button sx={{ "fontSize": "10px", "padding": "7px 0px" }} type="submit" variant="contained" color="primary">
               search
             </Button>
           </Grid>
