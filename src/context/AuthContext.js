@@ -9,12 +9,18 @@ import axios from 'axios'
 
 // ** Config
 import authConfig from 'src/configs/auth'
+import awsConfig from 'src/configs/awsConfig'
+import jwt from 'jsonwebtoken'
+import { jwtDecode } from 'jwt-decode'
+import moment from 'moment'
 
 // ** Defaults
 const defaultProvider = {
   user: null,
   loading: true,
   setUser: () => null,
+  failureMessage: null,
+  setFailureMessage: () => null,
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
@@ -26,34 +32,39 @@ const AuthProvider = ({ children }) => {
   // ** States
   const [user, setUser] = useState(defaultProvider.user)
   const [loading, setLoading] = useState(defaultProvider.loading)
+  const [failureMessage, setFailureMessage] = useState(null)
 
   // ** Hooks
   const router = useRouter()
+
+  const autoLogout = time => {
+    const targetTime = moment(time).subtract(1, 'minute')
+    const currentTime = moment()
+    const timeDifference = targetTime.diff(currentTime)
+
+    setTimeout(() => {
+      handleLogout()
+    }, timeDifference)
+  }
+
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)
+      const userParseData = window.localStorage.getItem('userdetails')
+      const userData = JSON.parse(userParseData)
+
+      setLoading(true)
       if (storedToken) {
-        setLoading(true)
-        await axios
-          .get(authConfig.meEndpoint, {
-            headers: {
-              Authorization: storedToken
-            }
-          })
-          .then(async response => {
-            setLoading(false)
-            setUser({ ...response.data.userData })
-          })
-          .catch(() => {
-            localStorage.removeItem('userData')
-            localStorage.removeItem('refreshToken')
-            localStorage.removeItem('accessToken')
-            setUser(null)
-            setLoading(false)
-            if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-              router.replace('/login')
-            }
-          })
+        const decodedToken = jwtDecode(storedToken)
+        const expirationTime = new Date(decodedToken.exp * 1000) // Convert to milliseconds
+        autoLogout(expirationTime)
+        setLoading(false)
+        if (router.route == '/login') {
+          router.replace('/home')
+        } else {
+          const newUrl = router.pathname
+          router.replace(newUrl, undefined, { shallow: true })
+        }
       } else {
         setLoading(false)
       }
@@ -62,20 +73,46 @@ const AuthProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const isTokenValid = (token, publicKey) => {
+    if (!token) return false
+
+    try {
+      jwt.verify(token, publicKey)
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
   const handleLogin = (params, errorCallback) => {
+    const body = {
+      Type: 1,
+      Token: params?.password,
+      ClientCode: params?.userId,
+      BranchCode: params?.loginType?.branchCode,
+      Code: params?.loginType?.code
+    }
     axios
-      .post(authConfig.loginEndpoint, params)
+      .post(`${awsConfig.baseUrl}/auth/login`, body)
       .then(async response => {
-        params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
-          : null
+        const decodedToken = jwtDecode(response?.data?.token)
+
+        window.localStorage.setItem(authConfig.storageTokenKeyName, response?.data?.token)
+        window.localStorage.setItem('idToken', response?.data?.token)
+
+        setUser({ ...response?.data?.data[0], role: 'admin' })
+        const userDetailsString = JSON.stringify({ ...response?.data?.data[0], role: 'admin' })
+        window.localStorage.setItem('userdetails', userDetailsString)
+
+        const expirationTime = new Date(decodedToken.exp * 1000) // Convert to milliseconds
+        autoLogout(expirationTime)
+
         const returnUrl = router.query.returnUrl
-        setUser({ ...response.data.userData })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
         router.replace(redirectURL)
       })
       .catch(err => {
+        setFailureMessage(err?.response?.data?.message)
         if (errorCallback) errorCallback(err)
       })
   }
@@ -94,7 +131,7 @@ const AuthProvider = ({ children }) => {
         if (res.data.error) {
           if (errorCallback) errorCallback(res.data.error)
         } else {
-          handleLogin({ email: params.email, password: params.password })
+          handleLogin({ userId: params.userId, password: params.password })
         }
       })
       .catch(err => (errorCallback ? errorCallback(err) : null))
@@ -107,7 +144,9 @@ const AuthProvider = ({ children }) => {
     setLoading,
     login: handleLogin,
     logout: handleLogout,
-    register: handleRegister
+    register: handleRegister,
+    failureMessage,
+    setFailureMessage
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>
