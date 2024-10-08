@@ -37,7 +37,7 @@
 
         return (
             <FormProvider {...methods}>
-                <Box sx={{ padding: 2 }}>
+                <Box >
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
                         <AccountsDepositListForm formValues={formValues} handleInputChange={handleInputChange} />
                     </form>

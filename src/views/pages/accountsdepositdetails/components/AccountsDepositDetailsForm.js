@@ -2,7 +2,7 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel, RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel,IconButton, InputAdornment, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel, RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -19,10 +19,12 @@ import axios from 'axios';
 import { Toast } from 'primereact/toast';
 import { useDataSharing } from 'src/context/DataSharingProvider';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import SearchIcon from '@mui/icons-material/Search';
+import DeleteIcon from '@mui/icons-material/Delete'; // Import DeleteIcon
 
 
 const Container1 = () => {
-  const { control, setValue, watch, formState: { errors } } = useFormContext();
+  const { control, setValue, watch, formState: { errors }, reset } = useFormContext();
   const { data, total, loading, error, fetchData } = useAccountsDepositDetails();
 
   const { setSharedData } = useDataSharing();
@@ -247,11 +249,10 @@ const Container1 = () => {
 
   const selectedMode = watch("ModeofDeposit");
 
-  const [age, setAge] = React.useState('');
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  const onReset = () => {
+    return reset(); 
+};
 
   return (
     <div>
@@ -260,8 +261,6 @@ const Container1 = () => {
       {/* <Card id="AccountsDepositDetailsForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}> */}
       <div sx={{ "padding": "15px 5px 5px 5px", "height": "81vh" }}>
         <Grid container spacing={5}>
-
-
           <div className="card flex justify-content-center">
             <Toast
               ref={toast}
@@ -364,7 +363,7 @@ const Container1 = () => {
 
 
 
-          <Grid item lg={6} md={6} sm={12} xs={12} >
+          {/* <Grid item lg={6} md={6} sm={12} xs={12} >
             <FormControl fullWidth>
               <Controller
                 name="ClientCode"
@@ -393,13 +392,59 @@ const Container1 = () => {
                 )}
               />
             </FormControl>
+          </Grid> */}
+
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <Controller
+                name="ClientCode"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="ClientCode"
+                    defaultValue=""
+                    label={'Client Code'}
+                    size="small"
+                    fullWidth
+                    error={!!errors?.ClientCode}
+                    helperText={errors?.ClientCode?.message}
+                    InputProps={{
+                      style: { fontSize: '10px' },
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={fetchBankDetails}
+                            edge="end"
+                            sx={{
+                              backgroundColor: '#25335C', // Blue background
+                              color: '#fff', // White icon color
+                              '&:hover': {
+                                backgroundColor: '#25335C', // Darker blue on hover
+                              },
+                              borderRadius: '5px', // Circular button
+                              padding: '4px', // Adjust padding if needed
+                            }}
+                          >
+                            <SearchIcon sx={{ fontSize: "15px" }}/> {/* Example icon */}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    InputLabelProps={{
+                      style: { fontSize: '10px', fontWeight: '600', color: '#818589' },
+                    }}
+                  />
+                )}
+              />
+            </FormControl>
           </Grid>
 
-          <Grid item lg={12} md={12} sm={12} xs={12}>
+          {/* <Grid item lg={12} md={12} sm={12} xs={12}>
             <Button onClick={fetchBankDetails} sx={{ "fontSize": "10px", "padding": "7px 0px" }} type="button" variant="contained" color="primary">
               search
             </Button>
-          </Grid>
+          </Grid> */}
 
 
 
@@ -668,7 +713,7 @@ const Container1 = () => {
           </Grid>
 
 
-          <Grid item lg={6} md={12} sm={12}>
+          {/* <Grid item lg={6} md={12} sm={12}>
             <Typography style={{ fontSize: "10px" }} variant="body2" color="textSecondary">
               Upload Cheque
             </Typography>
@@ -692,17 +737,60 @@ const Container1 = () => {
                       style={{ display: 'none' }}
                     />
                   </Button>
-                  {/* <Typography style={{fontSize:"10px" }} variant="body2" color="textSecondary">
-                            {field.value ? field.value.name : 'No file selected'}
-                        </Typography> */}
-                  {/* <Typography variant="caption" color="textSecondary" style={{fontSize:"10px", marginLeft: '10px' }}>
-                            Allowed: JPG, PNG
-                        </Typography> */}
-                  {/* {imagePreviewUrl && <img src={imagePreviewUrl} alt="Preview" style={{ maxWidth: '100%', height: 'auto' }} />} */}
                 </Box>
               )}
             />
-          </Grid>
+          </Grid> */}
+
+<Grid item lg={6} md={12} sm={12}>
+  <Typography style={{ fontSize: "10px" }} variant="body2" color="textSecondary">
+    Upload Cheque
+  </Typography>
+  <Controller
+    name="File1"
+    control={control}
+    defaultValue={null}
+    render={({ field }) => (
+      <Box style={{ backgroundColor: '#ffffff', padding: '5px 2px', border: '1px solid #ddd', borderRadius: '5px', textAlign: 'center' }}>
+        <Button
+          component="label"
+          variant="contained"
+          startIcon={<CloudUploadIcon />}
+          style={{ fontSize: "10px", fontWeight: "400", marginRight: '10px', marginBottom: '5px' }}
+        >
+          Upload File
+          <input
+            type="file"
+            accept=".jpg,.png,.pdf,.csv"
+            onChange={(e) => handleFileChange(e, field.onChange)}
+            style={{ display: 'none' }}
+          />
+        </Button>
+
+        {/* Render delete icon button if a file is selected */}
+        {field.value && (
+          <IconButton
+            onClick={() => {
+              field.onChange(null); // Clear the selected file
+            }}
+            size="small"
+            color="secondary"
+            style={{ marginLeft: '10px' }}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        )}
+
+        {/* Optional: Show the selected file name */}
+        {field.value && (
+          <Typography style={{ fontSize: "10px", marginLeft: '10px' }} variant="body2" color="textSecondary">
+            {field.value.name}
+          </Typography>
+        )}
+      </Box>
+    )}
+  />
+</Grid>
 
           {selectedMode === 'Cheque' && (<Grid item lg={6} md={12} sm={12}>
             <Typography style={{ fontSize: "10px" }} variant="body2" color="textSecondary">
@@ -740,11 +828,19 @@ const Container1 = () => {
             />
           </Grid>)}
 
-          <Grid item lg={12} md={12} sm={12} xs={12}>
+          <Grid item lg={12}>
             <Button sx={{ "fontSize": "10px", "padding": "7px 0px" }} type="submit" variant="contained" color="primary">
-              search
+              Save
             </Button>
+
+            <Button  sx={{marginLeft:"5px", "fontSize": "10px", "padding": "7px 0px" }} type="button" variant="outlined" color="primary" onClick={onReset}>
+              Clear
+          </Button>
           </Grid>
+{/* 
+          <Grid item lg={2} md={6} sm={12} xs={12}>
+
+          </Grid> */}
 
 
         </Grid>
