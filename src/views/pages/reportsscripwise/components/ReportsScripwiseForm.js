@@ -3,7 +3,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel,  RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip, Dialog, DialogTitle, IconButton, DialogContent } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -18,6 +18,7 @@ import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -138,8 +139,46 @@ const Container1 = () => {
             </div>
         );
         
+        const [dialogOpen, setDialogOpen] = useState(false);
+        const [bankDetails, setBankDetails] = useState([]);
+        const [loadingDetails, setLoadingDetails] = useState(false);
 
-    undefined
+        const handleClientCodeClick = async (clientCode) => {
+            setLoadingDetails(true);
+            setDialogOpen(true);
+            try {
+            //   const response = await axios.post(`http://175.184.255.158:5555/api/v1/client/bankdetails`, {
+            //     ClientCode: clientCode,
+            //     Branch: "HO",
+            //     Role: "11",
+            //   });
+            const accessToken = window.localStorage.getItem('accessToken');
+            const response = await axios.post('http://175.184.255.158:5555/api/v1/client/bankdetails',{
+                    ClientCode: clientCode,
+                    Branch: "HO",
+                    Role: "11",
+                  },
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
+
+              setBankDetails(response.data.data); // Assuming response.data contains the bank details
+            } catch (error) {
+              console.error('Error fetching bank details:', error);
+            } finally {
+              setLoadingDetails(false);
+            }
+          };
+        
+          // Close the dialog
+          const handleCloseDialog = () => {
+            setDialogOpen(false);
+            setBankDetails([]);
+          };
+        
     
 
     return (
@@ -248,32 +287,79 @@ const Container1 = () => {
                 <CircularProgress />
                 </div>
             )}
-            <DataTable 
-                size='small' 
-                value={data ?? []} 
-                rows={10} 
-                filters={filters} 
-                filterDisplay="row"
-                emptyMessage={emptyMessage}
-                scrollable={true}
-                scrollHeight='1rem'
+<DataTable
+        size="small"
+        value={data ?? []}
+        rows={10}
+        filters={filters}
+        filterDisplay="row"
+        emptyMessage={emptyMessage}
+        scrollable={true}
+        scrollHeight="1rem"
+      >
+        {/* Dynamically render columns based on the columns array */}
+        {columns.map((col, index) => (
+          <Column
+            key={index}
+            field={col.field}
+            header={col.header}
+            style={{ minWidth: col.width || 'auto' }}
+            body={(rowData) => {
+              // If the column is ClientCode, render it as a clickable link
+              if (col.field === 'ClientCode') {
+                return (
+                  <Button
+                    variant="text"
+                    onClick={() => handleClientCodeClick(rowData.ClientCode)}
+                    style={{ textDecoration: 'underline', color: 'blue' }}
+                  >
+                    {rowData.ClientCode}
+                  </Button>
+                );
+              }
+              return rowData[col.field];
+            }}
+            filter
+            showFilterMenu={false}
+            filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+            bodyStyle={rowStyle}
+            headerStyle={headerStyle}
+           
+          />
+        ))}
+      </DataTable>
+
+
+             {/* Dialog to display bank details */}
+      <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+        <DialogTitle>
+          Bank Details
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseDialog}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          {loadingDetails ? (
+            <Skeleton variant="rectangular" height={200} />
+          ) : (
+            <DataTable
+              size="small"
+              value={bankDetails}
+              rows={10}
+              scrollable={true}
+              scrollHeight="15rem"
             >
-                {/* Dynamically render columns based on the columns array */}
-                {columns.map((col, index) => (
-                    <Column
-                        key={index}
-                        field={col.field}
-                        header={col.header}
-                        style={{ minWidth: col.width || 'auto' }}
-                        filter
-                        showFilterMenu={false}
-                        filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
-                        bodyStyle={rowStyle}
-                        headerStyle={headerStyle}
-                        body={loading ? <Skeleton /> : null}  // Show skeleton while loading
-                    />
-                ))}
+              <Column field="ClientName" header="Client Name" />
+              <Column field="BankAccountNumber" header="Account Number" />
+              {/* Add other fields as required */}
             </DataTable>
+          )}
+        </DialogContent>
+      </Dialog>
         </Box>
         </Grid>
         
