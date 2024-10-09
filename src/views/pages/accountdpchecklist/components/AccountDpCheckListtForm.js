@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useAccountsDepositList } from 'src/hooks/AccountsDepositListHook';
+import { useAccountDpCheckList } from 'src/hooks/AccountDpCheckListHook';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
@@ -20,7 +20,7 @@ import { Toast } from 'primereact/toast';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
-     const { data, total, loading, error, fetchData } = useAccountsDepositList();
+     const { data, total, loading, error, fetchData } = useAccountDpCheckList();
 
         const exportToExcel = () => {
       // Create a new workbook
@@ -33,7 +33,7 @@ const Container1 = () => {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
       // Generate the Excel file and trigger the download
-      XLSX.writeFile(workbook, 'AccountsDepositList.xlsx');
+      XLSX.writeFile(workbook, 'AccountDpCheckList.xlsx');
     };
 
     
@@ -62,8 +62,8 @@ const Container1 = () => {
             }, [data]);
         
 
-        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Branch":{"value":null,"matchMode":"in"},"IssuingBankName":{"value":null,"matchMode":"in"},"IssuingBankAccount":{"value":null,"matchMode":"in"},"DepositBankName":{"value":null,"matchMode":"in"},"DepositAmount":{"value":null,"matchMode":"in"},"DepositChequeNo":{"value":null,"matchMode":"in"},"ModeOfDeposit":{"value":null,"matchMode":"in"},"DepositDate":{"value":null,"matchMode":"in"},"PunchBy":{"value":null,"matchMode":"in"},"PunchTime":{"value":null,"matchMode":"in"},"Status":{"value":null,"matchMode":"in"},"Image1":{"value":null,"matchMode":"in"},"Image2":{"value":null,"matchMode":"in"}});
-        const [columns] = useState([{"field":"ClientCode","header":"Client Code","width":"15rem"},{"field":"ClientName","header":"Client Name","width":"20rem"},{"field":"Branch","header":"Branch","width":"10rem"},{"field":"IssuingBankName","header":"Issuing Bank Name","width":"20rem"},{"field":"IssuingBankAccount","header":"Issuing Bank Account","width":"20rem"},{"field":"DepositBankName","header":"Deposit Bank Name","width":"20rem"},{"field":"DepositAmount","header":"Deposit Amount","width":"15rem"},{"field":"DepositChequeNo","header":"Deposit Cheque No","width":"15rem"},{"field":"ModeofDeposit","header":"Mode of Deposit","width":"15rem"},{"field":"DepositDate","header":"Deposit Date","width":"15rem"},{"field":"PunchBy","header":"Punch By","width":"15rem"},{"field":"PunchTime","header":"Punch Time","width":"20rem"},{"field":"Status","header":"Status","width":"10rem"},{"field":"Image1","header":"Cheque","width":"15rem"},{"field":"Image2","header":"Deposit Slip","width":"15rem"}]);  // Dynamic columns from JSON input
+        const [filters, setFilters] = useState({"ClientCode":{"value":null,"matchMode":"in"},"ClientName":{"value":null,"matchMode":"in"},"Branch":{"value":null,"matchMode":"in"},"IssuingBankName":{"value":null,"matchMode":"in"},"IssuingBankAccount":{"value":null,"matchMode":"in"},"DepositBankName":{"value":null,"matchMode":"in"},"DepositAmount":{"value":null,"matchMode":"in"},"DepositChequeNo":{"value":null,"matchMode":"in"},"ModeOfDeposit":{"value":null,"matchMode":"in"},"DepositDate":{"value":null,"matchMode":"in"},"Depository":{"value":null,"matchMode":"in"},"PunchBy":{"value":null,"matchMode":"in"},"PunchTime":{"value":null,"matchMode":"in"},"Status":{"value":null,"matchMode":"in"},"Image1":{"value":null,"matchMode":"in"},"Image2":{"value":null,"matchMode":"in"}});
+        const [columns] = useState([{"field":"ClientCode","header":"Client Code","width":"15rem"},{"field":"ClientName","header":"Client Name","width":"20rem"},{"field":"Branch","header":"Branch","width":"10rem"},{"field":"IssuingBankName","header":"Issuing Bank Name","width":"20rem"},{"field":"IssuingBankAccount","header":"Issuing Bank Account","width":"20rem"},{"field":"DepositBankName","header":"Deposit Bank Name","width":"20rem"},{"field":"DepositAmount","header":"Deposit Amount","width":"15rem"},{"field":"DepositChequeNo","header":"Deposit Cheque No","width":"15rem"},{"field":"ModeOfDeposit","header":"Mode of Deposit","width":"15rem"},{"field":"DepositDate","header":"Deposit Date","width":"15rem"},{"field":"Depository","header":"Depository","width":"10rem"},{"field":"PunchBy","header":"Punch By","width":"15rem"},{"field":"PunchTime","header":"Punch Time","width":"20rem"},{"field":"Status","header":"Status","width":"10rem"},{"field":"Image1","header":"Cheque","width":"15rem"},{"field":"Image2","header":"Deposit Slip","width":"15rem"}]);  // Dynamic columns from JSON input
 
         const uniqueValues = (key) => {
             return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -115,7 +115,7 @@ const Container1 = () => {
             <div>
             
             
-                <Card id="AccountsDepositListForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
+                <Card id="AccountDpCheckListtForm" sx={{"padding":"15px 5px 5px 5px","height":"81vh"}}>
                  
                     <Grid container spacing={5}>
                         

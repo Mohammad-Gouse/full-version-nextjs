@@ -126,6 +126,10 @@ const navigation = () => {
         {
           title: 'Margin Cheque',
           path: '/accountdeposit'
+        },
+        {
+          title: 'DP Cheque',
+          path: '/accountdpcheck'
         }
       ]
     }

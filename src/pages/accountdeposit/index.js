@@ -148,40 +148,80 @@ export default function BasicButtonGroup() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <ButtonGroup sx={{marginLeft:"0.3rem" }}  variant="contained" aria-label="basic button group">
-        <Button
-          onClick={() => handleButtonClick(0)}
-          sx={{ 
-            backgroundColor: selected === 0 ? '#25335C' : '#fff', color: selected === 0 ? '#fff' : '#25335C',
-            fontSize:"0.7rem",
-            '&:hover': {
-            backgroundColor: '#25335C', // Color on hover
-            color: '#fff',
-          }, }}
-        >
-          Fill Cheque Details
-        </Button>
-        <Button
-          onClick={() => handleButtonClick(1)}
-          sx={{ backgroundColor: selected === 1 ? '#25335C' : '#fff', color: selected === 1 ? '#fff' : '#25335C',
-            fontSize:"0.7rem",
-            '&:hover': {
-              backgroundColor: '#25335C', // Color on hover
-              color: '#fff',
-            },
-          }}
-        >
-          View Cheque List
-        </Button>
-      </ButtonGroup>
+    // <Box sx={{ width: '100%' }}>
+    //   <ButtonGroup sx={{marginLeft:"0.3rem" }}  aria-label="basic button group">
+    //     <Button
+    //       onClick={() => handleButtonClick(0)}
+    //       sx={{ 
+    //         backgroundColor: selected === 0 ? '#25335C' : '#fff', color: selected === 0 ? '#fff' : '#25335C',
+    //         fontSize:"0.7rem",
+    //         '&:hover': {
+    //         // backgroundColor: '#25335C', // Color on hover
+    //         color: '#25335C',
+    //       }, }}
+    //     >
+    //       Fill Cheque Details
+    //     </Button>
+    //     <Button
+    //       onClick={() => handleButtonClick(1)}
+    //       sx={{ backgroundColor: selected === 1 ? '#25335C' : '#fff', color: selected === 1 ? '#fff' : '#25335C',
+    //         fontSize:"0.7rem",
+    //         '&:hover': {
+    //           // backgroundColor: '#25335C', // Color on hover
+    //           color: '#25335C',
+    //         },
+    //       }}
+    //     >
+    //       View Cheque List
+    //     </Button>
+    //   </ButtonGroup>
 
-      {/* Render the selected component based on the current button */}
-      <Box sx={{ padding: 2, marginTop: 2 }}>
-        {selected === 0 && <PageSplitter />}
-        {selected === 1 && <Index />}
-      </Box>
-    </Box>
+    //   {/* Render the selected component based on the current button */}
+    //   <Box sx={{ padding: 2, marginTop: 2 }}>
+    //     {selected === 0 && <PageSplitter />}
+    //     {selected === 1 && <Index />}
+    //   </Box>
+    // </Box>
+
+    <Box sx={{ width: '100%' }}>
+  <ButtonGroup sx={{ marginLeft: "0.3rem" }} aria-label="basic button group">
+    <Button
+      onClick={() => handleButtonClick(0)}
+      sx={{
+        backgroundColor: selected === 0 ? '#25335C' : '#fff', 
+        color: selected === 0 ? '#fff' : '#25335C',
+        fontSize: "0.7rem",
+        '&:hover': {
+          backgroundColor: '#25335C !important', // Ensures hover color is applied
+          color: '#fff !important', // Ensures hover text color is applied
+        },
+      }}
+    >
+      Margin Cheque Details
+    </Button>
+    <Button
+      onClick={() => handleButtonClick(1)}
+      sx={{
+        backgroundColor: selected === 1 ? '#25335C' : '#fff', 
+        color: selected === 1 ? '#fff' : '#25335C',
+        fontSize: "0.7rem",
+        '&:hover': {
+          backgroundColor: '#25335C !important', // Ensures hover color is applied
+          color: '#fff !important', // Ensures hover text color is applied
+        },
+      }}
+    >
+      View Cheque List
+    </Button>
+  </ButtonGroup>
+
+  {/* Render the selected component based on the current button */}
+  <Box sx={{ padding: 2, marginTop: 2 }}>
+    {selected === 0 && <PageSplitter />}
+    {selected === 1 && <Index />}
+  </Box>
+</Box>
+
   );
 }
 

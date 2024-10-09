@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
 import moment from 'moment'
-import { useAccountsDepositDetails } from 'src/hooks/AccountsDepositDetailsHook';
+import { useAccountsDpCheckDetails } from 'src/hooks/AccountsDpCheckDetailsHook';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
@@ -28,7 +28,7 @@ import FileUploadField from 'src/components/FileUploadField';
 
 const Container1 = () => {
   const { control, setValue, watch, formState: { errors }, reset } = useFormContext();
-  const { data, total, loading, error, fetchData } = useAccountsDepositDetails();
+  const { data, total, loading, error, fetchData } = useAccountsDpCheckDetails();
 
   const { setSharedData } = useDataSharing();
 
@@ -311,54 +311,126 @@ const Container1 = () => {
 
           <Grid item lg={12} md={12} sm={12} >
             <Typography component="div">
-              <Box sx={{ 'font-size': '10px', 'font-weight': 'bold',  marginTop: "5px" }}>
+              <Box sx={{ fontSize: '10px',marginLeft:"5px", marginTop: "5px", fontWeight: 'bold' }}>
                 Check Deposit Details
               </Box>
             </Typography>
 
           </Grid>
 
-
-
-
-
-          {/* <Grid item lg={6} md={6} sm={12} xs={12} >
-            <FormControl fullWidth>
-              <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', 'color': '#818589' }} id="Segment">Segment</InputLabel>
+          {/* <Grid item xs={12}>
+            <FormControl error={Boolean(errors.Depository)}>
+              <FormLabel sx={{ fontSize: '10px', fontWeight: '600', color: '#818589', marginBottom: '4px' }}>
+                Depository Type
+              </FormLabel>
               <Controller
-                name="Segment"
+                name='Depository'
                 control={control}
+                rules={{ required: false }}
                 render={({ field }) => (
-                  <Select
-                    {...field}
-                    sx={{ 'font-size': '10px' }}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      handleSegmentChange(e)
-                    }}
-                    labelId="Segment"
-                    label='Segment'
-                    defaultValue="Equity"
-                    disabled={false}
-                    id='Segment'
-                    size="small"
-                    fullWidth
-                    error={!!errors.Segment}
-                  >
-                    <MenuItem sx={{ 'font-size': '10px' }} value="BSE">BSE</MenuItem>
-                    <MenuItem sx={{ 'font-size': '10px' }} value="NSE">NSE</MenuItem>
-                  </Select>
+                  <RadioGroup row {...field} aria-label='Depository' name='Depository'>
+
+                    <FormControlLabel
+                      value='NSDL'
+                      label='NSDL'
+                      sx={errors.Depository ? { color: 'error.main' } : null}
+                      componentsProps={{
+                        typography: { sx: { "fontSize": "10px", "fontWeight": "600", "color": "#818589" } }
+                      }}
+                      control={<Radio sx={{
+                        '& .MuiSvgIcon-root': { "fontSize": "14px" },
+                        ...(errors.Depository && { color: 'error.main' })
+                      }} />}
+                    />
+                    <FormControlLabel
+                      value='CDSL'
+                      label='CDSL'
+                      sx={errors.Depository ? { color: 'error.main' } : null}
+                      componentsProps={{
+                        typography: { sx: { "fontSize": "10px", "fontWeight": "600", "color": "#818589" } }
+                      }}
+                      control={<Radio sx={{
+                        '& .MuiSvgIcon-root': { "fontSize": "14px" },
+                        ...(errors.Depository && { color: 'error.main' })
+                      }} />}
+                    />
+                  </RadioGroup>
                 )}
               />
-              {errors.Segment && (
-                <FormHelperText sx={{ color: 'error.main' }}>
-                  {errors.Segment.message}
+              {errors.Depository && (
+                <FormHelperText sx={{ color: 'error.main' }} id='Depository-helper-text'>
+                  This field is required
                 </FormHelperText>
               )}
             </FormControl>
           </Grid> */}
 
-          <Grid item lg={6} md={6} sm={12} xs={12}>
+<Grid item xs={12} style={{paddingTop:"0px"}}>
+  <FormControl component="fieldset" error={Boolean(errors.Depository)}>
+    <Box display="flex" alignItems="center">
+      {/* Inline label for the Depository radio group */}
+      <Typography sx={{ fontSize: '10px', fontWeight: '600', color: '#818589', marginRight: '10px', marginLeft:'5px' }}>
+        Depository Type
+      </Typography>
+
+      <Controller
+        name="Depository"
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <RadioGroup row {...field} aria-label="Depository" name="Depository">
+            <FormControlLabel
+              value="NSDL"
+              label="NSDL"
+              sx={errors.Depository ? { color: 'error.main' } : null}
+              componentsProps={{
+                typography: {
+                  sx: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                }
+              }}
+              control={
+                <Radio
+                  sx={{
+                    '& .MuiSvgIcon-root': { fontSize: '14px' },
+                    ...(errors.Depository && { color: 'error.main' })
+                  }}
+                />
+              }
+            />
+            <FormControlLabel
+              value="CDSL"
+              label="CDSL"
+              sx={errors.Depository ? { color: 'error.main' } : null}
+              componentsProps={{
+                typography: {
+                  sx: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                }
+              }}
+              control={
+                <Radio
+                  sx={{
+                    '& .MuiSvgIcon-root': { fontSize: '14px' },
+                    ...(errors.Depository && { color: 'error.main' })
+                  }}
+                />
+              }
+            />
+          </RadioGroup>
+        )}
+      />
+    </Box>
+    {errors.Depository && (
+      <FormHelperText sx={{ color: 'error.main' }} id="Depository-helper-text">
+        This field is required
+      </FormHelperText>
+    )}
+  </FormControl>
+</Grid>
+
+
+
+
+          <Grid item lg={6} md={6} sm={12} xs={12} style={{paddingTop:"0px"}}>
             <FormControl size="small" fullWidth>
               <InputLabel sx={{ fontSize: '10px', fontWeight: '600', color: '#818589' }} id="Segment">Segment</InputLabel>
               <Controller
@@ -431,7 +503,7 @@ const Container1 = () => {
             </FormControl>
           </Grid> */}
 
-          <Grid item lg={6} md={6} sm={12} xs={12}>
+          <Grid item lg={6} md={6} sm={12} xs={12} style={{paddingTop:"0px"}}>
             <FormControl fullWidth>
               <Controller
                 name="ClientCode"
@@ -762,9 +834,6 @@ const Container1 = () => {
             />
           </Grid>)}
 
-
-
-
           <Grid item md={12}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button sx={{
@@ -783,18 +852,6 @@ const Container1 = () => {
               </Button>
             </Box>
           </Grid>
-
-
-
-
-
-
-          {/* 
-          <Grid item lg={2} md={6} sm={12} xs={12}>
-
-          </Grid> */}
-
-
         </Grid>
       </div>
       {/* </Card> */}
