@@ -19,7 +19,7 @@ import axios from 'axios';
 import { Toast } from 'primereact/toast';
 import CloseIcon from '@mui/icons-material/Close';
 import awsConfig from 'src/configs/awsConfig';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Container1 = () => {
   const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -89,47 +89,6 @@ const Container1 = () => {
   //   }
   // };
 
-  const handleDelete = async (id) => {
-    try {
-      const accessToken = window.localStorage.getItem('accessToken');
-      const response = await axios.post(
-        `${awsConfig.BASE_URL}/dpcheque/status-update`,
-        {
-          Id: id.toString(),
-          Status: "Deleted",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      // Handle response with status 204 as success
-      if (response.status === 204) {
-
-        toast.current.show({
-          severity: 'success',
-          summary: 'Delete',
-          detail: `${id} Deleted Successfully `,
-          life: 3000,
-        });
-
-        const payload = control._formValues;
-        payload.Branch = "HO";
-        payload.Role = "11";
-        fetchData(payload);
-      } else {
-        console.error('Failed to delete');
-      }
-    } catch (error) {
-      console.error('Error during delete operation:', error);
-    }
-  };
-
-
-
-
 
 
 
@@ -178,13 +137,50 @@ const Container1 = () => {
     </div>
   );
 
+  const handleDelete = async (id) => {
+    try {
+      const accessToken = window.localStorage.getItem('accessToken');
+      const response = await axios.post(
+        `${awsConfig.BASE_URL}/dpcheque/status-update`,
+        {
+          Id: id.toString(),
+          Status: "Deleted",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      // Handle response with status 204 as success
+      if (response.status === 204) {
+
+        toast.current.show({
+          severity: 'success',
+          summary: 'Delete',
+          detail: `${id} Deleted Successfully `,
+          life: 3000,
+        });
+
+        const payload = control._formValues;
+        payload.Branch = "HO";
+        payload.Role = "11";
+        fetchData(payload);
+      } else {
+        console.error('Failed to delete');
+      }
+    } catch (error) {
+      console.error('Error during delete operation:', error);
+    }
+  };
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
 
   // Function to construct image URL using the API and file ID
   const constructImageUrl = (fileId) => {
-    return `http://175.184.255.158:5555/api/v1/images/download?file=${fileId}`;
+    return `${awsConfig.BASE_URL}/images/download?file=${fileId}`;
   };
 
   // Handler to open the dialog and show the image
@@ -221,11 +217,6 @@ const Container1 = () => {
     }
   };
 
-  // Handler to close the dialog
-  // const handleCloseDialog = () => {
-  //   setDialogOpen(false);
-  //   setCurrentImageUrl(null);
-  // };
 
 
   return (
@@ -366,63 +357,6 @@ const Container1 = () => {
                   <CircularProgress />
                 </div>
               )}
-              {/* <DataTable 
-                size='small' 
-                value={data ?? []} 
-                rows={10} 
-                filters={filters} 
-                filterDisplay="row"
-                emptyMessage={emptyMessage}
-                scrollable={true}
-                scrollHeight='1rem'
-            >
-                {columns.map((col, index) => (
-                    <Column
-                        key={index}
-                        field={col.field}
-                        header={col.header}
-                        style={{ minWidth: col.width || 'auto' }}
-                        filter
-                        showFilterMenu={false}
-                        filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
-                        bodyStyle={rowStyle}
-                        headerStyle={headerStyle}
-                        body={loading ? <Skeleton /> : null}
-                    />
-                ))}
-            </DataTable> */}
-
-              {/* <DataTable
-                size="small"
-                value={data ?? []}
-                rows={10}
-                filters={filters}
-                filterDisplay="row"
-                emptyMessage={emptyMessage}
-                scrollable={true}
-                scrollHeight="1rem"
-              >
-                {columns.map((col, index) => (
-                  <Column
-                    key={index}
-                    field={col.field}
-                    header={col.header}
-                    style={{ minWidth: col.width || 'auto' }}
-                    filter
-                    showFilterMenu={false}
-                    filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
-                    bodyStyle={rowStyle}
-                    headerStyle={headerStyle}
-                    body={
-                      col.field === 'Image1' || col.field === 'Image2'
-                        ? (rowData) => imageBodyTemplate(rowData, col.field)
-                        : loading
-                          ? <Skeleton />
-                          : null
-                    } 
-                  />
-                ))}
-              </DataTable> */}
 
               <DataTable
                 size='small'
@@ -442,14 +376,13 @@ const Container1 = () => {
                   body={(rowData) => (
                     <Button
                       onClick={() => handleDelete(rowData.Id)}  // Use rowData.Id for the corresponding delete action
-                      variant="outlined"
                       size="small"
                       style={{ fontSize: "10px" }}
                     >
-                      Delete
+                     <DeleteIcon style={{ fontSize: "1rem" }}/>
                     </Button>
                   )}
-                  style={{ minWidth: '8rem' }} // Adjust the width as needed
+                  style={{ minWidth: '5rem' }} // Adjust the width as needed
                 />
 
                 {/* Dynamically render other columns based on the columns array */}
@@ -475,8 +408,6 @@ const Container1 = () => {
                 ))}
               </DataTable>
 
-
-              {/* Dialog box to display the image */}
               <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth
                BackdropProps={{
                 sx: {

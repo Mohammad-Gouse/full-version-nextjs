@@ -1,5 +1,6 @@
 
 import React, { createContext, useState, useEffect } from 'react';
+import awsConfig from 'src/configs/awsConfig';
 import createAxiosInstance from 'src/configs/axiosConfig';
 
 const ReportBrokerageContext = createContext();
@@ -17,7 +18,7 @@ const ReportBrokerageProvider = ({ children }) => {
       console.log("Fetching data...");
       setLoading(true);
       try {
-          const response = await axiosInstance.post(`http://175.184.255.158:5555/api/v1/reports/brokerage`, payload);
+          const response = await axiosInstance.post(`${awsConfig.BASE_URL}/reports/brokerage`, payload);
           console.log(response);
           setData(response.data.data);
           setTotal(response.data.total)

@@ -19,6 +19,7 @@ import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
 import CloseIcon from '@mui/icons-material/Close';
+import awsConfig from 'src/configs/awsConfig';
 
 const Container1 = () => {
   const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -71,7 +72,7 @@ const Container1 = () => {
     const fetchScripOptions = async (segment = 'Scrip}') => {  // Dynamic fetch function
       try {
         const accessToken = window.localStorage.getItem('accessToken');
-        const response = await axios.post('http://175.184.255.158:5555/api/v1/reports/scrip-list', { Segment: segment },
+        const response = await axios.post(`${awsConfig.BASE_URL}/reports/scrip-list`, { Segment: segment },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -147,13 +148,13 @@ const Container1 = () => {
     setLoadingDetails(true);
     setDialogOpen(true);
     try {
-      //   const response = await axios.post(`http://175.184.255.158:5555/api/v1/client/bankdetails`, {
+      //   const response = await axios.post(`${awsConfig.BASE_URL}/client/bankdetails`, {
       //     ClientCode: clientCode,
       //     Branch: "HO",
       //     Role: "11",
       //   });
       const accessToken = window.localStorage.getItem('accessToken');
-      const response = await axios.post('http://175.184.255.158:5555/api/v1/client/scripwise-postion', {
+      const response = await axios.post(`${awsConfig.BASE_URL}/client/scripwise-postion`, {
         ClientCode: clientCode,
         Branch: "HO",
         Role: "11",

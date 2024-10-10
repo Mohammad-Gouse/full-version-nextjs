@@ -1,5 +1,6 @@
 
 import React, { createContext, useState, useEffect } from 'react';
+import awsConfig from 'src/configs/awsConfig';
 import createAxiosInstance from 'src/configs/axiosConfig';
 
 const TradeBlockDataContext = createContext();
@@ -17,7 +18,7 @@ const TradeBlockDataProvider = ({ children }) => {
       console.log("Fetching data...");
       setLoading(true);
       try {
-          const response = await axiosInstance.post('http://175.184.255.158:5555/api/v1/trades/blockdata', payload);
+          const response = await axiosInstance.post(`${awsConfig.BASE_URL}/trades/blockdata`, payload);
           console.log(response);
           setData(response.data.data);
           setTotal(response.data.total)

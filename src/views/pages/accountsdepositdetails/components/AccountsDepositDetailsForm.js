@@ -24,11 +24,12 @@ import DeleteIcon from '@mui/icons-material/Delete'; // Import DeleteIcon
 import { lightBlue } from '@mui/material/colors';
 import UploadIcon from '@mui/icons-material/Upload';
 import FileUploadField from 'src/components/FileUploadField';
+import awsConfig from 'src/configs/awsConfig';
 
 
 const Container1 = () => {
   const { control, setValue, watch, formState: { errors }, reset } = useFormContext();
-  const { data, total, loading, error, fetchData } = useAccountsDepositDetails();
+  const {loading, error, success, setSuccess, fetchData } = useAccountsDepositDetails();
 
   const { setSharedData } = useDataSharing();
 
@@ -85,7 +86,6 @@ const Container1 = () => {
     setSelectedSegment(event.target.value);
   };
 
-
   const toast = useRef(null);
 
   useEffect(() => {
@@ -100,45 +100,31 @@ const Container1 = () => {
   }, [error]);
 
   useEffect(() => {
-    if (data?.length == 0) {
+    console.log(success)
+    if (success && error) {
       toast.current.show({
-        severity: 'info',
-        summary: 'Info',
-        detail: 'No data available',
+        severity: 'success',
+        summary: 'Save',
+        detail: 'Details have been saved successfully!',
         life: 3000,
       });
+
+      // Reset success state after showing the toast
+      const timer = setTimeout(() => {
+        setSuccess(false);
+      }, 3000); // Reset after 3 seconds (or adjust as needed)
+
+      return () => clearTimeout(timer); // Clear timer on component unmount
     }
-  }, [data]);
+  }, [success]);
+
+
+
 
 
   const [IssuingBankNameOptions, setIssuingBankNameOptions] = useState([]);  // Dynamic state for options
   const [loadingIssuingBankName, setloadingIssuingBankName] = useState(false);  // Dynamic state for loading
 
-  // useEffect(() => {
-  //   const fetchIssuingBankNameOptions = async (segment = 'equity}') => {  // Dynamic fetch function
-  //     try {
-  //       const accessToken = window.localStorage.getItem('accessToken');
-  //       const response = await axios.post('http://175.184.255.158:5555/api/v1/client/bankdetails', { Segment: segment },
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${accessToken}`,
-  //           },
-  //         }
-  //       );
-  //       const data = response.data.data.map((item) => item.BankName);  // Extract specific field values
-  //       setIssuingBankNameOptions(data);  // Set options for Autocomplete
-  //       setloadingIssuingBankName(false);  // Disable loading state
-  //       // if (data.length > 0) {
-  //       //   setValue('IssuingBankName', data[0]);
-  //       // }
-  //     } catch (error) {
-  //       console.error('Error fetching options for IssuingBankName:', error);
-  //       setloadingIssuingBankName(false);  // Disable loading state on error
-  //     }
-  //   };
-
-  //   fetchIssuingBankNameOptions(selectedSegment);  // Fetch options
-  // }, [selectedSegment]);
 
 
   const [DepositBankNameOptions, setDepositBankNameOptions] = useState([]);  // Dynamic state for options
@@ -148,7 +134,7 @@ const Container1 = () => {
     const fetchDepositBankNameOptions = async (segment = 'equity}') => {  // Dynamic fetch function
       try {
         const accessToken = window.localStorage.getItem('accessToken');
-        const response = await axios.post('http://175.184.255.158:5555/api/v1/margincheque/deposit-bank', { Segment: segment },
+        const response = await axios.post(`${awsConfig.BASE_URL}/margincheque/deposit-bank`, { Segment: segment },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -175,7 +161,7 @@ const Container1 = () => {
     setloadingIssuingBankName(true);
     const accessToken = window.localStorage.getItem('accessToken');
     try {
-      const response = await axios.post('http://175.184.255.158:5555/api/v1/client/bankdetails', {
+      const response = await axios.post(`${awsConfig.BASE_URL}/client/bankdetails`, {
         "ClientCode": control._formValues.ClientCode,
         "Branch": "HO",
         "Role": "11"
@@ -223,7 +209,7 @@ const Container1 = () => {
     const fetchData = async () => {
       const accessToken = window.localStorage.getItem('accessToken');
       try {
-        const response = await axios.post('http://175.184.255.158:5555/api/v1/combo/values', {},
+        const response = await axios.post(`${awsConfig.BASE_URL}/combo/values`, {},
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -247,7 +233,7 @@ const Container1 = () => {
     const fetchData = async () => {
       const accessToken = window.localStorage.getItem('accessToken');
       try {
-        const response = await axios.post('http://175.184.255.158:5555/api/v1/combo/values', {},
+        const response = await axios.post(`${awsConfig.BASE_URL}/combo/values`, {},
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

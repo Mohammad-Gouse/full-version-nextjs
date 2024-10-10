@@ -2,6 +2,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 // import createAxiosInstance from 'src/configs/axiosConfig';
 import axios from 'axios';
+import awsConfig from 'src/configs/awsConfig';
 
 const AccountsDpCheckDetailsContext = createContext();
 
@@ -10,25 +11,21 @@ const AccountsDpCheckDetailsProvider = ({ children }) => {
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
 
   // Create Axios instance
 //   const axiosInstance = createAxiosInstance();
 
   const fetchData = async (payload) => {
-      console.log("Fetching data...");
-
-      console.log(payload)
       setLoading(true);
       try {
-        //   const response = await axiosInstance.post(`http://175.184.255.158:5555/api/v1/accounts/margincheque`, payload);
-        axios.post(`http://175.184.255.158:5555/api/v1/accounts/dpcheque`, payload, {
+          const response = axios.post(`${awsConfig.BASE_URL}/accounts/dpcheque`, payload, {
             headers: {
               'Content-Type': 'multipart/form-data', // Ensure multipart form data
             }
           })
-          console.log(response);
-          setData(response.data.data);
-          setTotal(response.data.total)
+          setSuccess(true)
       } catch (error) {
           console.log("Error fetching data...");
           setError(error);
@@ -37,7 +34,7 @@ const AccountsDpCheckDetailsProvider = ({ children }) => {
       }
   };
 
-  const values = { data, total, loading, error, fetchData };
+  const values = {loading, error,  success, setSuccess, fetchData };
 
   return (
       <AccountsDpCheckDetailsContext.Provider value={values}>

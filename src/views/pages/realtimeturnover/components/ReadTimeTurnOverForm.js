@@ -18,6 +18,7 @@ import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
+import awsConfig from 'src/configs/awsConfig';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -96,7 +97,7 @@ const Container1 = () => {
         const fetchExchangeOptions = async (segment='equity}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/exchange/segment', {Segment : segment },
+                const response = await axios.post(`${awsConfig.BASE_URL}/exchange/segment`, {Segment : segment },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
@@ -126,7 +127,7 @@ const Container1 = () => {
         const fetchRegionOptions = async (exchange='ALL}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/region', {Exchange : exchange },
+                const response = await axios.post(`${awsConfig.BASE_URL}/masters/region`, {Exchange : exchange },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
@@ -156,7 +157,7 @@ const Container1 = () => {
         const fetchBranchOptions = async (code='all}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/branch', {Code : code },
+                const response = await axios.post(`${awsConfig.BASE_URL}/masters/branch`, {Code : code },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
@@ -186,7 +187,7 @@ const Container1 = () => {
         const fetchFranchiseOptions = async (code='all}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/franchise', {Code : code },
+                const response = await axios.post(`${awsConfig.BASE_URL}/masters/franchise`, {Code : code },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
@@ -216,7 +217,7 @@ const Container1 = () => {
         const fetchClientCodeOptions = async (code='all}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/masters/client', {Code : code },
+                const response = await axios.post(`${awsConfig.BASE_URL}/masters/client`, {Code : code },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,

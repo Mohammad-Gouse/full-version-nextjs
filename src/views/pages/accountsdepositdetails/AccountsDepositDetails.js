@@ -41,8 +41,6 @@
             formData.Branch = "HO"
             formData.Role = "11"
             formData.PunchBy = "user"
-
-            console.log(formData)
             fetchData(formData)
         };
 

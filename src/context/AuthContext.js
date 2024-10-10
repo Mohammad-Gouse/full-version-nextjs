@@ -48,12 +48,19 @@ const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    const useData = window.localStorage.getItem('userdetails')
+    const userDetail = JSON.parse(useData)
+    setUser(userDetail)
+  }, [])
+
+  useEffect(() => {
     const initAuth = async () => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)
       const userParseData = window.localStorage.getItem('userdetails')
       const userData = JSON.parse(userParseData)
-
       setLoading(true)
+
+      console.log(storedToken)
       if (storedToken) {
         const decodedToken = jwtDecode(storedToken)
         const expirationTime = new Date(decodedToken.exp * 1000) // Convert to milliseconds
@@ -93,7 +100,7 @@ const AuthProvider = ({ children }) => {
       Code: params?.loginType?.code
     }
     axios
-      .post(`${awsConfig.baseUrl}/auth/login`, body)
+      .post(`${awsConfig.BASE_URL}/auth/login`, body)
       .then(async response => {
         const decodedToken = jwtDecode(response?.data?.token)
 

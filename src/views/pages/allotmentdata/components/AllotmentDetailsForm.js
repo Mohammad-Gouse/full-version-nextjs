@@ -18,6 +18,7 @@ import { Skeleton } from 'primereact/skeleton';
 import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
+import awsConfig from 'src/configs/awsConfig';
 
 const Container1 = () => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -70,7 +71,7 @@ const Container1 = () => {
         const fetchScripOptions = async (segment='Scrip}') => {  // Dynamic fetch function
             try {
                 const accessToken = window.localStorage.getItem('accessToken');
-                const response = await axios.post('http://175.184.255.158:5555/api/v1/ipo/allotment/list', {Segment : segment },
+                const response = await axios.post(`${awsConfig.BASE_URL}/ipo/allotment/list`, {Segment : segment },
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
