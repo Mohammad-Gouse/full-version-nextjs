@@ -29,7 +29,7 @@ import awsConfig from 'src/configs/awsConfig';
 
 const Container1 = () => {
   const { control, setValue, watch, formState: { errors }, reset } = useFormContext();
-  const {loading, error, success, setSuccess, fetchData } = useAccountsDepositDetails();
+  const {loading, error, success, fetchData, resetStatus } = useAccountsDepositDetails();
 
   const { setSharedData } = useDataSharing();
 
@@ -88,38 +88,35 @@ const Container1 = () => {
 
   const toast = useRef(null);
 
+  // Show error toast
   useEffect(() => {
     if (error) {
       toast.current.show({
         severity: 'error',
-        summary: 'error',
+        summary: 'Error',
         detail: 'Something Went Wrong',
         life: 3000,
       });
-    }
-  }, [error]);
 
+      // Reset the error state after showing the toast
+      resetStatus();
+    }
+  }, [error, resetStatus]);
+
+  // Show success toast
   useEffect(() => {
-    console.log(success)
-    if (success && error) {
+    if (success) {
       toast.current.show({
         severity: 'success',
-        summary: 'Save',
+        summary: 'Success',
         detail: 'Details have been saved successfully!',
         life: 3000,
       });
 
-      // Reset success state after showing the toast
-      const timer = setTimeout(() => {
-        setSuccess(false);
-      }, 3000); // Reset after 3 seconds (or adjust as needed)
-
-      return () => clearTimeout(timer); // Clear timer on component unmount
+      // Reset the success state after showing the toast
+      resetStatus();
     }
-  }, [success]);
-
-
-
+  }, [success, resetStatus]);
 
 
   const [IssuingBankNameOptions, setIssuingBankNameOptions] = useState([]);  // Dynamic state for options

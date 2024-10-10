@@ -29,7 +29,7 @@ import awsConfig from 'src/configs/awsConfig';
 
 const Container1 = () => {
   const { control, setValue, watch, formState: { errors }, reset } = useFormContext();
-  const {  success, setSuccess, loading, error, fetchData } = useAccountsDpCheckDetails();
+  const {  loading, error, success, fetchData, resetStatus } = useAccountsDpCheckDetails();
 
   const { setSharedData } = useDataSharing();
 
@@ -89,32 +89,36 @@ const Container1 = () => {
 
   const toast = useRef(null);
 
+
+  // Show error toast
   useEffect(() => {
     if (error) {
       toast.current.show({
         severity: 'error',
-        summary: 'error',
+        summary: 'Error',
         detail: 'Something Went Wrong',
         life: 3000,
       });
-    }
-  }, [error]);
 
+      // Reset the error state after showing the toast
+      resetStatus();
+    }
+  }, [error, resetStatus]);
+
+  // Show success toast
   useEffect(() => {
     if (success) {
       toast.current.show({
         severity: 'success',
-        summary: 'Save',
+        summary: 'Success',
         detail: 'Details have been saved successfully!',
         life: 3000,
       });
-      const timer = setTimeout(() => {
-        setSuccess(false);
-      }, 3000); 
 
-      return () => clearTimeout(timer); 
+      // Reset the success state after showing the toast
+      resetStatus();
     }
-  }, [success]);
+  }, [success, resetStatus]);
 
 
 

@@ -199,7 +199,7 @@ const Container1 = () => {
       <Box sx={{ display: 'flex', flexDirection: "row", fontSize: "10px" }}>
       <Card variant="outlined" sx={{ padding: "8px 5px", marginRight: "5px", fontWeight: "900", background:'#F9FAFB' }}>
                   
-              {"Client Code"}: {data?.length>0 ? control._formValues.ClientCode: ''}
+              {"Client Code"}: {data?.length>0 && control._formValues.Client == "ClientCode"  ? control._formValues.ClientCode: ''}
             </Card>
       </Box>
     </Grid>

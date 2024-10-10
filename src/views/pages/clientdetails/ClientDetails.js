@@ -33,6 +33,11 @@
             formData.Branch = "HO"
             formData.Role = "11"
 
+            if(formData.Client == "PanNumber"){
+                formData.PAN = formData.ClientCode
+                formData.ClientCode = ""
+            }
+
             fetchData(formData)
         };
 

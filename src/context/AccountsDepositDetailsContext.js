@@ -1,9 +1,6 @@
-
-import React, { createContext, useState, useEffect } from 'react';
-// import createAxiosInstance from 'src/configs/axiosConfig';
+import React, { createContext, useState } from 'react';
 import axios from 'axios';
 import awsConfig from 'src/configs/awsConfig';
-
 
 const AccountsDepositDetailsContext = createContext();
 
@@ -14,33 +11,36 @@ const AccountsDepositDetailsProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // Create Axios instance
-//   const axiosInstance = createAxiosInstance();
-
   const fetchData = async (payload) => {
-      setLoading(true);
-      try {
-        const response = axios.post(`${awsConfig.BASE_URL}/accounts/margincheque`, payload, {
-            headers: {
-              'Content-Type': 'multipart/form-data', // Ensure multipart form data
-            }
-          })
-          setSuccess(true)
-      } catch (error) {
-          console.log("Error fetching data...");
-          setError(error);
-          setSuccess(false)
-      } finally {
-          setLoading(false);
-      }
+    setLoading(true);
+    try {
+      await axios.post(`${awsConfig.BASE_URL}/accounts/margincheque`, payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setSuccess(true); // Set success on successful request
+    } catch (error) {
+      console.log('Error fetching data...');
+      setError(error);
+      setSuccess(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const values = {loading, error, success, setSuccess, fetchData };
+  // Reset success and error after toast is shown
+  const resetStatus = () => {
+    setSuccess(null);
+    setError(null);
+  };
+
+  const values = { loading, error, success, fetchData, resetStatus };
 
   return (
-      <AccountsDepositDetailsContext.Provider value={values}>
-          {children}
-      </AccountsDepositDetailsContext.Provider>
+    <AccountsDepositDetailsContext.Provider value={values}>
+      {children}
+    </AccountsDepositDetailsContext.Provider>
   );
 };
 

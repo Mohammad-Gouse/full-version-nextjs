@@ -3,6 +3,7 @@ import React, { createContext, useState, useEffect } from 'react';
 // import createAxiosInstance from 'src/configs/axiosConfig';
 import axios from 'axios';
 import awsConfig from 'src/configs/awsConfig';
+import createAxiosInstance from 'src/configs/axiosConfig';
 
 const AccountsDpCheckDetailsContext = createContext();
 
@@ -13,28 +14,33 @@ const AccountsDpCheckDetailsProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-
-  // Create Axios instance
-//   const axiosInstance = createAxiosInstance();
+  const axiosInstance = createAxiosInstance();
 
   const fetchData = async (payload) => {
       setLoading(true);
       try {
-          const response = axios.post(`${awsConfig.BASE_URL}/accounts/dpcheque`, payload, {
+          await axiosInstance.post(`${awsConfig.BASE_URL}/accounts/dpcheque`, payload, {
             headers: {
               'Content-Type': 'multipart/form-data', // Ensure multipart form data
             }
           })
           setSuccess(true)
       } catch (error) {
-          console.log("Error fetching data...");
-          setError(error);
+        console.log('Error fetching data...');
+        setError(error);
+        setSuccess(false);
       } finally {
           setLoading(false);
       }
   };
 
-  const values = {loading, error,  success, setSuccess, fetchData };
+    // Reset success and error after toast is shown
+    const resetStatus = () => {
+      setSuccess(null);
+      setError(null);
+    };
+
+  const values = { loading, error, success, fetchData, resetStatus };
 
   return (
       <AccountsDpCheckDetailsContext.Provider value={values}>
