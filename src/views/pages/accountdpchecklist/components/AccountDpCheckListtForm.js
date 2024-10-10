@@ -18,6 +18,8 @@ import { CustomLoader } from 'src/components/CustomLoader';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
 import CloseIcon from '@mui/icons-material/Close';
+import awsConfig from 'src/configs/awsConfig';
+
 
 const Container1 = () => {
   const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -62,9 +64,77 @@ const Container1 = () => {
     }
   }, [data]);
 
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const accessToken = window.localStorage.getItem('accessToken');
+  //       const response = await axios.post(`${awsConfig.BASE_URL}/dpcheque/status-update`, {
+  //             Id: id.toString(),
+  //             Status: "Deleted"
+  //           },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //           },
+  //         }
+  //       );
+
+  //     if (response.ok) {
+  //       console.log('Deleted successfully');
+  //       // Refresh or update your data state here
+  //     } else {
+  //       console.error('Failed to delete');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during delete operation:', error);
+  //   }
+  // };
+
+  const handleDelete = async (id) => {
+    try {
+      const accessToken = window.localStorage.getItem('accessToken');
+      const response = await axios.post(
+        `${awsConfig.BASE_URL}/dpcheque/status-update`,
+        {
+          Id: id.toString(),
+          Status: "Deleted",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      // Handle response with status 204 as success
+      if (response.status === 204) {
+
+        toast.current.show({
+          severity: 'success',
+          summary: 'Delete',
+          detail: `${id} Deleted Successfully `,
+          life: 3000,
+        });
+
+        const payload = control._formValues;
+        payload.Branch = "HO";
+        payload.Role = "11";
+        fetchData(payload);
+      } else {
+        console.error('Failed to delete');
+      }
+    } catch (error) {
+      console.error('Error during delete operation:', error);
+    }
+  };
+
+
+
+
+
+
 
   const [filters, setFilters] = useState({ "ClientCode": { "value": null, "matchMode": "in" }, "ClientName": { "value": null, "matchMode": "in" }, "Branch": { "value": null, "matchMode": "in" }, "IssuingBankName": { "value": null, "matchMode": "in" }, "IssuingBankAccount": { "value": null, "matchMode": "in" }, "DepositBankName": { "value": null, "matchMode": "in" }, "DepositAmount": { "value": null, "matchMode": "in" }, "DepositChequeNo": { "value": null, "matchMode": "in" }, "ModeOfDeposit": { "value": null, "matchMode": "in" }, "DepositDate": { "value": null, "matchMode": "in" }, "Depository": { "value": null, "matchMode": "in" }, "PunchBy": { "value": null, "matchMode": "in" }, "PunchTime": { "value": null, "matchMode": "in" }, "Status": { "value": null, "matchMode": "in" }, "Image1": { "value": null, "matchMode": "in" }, "Image2": { "value": null, "matchMode": "in" } });
-  const [columns] = useState([{ "field": "ClientCode", "header": "Client Code", "width": "15rem" }, { "field": "ClientName", "header": "Client Name", "width": "20rem" }, { "field": "Branch", "header": "Branch", "width": "10rem" }, { "field": "IssuingBankName", "header": "Issuing Bank Name", "width": "20rem" }, { "field": "IssuingBankAccount", "header": "Issuing Bank Account", "width": "20rem" }, { "field": "DepositBankName", "header": "Deposit Bank Name", "width": "20rem" }, { "field": "DepositAmount", "header": "Deposit Amount", "width": "15rem" }, { "field": "DepositChequeNo", "header": "Deposit Cheque No", "width": "15rem" }, { "field": "ModeOfDeposit", "header": "Mode of Deposit", "width": "15rem" }, { "field": "DepositDate", "header": "Deposit Date", "width": "15rem" }, { "field": "Depository", "header": "Depository", "width": "10rem" }, { "field": "PunchBy", "header": "Punch By", "width": "15rem" }, { "field": "PunchTime", "header": "Punch Time", "width": "20rem" }, { "field": "Status", "header": "Status", "width": "10rem" }, { "field": "Image1", "header": "Cheque", "width": "15rem" }, { "field": "Image2", "header": "Deposit Slip", "width": "15rem" }]);  // Dynamic columns from JSON input
+  const [columns] = useState([{ "field": "Id", "header": "Ref.No.", "width": "15rem" }, { "field": "ClientCode", "header": "Client Code", "width": "15rem" }, { "field": "ClientName", "header": "Client Name", "width": "20rem" }, { "field": "Branch", "header": "Branch", "width": "10rem" }, { "field": "IssuingBankName", "header": "Issuing Bank Name", "width": "20rem" }, { "field": "IssuingBankAccount", "header": "Issuing Bank Account", "width": "20rem" }, { "field": "DepositBankName", "header": "Deposit Bank Name", "width": "20rem" }, { "field": "DepositAmount", "header": "Deposit Amount", "width": "15rem" }, { "field": "DepositChequeNo", "header": "Deposit Cheque No", "width": "15rem" }, { "field": "ModeOfDeposit", "header": "Mode of Deposit", "width": "15rem" }, { "field": "DepositDate", "header": "Deposit Date", "width": "15rem" }, { "field": "Depository", "header": "Depository", "width": "10rem" }, { "field": "PunchBy", "header": "Punch By", "width": "15rem" }, { "field": "PunchTime", "header": "Punch Time", "width": "20rem" }, { "field": "Status", "header": "Status", "width": "10rem" }, { "field": "Image1", "header": "Cheque", "width": "15rem" }, { "field": "Image2", "header": "Deposit Slip", "width": "15rem" }]);  // Dynamic columns from JSON input
 
   const uniqueValues = (key) => {
     return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -137,11 +207,11 @@ const Container1 = () => {
     if (fileId) {
       return (
         <Button
-          variant="text"
+          variant="outlined"
           size="small"
           color="primary"
           onClick={() => handleViewImage(fileId)}
-          style={{fontSize:"10px"}}
+          style={{ fontSize: "10px" }}
         >
           View
         </Button>
@@ -151,11 +221,11 @@ const Container1 = () => {
     }
   };
 
-    // Handler to close the dialog
-    // const handleCloseDialog = () => {
-    //   setDialogOpen(false);
-    //   setCurrentImageUrl(null);
-    // };
+  // Handler to close the dialog
+  // const handleCloseDialog = () => {
+  //   setDialogOpen(false);
+  //   setCurrentImageUrl(null);
+  // };
 
 
   return (
@@ -322,7 +392,7 @@ const Container1 = () => {
                 ))}
             </DataTable> */}
 
-              <DataTable
+              {/* <DataTable
                 size="small"
                 value={data ?? []}
                 rows={10}
@@ -332,7 +402,57 @@ const Container1 = () => {
                 scrollable={true}
                 scrollHeight="1rem"
               >
-                {/* Dynamically render columns based on the columns array */}
+                {columns.map((col, index) => (
+                  <Column
+                    key={index}
+                    field={col.field}
+                    header={col.header}
+                    style={{ minWidth: col.width || 'auto' }}
+                    filter
+                    showFilterMenu={false}
+                    filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+                    bodyStyle={rowStyle}
+                    headerStyle={headerStyle}
+                    body={
+                      col.field === 'Image1' || col.field === 'Image2'
+                        ? (rowData) => imageBodyTemplate(rowData, col.field)
+                        : loading
+                          ? <Skeleton />
+                          : null
+                    } 
+                  />
+                ))}
+              </DataTable> */}
+
+              <DataTable
+                size='small'
+                value={data ?? []}
+                rows={10}
+                filters={filters}
+                filterDisplay="row"
+                emptyMessage={emptyMessage}
+                scrollable={true}
+                scrollHeight='1rem'
+              >
+                {/* Prepend delete column */}
+                <Column
+                  header="Action"
+                  bodyStyle={rowStyle}
+                  headerStyle={headerStyle}
+                  body={(rowData) => (
+                    <Button
+                      onClick={() => handleDelete(rowData.Id)}  // Use rowData.Id for the corresponding delete action
+                      variant="outlined"
+                      size="small"
+                      style={{ fontSize: "10px" }}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                  style={{ minWidth: '8rem' }} // Adjust the width as needed
+                />
+
+                {/* Dynamically render other columns based on the columns array */}
                 {columns.map((col, index) => (
                   <Column
                     key={index}
@@ -356,26 +476,32 @@ const Container1 = () => {
               </DataTable>
 
 
-{/* Dialog box to display the image */}
-<Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle style={{fontSize:"12px"}}>
-          Image Preview
-          <IconButton
-            aria-label="close"
-            onClick={handleCloseDialog}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          {currentImageUrl ? (
-            <img src={currentImageUrl} alt="Image Preview" />
-          ) : (
-            <Typography>No image available</Typography>
-          )}
-        </DialogContent>
-      </Dialog>
+              {/* Dialog box to display the image */}
+              <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth
+               BackdropProps={{
+                sx: {
+                  backgroundColor: 'transparent' // Remove the backdrop
+                }
+              }}
+              >
+                <DialogTitle style={{ fontSize: "12px" }}>
+                  Image Preview
+                  <IconButton
+                    aria-label="close"
+                    onClick={handleCloseDialog}
+                    sx={{ position: 'absolute', right: 8, top: 8 }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                  {currentImageUrl ? (
+                    <img src={currentImageUrl} alt="Image Preview" style={{ maxWidth: "100%" }} />
+                  ) : (
+                    <Typography>No image available</Typography>
+                  )}
+                </DialogContent>
+              </Dialog>
             </Box>
           </Grid>
 

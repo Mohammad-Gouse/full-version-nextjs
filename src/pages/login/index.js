@@ -45,8 +45,8 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrations from 'src/views/pages/auth/FooterIllustrationsV2'
 import { Toast } from 'primereact/toast'
 import { Autocomplete, Card, CardContent, Grid } from '@mui/material'
-import awsConfig from 'src/configs/awsConfig'
 import axios from 'axios'
+import awsConfig from 'src/configs/awsConfig'
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)(({ theme }) => ({
@@ -153,7 +153,7 @@ const LoginPage = () => {
     }
   }, [auth.failureMessage])
   useEffect(() => {
-    axios.post(`${awsConfig.baseUrl}/auth/login-type`).then(async response => {
+    axios.post(`${awsConfig.BASE_URL}/auth/login-type`).then(async response => {
       if (response?.data?.data?.length > 0) {
         const dataArray = response?.data?.data?.map(item => {
           return {
