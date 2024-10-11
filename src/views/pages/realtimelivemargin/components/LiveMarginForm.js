@@ -21,13 +21,13 @@ const transformData = (data) => {
   const client = data || {}; // Ensure client is an object, defaulting to empty if no data
   
   return [
-      { label: 'Deposit', value: client?.Deposit ?? '' },
+      { label: 'Margin for trading', value: client?.Deposit ?? '' },
       { label: 'Booked Profit/Loss', value: client?.BookedProfitLoss ?? '' },
       { label: 'MTM Profit/Loss', value: client?.MTMProfitLoss ?? '' },
       { label: 'Fund Transfer', value: client?.FundTransfer ?? '' },
       { label: 'Credit for Sale', value: client?.CreditforSale ?? '' },
       { label: 'Margin Used', value: client?.MarginUsed ?? '' },
-      { label: 'Total Limit', value: client?.TotalLimit ?? '' },
+      // { label: 'Total Limit', value: client?.TotalLimit ?? '' },
       { label: 'Net Balance', value: client?.NetBalance ?? '' }
   ];
 };
