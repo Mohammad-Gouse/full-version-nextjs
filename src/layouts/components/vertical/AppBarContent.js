@@ -113,6 +113,9 @@ const AppBarContent = props => {
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
 
+  const login_user = JSON.parse(window.localStorage.getItem('userdetails'))
+  // console.log((login_user.ClientCode))
+
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
@@ -129,6 +132,11 @@ const AppBarContent = props => {
         <ShortcutsDropdown settings={settings} shortcuts={shortcuts} />
         <NotificationDropdown settings={settings} notifications={notifications} /> */}
         <UserDropdown settings={settings} />
+        <div style={{marginLeft:"5px", marginRight:"5px"}}>
+          <div style={{fontSize:"10px"}}>Hey!</div>
+          <div style={{fontSize:"12px", color:"black"}}>{login_user.ClientCode.toUpperCase()}</div>
+        </div>
+
       </Box>
     </Box>
   )

@@ -2,7 +2,7 @@
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel, RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText, Button, Typography, FormControlLabel, FormLabel, RadioGroup, Radio, Card, CircularProgress, Checkbox, Tooltip, Dialog, DialogContent, DialogTitle, DialogActions, IconButton } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 import { CustomTimeInput } from 'src/components/CustomTimeInput';
@@ -68,7 +68,7 @@ const Container1 = () => {
 
 
   const [filters, setFilters] = useState({ "ClientCode": { "value": null, "matchMode": "in" }, "ClientName": { "value": null, "matchMode": "in" }, "Branch": { "value": null, "matchMode": "in" }, "IssuingBankName": { "value": null, "matchMode": "in" }, "IssuingBankAccount": { "value": null, "matchMode": "in" }, "DepositBankName": { "value": null, "matchMode": "in" }, "DepositAmount": { "value": null, "matchMode": "in" }, "DepositChequeNo": { "value": null, "matchMode": "in" }, "ModeOfDeposit": { "value": null, "matchMode": "in" }, "DepositDate": { "value": null, "matchMode": "in" }, "PunchBy": { "value": null, "matchMode": "in" }, "PunchTime": { "value": null, "matchMode": "in" }, "Status": { "value": null, "matchMode": "in" }, "Image1": { "value": null, "matchMode": "in" }, "Image2": { "value": null, "matchMode": "in" } });
-  const [columns] = useState([{ "field": "ClientCode", "header": "Client Code", "width": "15rem" }, { "field": "ClientName", "header": "Client Name", "width": "20rem" }, { "field": "Branch", "header": "Branch", "width": "10rem" }, { "field": "IssuingBankName", "header": "Issuing Bank Name", "width": "20rem" }, { "field": "IssuingBankAccount", "header": "Issuing Bank Account", "width": "20rem" }, { "field": "DepositBankName", "header": "Deposit Bank Name", "width": "20rem" }, { "field": "DepositAmount", "header": "Deposit Amount", "width": "15rem" }, { "field": "DepositChequeNo", "header": "Deposit Cheque No", "width": "15rem" }, { "field": "ModeofDeposit", "header": "Mode of Deposit", "width": "15rem" }, { "field": "DepositDate", "header": "Deposit Date", "width": "15rem" }, { "field": "PunchBy", "header": "Punch By", "width": "15rem" }, { "field": "PunchTime", "header": "Punch Time", "width": "20rem" }, { "field": "Status", "header": "Status", "width": "10rem" }, { "field": "Image1", "header": "Cheque", "width": "15rem" }, { "field": "Image2", "header": "Deposit Slip", "width": "15rem" }]);  // Dynamic columns from JSON input
+  const [columns] = useState([{ "field": "Id", "header": "Ref.No.", "width": "15rem" },{ "field": "ClientCode", "header": "Client Code", "width": "15rem" }, { "field": "ClientName", "header": "Client Name", "width": "20rem" }, { "field": "Branch", "header": "Branch", "width": "10rem" }, { "field": "IssuingBankName", "header": "Issuing Bank Name", "width": "20rem" }, { "field": "IssuingBankAccount", "header": "Issuing Bank Account", "width": "20rem" }, { "field": "DepositBankName", "header": "Deposit Bank Name", "width": "20rem" }, { "field": "DepositAmount", "header": "Deposit Amount", "width": "15rem" }, { "field": "DepositChequeNo", "header": "Deposit Cheque No", "width": "15rem" }, { "field": "ModeofDeposit", "header": "Mode of Deposit", "width": "15rem" }, { "field": "DepositDate", "header": "Deposit Date", "width": "15rem" }, { "field": "PunchBy", "header": "Punch By", "width": "15rem" }, { "field": "PunchTime", "header": "Punch Time", "width": "20rem" }, { "field": "Status", "header": "Status", "width": "10rem" }, { "field": "Image1", "header": "Cheque", "width": "15rem" }, { "field": "Image2", "header": "Deposit Slip", "width": "15rem" }]);  // Dynamic columns from JSON input
 
   const uniqueValues = (key) => {
     return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
@@ -192,6 +192,32 @@ const Container1 = () => {
       return <span>No Image</span>;
     }
   };
+
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Track the dialog state
+  const [selectedId, setSelectedId] = useState(null); // Track the selected row's ID
+
+  // Function to handle delete with confirmation
+  const confirmDelete = (id) => {
+    setSelectedId(id); // Store the ID of the row to be deleted
+    setOpenConfirmDialog(true); // Open the confirmation dialog
+  };
+
+  // Function to handle the actual delete action
+  const handleDeleteConfirmed = async () => {
+    if (selectedId) {
+      await handleDelete(selectedId); // Call your existing delete function
+      setOpenConfirmDialog(false); // Close the dialog after deletion
+      setSelectedId(null); // Reset the selected ID
+    }
+  };
+
+  // Function to close the confirmation dialog
+  const handleCloseDialogDelete = () => {
+    setOpenConfirmDialog(false);
+    setSelectedId(null); // Reset selectedId if deletion is canceled
+  };
+
+
 
 
   return (
@@ -332,7 +358,7 @@ const Container1 = () => {
                   <CircularProgress />
                 </div>
               )}
-              <DataTable
+              {/* <DataTable
                 size='small'
                 value={data ?? []}
                 rows={10}
@@ -342,7 +368,6 @@ const Container1 = () => {
                 scrollable={true}
                 scrollHeight='1rem'
               >
-                {/* Prepend delete column */}
                 <Column
                   header="Action"
                   bodyStyle={rowStyle}
@@ -359,7 +384,6 @@ const Container1 = () => {
                   style={{ minWidth: '5rem' }} // Adjust the width as needed
                 />
 
-                {/* Dynamically render other columns based on the columns array */}
                 {columns.map((col, index) => (
                   <Column
                     key={index}
@@ -380,16 +404,90 @@ const Container1 = () => {
                     } // Show skeleton while loading or "View" link for images
                   />
                 ))}
-              </DataTable>
+              </DataTable> */}
 
-              <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth
+<DataTable
+        size='small'
+        value={data ?? []}
+        rows={10}
+        filters={filters}
+        filterDisplay="row"
+        emptyMessage={emptyMessage}
+        scrollable={true}
+        scrollHeight='1rem'
+      >
+        {/* Prepend delete column */}
+        <Column
+          header="Action"
+          bodyStyle={rowStyle}
+          headerStyle={headerStyle}
+          body={(rowData) => (
+            <Button
+              onClick={() => confirmDelete(rowData.Id)}  // Call confirmDelete instead of handleDelete
+              size="small"
+              style={{ fontSize: "10px" }}
+            >
+              <DeleteIcon style={{ fontSize: "1rem" }} />
+            </Button>
+          )}
+          style={{ minWidth: '5rem' }} // Adjust the width as needed
+        />
+
+        {/* Dynamically render other columns based on the columns array */}
+        {columns.map((col, index) => (
+          <Column
+            key={index}
+            field={col.field}
+            header={col.header}
+            style={{ minWidth: col.width || 'auto' }}
+            filter
+            showFilterMenu={false}
+            filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+            bodyStyle={rowStyle}
+            headerStyle={headerStyle}
+            body={
+              col.field === 'Image1' || col.field === 'Image2'
+                ? (rowData) => imageBodyTemplate(rowData, col.field)
+                : loading
+                  ? <Skeleton />
+                  : null
+            }
+          />
+        ))}
+      </DataTable>
+
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={openConfirmDialog}
+        onClose={handleCloseDialogDelete}
+        BackdropProps={{
+          sx: {
+            backgroundColor: 'transparent' // Remove the backdrop
+          }
+        }}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this item?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialogDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirmed} color="secondary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+              <Dialog open={dialogOpen} onClose={handleCloseDialog}  maxWidth="md"
                 BackdropProps={{
                   sx: {
                     backgroundColor: 'transparent' // Remove the backdrop
-                  }
+                  },
                 }}
               >
-                <DialogTitle style={{ fontSize: "12px" }}>
+                <DialogTitle style={{ fontSize: "12px", minWidth:"20vw" }}>
                   Image Preview
                   <IconButton
                     aria-label="close"

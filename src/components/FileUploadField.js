@@ -208,7 +208,7 @@ const FileUploadField = ({ control, name, label, resetTrigger }) => {
                 
                 <input
                   type="file"
-                  accept=".jpg,.png"
+                  accept=".jpg,.png, .jpeg"
                   multiple={false}
                   onChange={(e) => handleFileUpload(e, field.onChange)}
                   style={{ display: 'none' }}

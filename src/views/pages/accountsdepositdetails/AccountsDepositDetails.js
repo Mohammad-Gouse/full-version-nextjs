@@ -24,6 +24,8 @@
 
         const { data, total, loading, error, fetchData } = useAccountsDepositDetails();
 
+        const login_user = JSON.parse(window.localStorage.getItem('userdetails'))
+
         const onSubmit = (data) => {
             console.log(data.SelectedBank)
 
@@ -40,7 +42,7 @@
 
             formData.Branch = "HO"
             formData.Role = "11"
-            formData.PunchBy = "user"
+            formData.PunchBy = login_user.ClientCode
             fetchData(formData)
         };
 
