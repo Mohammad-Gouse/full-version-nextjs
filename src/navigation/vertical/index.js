@@ -109,16 +109,16 @@ const navigation = () => {
         },
       ]
     },
-    {
-      title: 'KYC',
-      icon: 'fluent:gift-16-regular',
-      children: [
-        {
-          title: 'Form Tracking',
-          path: '/kycformtracking'
-        }
-      ]
-    },
+    // {
+    //   title: 'KYC',
+    //   icon: 'fluent:gift-16-regular',
+    //   children: [
+    //     {
+    //       title: 'Form Tracking',
+    //       path: '/kycformtracking'
+    //     }
+    //   ]
+    // },
     {
       title: 'Accounts',
       icon: 'fluent:gift-16-regular',

@@ -60,7 +60,7 @@ const ChequeSplitter = () => {
   >
     <div style={{ display: 'grid', fontSize: "10px", gridTemplateColumns: '1fr 0.05fr 1.8fr', gap: '0.5rem' }}>
       {Object.entries(sharedData).map(([key, value]) => (
-        value !== undefined && value !== null && value !== '' && (typeof value !== 'object') && (
+       !["File", "SelectedBank"].some(substr => key.includes(substr)) && value !== undefined && value !== null && value !== '' && (typeof value !== 'File') && (
           <React.Fragment key={key}>
             <div>{key}</div>
             <div>:</div>

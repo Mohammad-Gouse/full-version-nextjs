@@ -426,6 +426,7 @@ const Container1 = () => {
               onClick={() => confirmDelete(rowData.Id)}  // Call confirmDelete instead of handleDelete
               size="small"
               style={{ fontSize: "10px" }}
+              disabled={rowData.Status.toLowerCase() !== 'pending'}
             >
               <DeleteIcon style={{ fontSize: "1rem" }} />
             </Button>

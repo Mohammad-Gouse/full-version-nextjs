@@ -18,12 +18,12 @@ const AccountsDepositDetailsSchema = Yup.object().shape({
 });
 
 const defaultValues = {
-                Segment: "",
+                Segment: "BSE",
                 ClientCode: "",
                 ClientName: "",
                 IssuingBankName: "",
                 SelectedBank: "",
-                ModeofDeposit: "",
+                ModeofDeposit: "Fund Transfer/NEFT",
                 DepositChequeNo: "",
                 DepositAmount: "",
                 DepositBankName: "",

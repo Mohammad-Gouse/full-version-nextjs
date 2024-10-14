@@ -19,13 +19,13 @@ const AccountsDpCheckDetailsSchema = Yup.object().shape({
 });
 
 const defaultValues = {
-                Depository: "",
-                Segment: "",
+                Depository: "NSDL",
+                Segment: "BSE",
                 ClientCode: "",
                 ClientName: "",
                 IssuingBankName: "",
                 SelectedBank: "",
-                ModeofDeposit: "",
+                ModeofDeposit: "Fund Transfer/NEFT",
                 DepositChequeNo: "",
                 DepositAmount: "",
                 DepositBankName: "",

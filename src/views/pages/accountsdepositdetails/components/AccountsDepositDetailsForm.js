@@ -80,7 +80,7 @@ const Container1 = () => {
 
 
 
-  const [selectedSegment, setSelectedSegment] = useState('Equity');
+  const [selectedSegment, setSelectedSegment] = useState('NSE');
 
   const handleSegmentChange = (event) => {
     setSelectedSegment(event.target.value);
@@ -115,6 +115,7 @@ const Container1 = () => {
 
       // Reset the success state after showing the toast
       resetStatus();
+      onReset();
     }
   }, [success, resetStatus]);
 
@@ -128,7 +129,7 @@ const Container1 = () => {
   const [loadingDepositBankName, setloadingDepositBankName] = useState(true);  // Dynamic state for loading
 
   useEffect(() => {
-    const fetchDepositBankNameOptions = async (segment = 'equity}') => {  // Dynamic fetch function
+    const fetchDepositBankNameOptions = async (segment = 'NSE') => {  // Dynamic fetch function
       try {
         const accessToken = window.localStorage.getItem('accessToken');
         const response = await axios.post(`${awsConfig.BASE_URL}/margincheque/deposit-bank`, { Segment: segment },
@@ -187,7 +188,7 @@ const Container1 = () => {
         issuingBankAccountNumber: item.BankAccountNumber
       }));
 
-      console.log(bankOptions)
+      setValue('SelectedBank', bankOptions[0]);
       setIssuingBankNameOptions(bankOptions);
 
     } catch (error) {
@@ -216,6 +217,10 @@ const Container1 = () => {
         // const response = await axios.get('{{BASE_URL}}/client/bankdetails'); // Adjust endpoint as needed
         const equityData = response.data.data[0].Equity; // Extract the Equity array from response
         setSegmentOptions(equityData); // Set the options for the dropdown
+        console.log(equityData)
+        if (equityData.length > 0) {
+          setValue('Segment', equityData[0]);
+      }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -727,7 +732,7 @@ const Container1 = () => {
           </Grid>
 
 
-          <Grid item xs={selectedMode === 'Cheque' ? 6 : 12} >
+          <Grid item lg={selectedMode === 'Cheque' ? 6 : 12} md={selectedMode === 'Cheque' ? 6 : 12} sm={12} xs={12} >
             <FileUploadField
               control={control}
               name="File1"
