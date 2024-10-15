@@ -25,6 +25,8 @@ const Container1 = () => {
   const { control, setValue, watch, formState: { errors } } = useFormContext();
   const { data, total, loading, error, fetchData } = useReportsScripwise();
 
+
+
   const exportToExcel = () => {
     // Create a new workbook
     const workbook = XLSX.utils.book_new();
@@ -129,13 +131,13 @@ const Container1 = () => {
 
   const headerStyle = { "padding": "3px 6px", "fontSize": "9px", "height": "9px" }
 
-  const rowStyle = { "padding": "5px 4px", "fontSize": "10px", "height": "4vh !important" }
+  const rowStyle = { "padding": "5px 4px", "fontSize": "10px", "height": "2vh !important" }
 
   const emptyMessage = (
     <div style={{ "display": "flex", "justifyContent": "start", "alignItems": "center", "paddingLeft": "35vw", "minHeight": "60vh" }}>
       <div className='w-[100%] text-center font-bold'>
         <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
-        <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div>
+        {/* <div style={{ textAlign: "center" }} className='w-[100%] text-center font-bold'>No Data Available</div> */}
       </div>
     </div>
   );
@@ -179,6 +181,8 @@ const Container1 = () => {
     setDialogOpen(false);
     setBankDetails([]);
   };
+
+
 
 
 
@@ -275,7 +279,7 @@ const Container1 = () => {
 
 
 
-          <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px" }}>
+          {/* <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px" }}>
             <Box>
               {loading && (
                 <div style={{
@@ -296,9 +300,9 @@ const Container1 = () => {
                 filterDisplay="row"
                 emptyMessage={emptyMessage}
                 scrollable={true}
+                // virtualScrollerOptions={{ itemSize: 50 }}
                 scrollHeight="1rem"
               >
-                {/* Dynamically render columns based on the columns array */}
                 {columns.map((col, index) => (
                   <Column
                     key={index}
@@ -306,16 +310,8 @@ const Container1 = () => {
                     header={col.header}
                     style={{ minWidth: col.width || 'auto' }}
                     body={(rowData) => {
-                      // If the column is ClientCode, render it as a clickable link
                       if (col.field === 'ClientCode') {
                         return (
-                          // <Button
-                          //   variant="text"
-                          //   onClick={() => handleClientCodeClick(rowData.ClientCode)}
-                          //   style={{ textDecoration: 'underline', color: 'blue' }}
-                          // >
-                          //   {rowData.ClientCode}
-                          // </Button>
                           <Button
                             onClick={() => handleClientCodeClick(rowData.ClientCode)}
                             variant="outlined"
@@ -337,55 +333,113 @@ const Container1 = () => {
                   />
                 ))}
               </DataTable>
+            </Box>
+          </Grid> */}
 
-
-              {/* Dialog to display bank details */}
-              <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth
-                BackdropProps={{
-                  sx: {
-                    backgroundColor: 'transparent' // Remove the backdrop
-                  }
+          <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px" }}>
+            <Box>
+              {loading && (
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: 1
                 }}>
-                <DialogTitle style={{ fontSize: "12px" }}>
-                  Scripwise Position
-                  <IconButton
-                    aria-label="close"
-                    onClick={handleCloseDialog}
-                    sx={{ position: 'absolute', right: 8, top: 8 }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                  {loadingDetails ? (
-                    <Skeleton />
-                  ) : (
-                    <DataTable
-                      size="small"
-                      value={bankDetails}
-                      rows={10}
-                      scrollable={true}
-                      scrollHeight="15rem"
-                    >
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="SymbolName" header="Symbol Name" />
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Quantity" header="Quantity" />
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="ClosingPrice" header="Closing Price" />
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Valuation" header="Valuation" />
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Quantity%" header="Quantity %" />
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Valuation%" header="Valuation %" />
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Ledger Balance" header="Ledger Balance" />
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Valuation after Var" header="Valuation after Var" />
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Stock % Before Var" header="Stock % Before Var" />
-                      <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Stock % after Var" header="Stock % after Var" />
-                      {/* <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="ClientName" header="Client Name" />
-              <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="BankAccountNumber" header="Account Number" /> */}
-                      {/* Add other fields as required */}
-                    </DataTable>
-                  )}
-                </DialogContent>
-              </Dialog>
+                  <CircularProgress />
+                </div>
+              )}
+              <DataTable
+                size="small"
+                value={data ?? []}
+                scrollable={true}
+                virtualScrollerOptions={{
+                  itemSize: 20,
+                }}
+                // scrollHeight="400px"  // Set a fixed scrollable area height
+                emptyMessage={emptyMessage}
+                filters={filters}
+                filterDisplay="row"
+              >
+                {columns.map((col, index) => (
+                  <Column
+                    key={index}
+                    field={col.field}
+                    header={col.header}
+                    style={{ minWidth: col.width || 'auto' }}
+                    bodyStyle={rowStyle}
+                    headerStyle={headerStyle}
+                    body={(rowData) => {
+                      if (col.field === 'ClientCode') {
+                        return (
+                          <Button
+                            onClick={() => handleClientCodeClick(rowData.ClientCode)}
+                            variant="outlined"
+                            size="small"
+                            style={{ fontSize: "10px" }}
+                          >
+                            {rowData.ClientCode}
+                          </Button>
+                        );
+                      }
+                      return rowData[col.field];
+                    }}
+                    filter
+                    showFilterMenu={false}
+                    filterElement={(options) => multiSelectFilterTemplate(options, col.field, col.header)}
+                  />
+                ))}
+              </DataTable>
             </Box>
           </Grid>
+
+
+
+
+
+
+          {/* Dialog to display bank details */}
+          <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth
+            BackdropProps={{
+              sx: {
+                backgroundColor: 'transparent' // Remove the backdrop
+              }
+            }}>
+            <DialogTitle style={{ fontSize: "12px" }}>
+              Scripwise Position
+              <IconButton
+                aria-label="close"
+                onClick={handleCloseDialog}
+                sx={{ position: 'absolute', right: 8, top: 8 }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent>
+              {loadingDetails ? (
+                <Skeleton />
+              ) : (
+                <DataTable
+                  size="small"
+                  value={bankDetails}
+                  rows={10}
+                  scrollable={true}
+                  scrollHeight="15rem"
+                >
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="SymbolName" header="Symbol Name" />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Quantity" header="Quantity" />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="ClosingPrice" header="Closing Price" />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Valuation" header="Valuation" />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Quantity%" header="Quantity %" />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Valuation%" header="Valuation %" />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Ledger Balance" header="Ledger Balance" />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Valuation after Var" header="Valuation after Var" />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Stock % Before Var" header="Stock % Before Var" />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field="Stock % after Var" header="Stock % after Var" />
+                </DataTable>
+              )}
+            </DialogContent>
+          </Dialog>
 
 
         </Grid>

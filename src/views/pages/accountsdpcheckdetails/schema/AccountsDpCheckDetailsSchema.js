@@ -6,8 +6,9 @@ import moment from 'moment';
 
 const AccountsDpCheckDetailsSchema = Yup.object().shape({
                 Depository: Yup.mixed(),
+                DPId:Yup.string(),
                 Segment: Yup.string(),
-                ClientCode: Yup.string().required('Client Code is required').min(5, 'Client Code must be at least 5 characters long').max(20, 'Client Code must be no more than 20 characters long').matches(new RegExp('^[a-zA-Z0-9]+$'), 'Client Code is invalid.'),
+                ClientCode: Yup.string(),
                 ClientName: Yup.mixed(),
                 IssuingBankName: Yup.mixed(),
                 SelectedBank: Yup.mixed(),
@@ -22,6 +23,7 @@ const defaultValues = {
                 Depository: "NSDL",
                 Segment: "BSE",
                 ClientCode: "",
+                DPId:"",
                 ClientName: "",
                 IssuingBankName: "",
                 SelectedBank: "",

@@ -162,10 +162,9 @@ const Container1 = () => {
     setloadingIssuingBankName(true);
     const accessToken = window.localStorage.getItem('accessToken');
     try {
-      const response = await axios.post(`${awsConfig.BASE_URL}/client/bankdetails`, {
-        "ClientCode": control._formValues.ClientCode,
-        "Branch": "HO",
-        "Role": "11"
+      const response = await axios.post(`${awsConfig.BASE_URL}/dpcheque/bank-details`, {
+          "Depository" : control._formValues.Depository,
+          "DPId" : control._formValues.DPId
       },
         {
           headers: {
@@ -183,6 +182,7 @@ const Container1 = () => {
 
       // Update the form fields with the fetched data
       setValue('ClientName', clientName);
+      setValue('ClientCode', control._formValues.DPId);
       // setValue('IssuingBankName', bankName);
 
       // Set options for IssuingBankName Autocomplete
@@ -466,7 +466,7 @@ const Container1 = () => {
           {/* <Grid item lg={6} md={6} sm={12} xs={12} >
             <FormControl fullWidth>
               <Controller
-                name="ClientCode"
+                name="DPId"
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -497,18 +497,18 @@ const Container1 = () => {
           <Grid item lg={6} md={6} sm={12} xs={12} style={{paddingTop:"0px"}}>
             <FormControl fullWidth>
               <Controller
-                name="ClientCode"
+                name="DPId"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    id="ClientCode"
+                    id="DPId"
                     defaultValue=""
-                    label={'Client Code'}
+                    label={'DP Id'}
                     size="small"
                     fullWidth
-                    error={!!errors?.ClientCode}
-                    helperText={errors?.ClientCode?.message}
+                    error={!!errors?.DPId}
+                    helperText={errors?.DPId?.message}
                     InputProps={{
                       style: { fontSize: '10px' },
                       endAdornment: (

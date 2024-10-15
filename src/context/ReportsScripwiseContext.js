@@ -15,15 +15,12 @@ const ReportsScripwiseProvider = ({ children }) => {
   const axiosInstance = createAxiosInstance();
 
   const fetchData = async (payload) => {
-      console.log("Fetching data...");
       setLoading(true);
       try {
           const response = await axiosInstance.post(`${awsConfig.BASE_URL}/reports/scripwise-holding`, payload);
-          console.log(response);
           setData(response.data.data);
           setTotal(response.data.total)
       } catch (error) {
-          console.log("Error fetching data...");
           setError(error);
       } finally {
           setLoading(false);
