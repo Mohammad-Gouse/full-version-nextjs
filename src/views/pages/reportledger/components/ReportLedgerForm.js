@@ -38,6 +38,7 @@ import { CustomLoader } from 'src/components/CustomLoader'
 import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import awsConfig from 'src/configs/awsConfig'
+import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 
 const Container1 = () => {
   const {
@@ -352,7 +353,7 @@ const Container1 = () => {
                     error={!!errors?.ClientCode}
                     helperText={errors?.ClientCode?.message}
                     value={value?.toUpperCase() || ''}
-                    onChange={e => onChange(e.target.value.toUpperCase())}
+                    onChange={e => onChange(e.target.value?.toUpperCase())}
                     InputProps={{
                       style: { 'font-size': '10px' }
                     }}
@@ -462,23 +463,7 @@ const Container1 = () => {
 
           <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px' }}>
             <Box>
-              {loading && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    textAlign: 'center', // Center the text
-                    zIndex: 1
-                  }}
-                >
-                  <CircularProgress />
-                  <div style={{}}>
-                    Fetching Data, Please wait...
-                  </div>
-                </div>
-              )}
+              {loading && <DatatableLoader />}
               <DataTable
                 size='small'
                 value={data ?? []}

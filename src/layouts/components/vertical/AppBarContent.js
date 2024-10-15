@@ -132,11 +132,10 @@ const AppBarContent = props => {
         <ShortcutsDropdown settings={settings} shortcuts={shortcuts} />
         <NotificationDropdown settings={settings} notifications={notifications} /> */}
         <UserDropdown settings={settings} />
-        <div style={{marginLeft:"5px", marginRight:"5px"}}>
-          <div style={{fontSize:"10px"}}>Hey!</div>
-          <div style={{fontSize:"12px", color:"black"}}>{login_user.ClientCode.toUpperCase()}</div>
+        <div style={{ marginLeft: '5px', marginRight: '5px' }}>
+          <div style={{ fontSize: '10px' }}>Hey!</div>
+          <div style={{ fontSize: '12px', color: 'black' }}>{login_user.ClientCode?.toUpperCase()}</div>
         </div>
-
       </Box>
     </Box>
   )
