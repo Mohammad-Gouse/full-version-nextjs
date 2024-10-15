@@ -1,51 +1,50 @@
+import React, { useContext, useState } from 'react'
+import Box from '@mui/material/Box'
+import { useForm, FormProvider } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { RealTimeTransactionSchema, defaultValues } from './schema/RealTimeTransactionSchema'
+import { RealTimeTransactionContext } from 'src/context/RealTimeTransactionContext'
+import { useRealTimeTransaction } from 'src/hooks/RealTimeTransactionHook'
+import { Button } from '@mui/material'
+import moment from 'moment'
+import RealTimeTransactionForm from './components/RealTimeTransactionForm'
 
-    import React, { useContext,useState } from 'react';
-    import Box from '@mui/material/Box';
-    import { useForm, FormProvider } from 'react-hook-form';
-    import { yupResolver } from '@hookform/resolvers/yup';
-    import { RealTimeTransactionSchema, defaultValues }  from './schema/RealTimeTransactionSchema';
-    import { RealTimeTransactionContext } from 'src/context/RealTimeTransactionContext';
-    import { useRealTimeTransaction } from 'src/hooks/RealTimeTransactionHook';
-    import { Button } from '@mui/material';
-    import moment from 'moment';
-    import RealTimeTransactionForm from './components/RealTimeTransactionForm';
+const RealTimeTransaction = () => {
+  const methods = useForm({
+    defaultValues: defaultValues,
+    resolver: yupResolver(RealTimeTransactionSchema)
+  })
 
-    const RealTimeTransaction = () => {
-        const methods = useForm({
-            defaultValues:defaultValues,
-            resolver: yupResolver(RealTimeTransactionSchema),
-        });
+  const [formValues, setFormValues] = useState({})
+  const handleInputChange = event => {
+    const { id, value } = event.target
+    setFormValues({ ...formValues, [id]: value })
+  }
 
-         const [formValues, setFormValues] = useState({});
-         const handleInputChange = (event) => {
-             const { id, value } = event.target;
-            setFormValues({ ...formValues, [id]: value });
-        };
+  const { data, total, loading, error, fetchData } = useRealTimeTransaction()
+  const login_user = JSON.parse(window.localStorage.getItem('userdetails'))
 
-        const { data, total, loading, error, fetchData } = useRealTimeTransaction();
-
-        const onSubmit = (formData) => {
-            for (const key in formData) {
-                if (key.toLowerCase().includes('date')) {
-                    formData[key] = moment(formData[key]).format('DD-MMM-YYYY');
-                }
-            }
-            formData.Branch = "HO"
-            formData.Role = "11"
-
-            fetchData(formData)
-        };
-
-        return (
-            <FormProvider {...methods}>
-                <Box sx={{ padding: 2 }}>
-                    <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        <RealTimeTransactionForm formValues={formValues} handleInputChange={handleInputChange} />
-                    </form>
-                </Box>
-            </FormProvider>
-        );
+  const onSubmit = formData => {
+    for (const key in formData) {
+      if (key.toLowerCase().includes('date')) {
+        formData[key] = moment(formData[key]).format('DD-MMM-YYYY')
+      }
     }
+    formData.Branch = login_user.Branch
+    formData.Role = login_user.Role
 
-    export default RealTimeTransaction;
-    
+    fetchData(formData)
+  }
+
+  return (
+    <FormProvider {...methods}>
+      <Box sx={{ padding: 2 }}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <RealTimeTransactionForm formValues={formValues} handleInputChange={handleInputChange} />
+        </form>
+      </Box>
+    </FormProvider>
+  )
+}
+
+export default RealTimeTransaction

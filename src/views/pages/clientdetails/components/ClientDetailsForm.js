@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import {
   Box,
@@ -33,6 +33,7 @@ import * as XLSX from 'xlsx'
 import { Skeleton } from 'primereact/skeleton'
 import { CustomLoader } from 'src/components/CustomLoader'
 import axios from 'axios'
+import { Toast } from 'primereact/toast'
 
 const transformData = data => {
   const client = data ? data[0] : {}
@@ -117,8 +118,35 @@ const Container1 = () => {
     height: '4vh !important'
   }
 
+  const toast = useRef(null)
+
+  useEffect(() => {
+    if (error) {
+      toast.current.show({
+        severity: 'error',
+        summary: 'error',
+        detail: 'Something Went Wrong',
+        life: 3000
+      })
+    }
+  }, [error])
+
+  useEffect(() => {
+    if (data?.length == 0) {
+      toast.current.show({
+        severity: 'info',
+        summary: 'Info',
+        detail: 'No data available',
+        life: 3000
+      })
+    }
+  }, [data])
+
   return (
     <div>
+      <div className='card flex justify-content-center'>
+        <Toast ref={toast} position='bottom-center' className='small-toast' />
+      </div>
       <div
         style={{
           display: 'flex',
@@ -235,8 +263,7 @@ const Container1 = () => {
                 variant='outlined'
                 sx={{ padding: '8px 5px', marginRight: '5px', fontWeight: '900', background: '#F9FAFB' }}
               >
-                {'Client Code'}:{' '}
-                {data?.length > 0 && control._formValues.Client == 'ClientCode' ? control._formValues.ClientCode : ''}
+                {'Client Code'}: {data?.length > 0 ? data[0]?.ClientCode : ''}
               </Card>
             </Box>
           </Grid>

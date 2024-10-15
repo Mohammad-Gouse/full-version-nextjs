@@ -185,21 +185,89 @@ const Container1 = () => {
             <Toast ref={toast} position='bottom-center' className='small-toast' />
           </div>
 
+          <Grid item xs={12} sm={6} lg={2} sx={{ marginLeft: '2px' }}>
+            <FormControl error={Boolean(errors.Client)}>
+              <Controller
+                name='Client'
+                id='Client'
+                control={control}
+                rules={{ required: false }}
+                render={({ field }) => (
+                  <RadioGroup row {...field} aria-label='Client' name='Client'>
+                    <FormControlLabel
+                      value='PAN'
+                      label='PAN'
+                      sx={errors.Client ? { color: 'error.main' } : null}
+                      componentsProps={{
+                        typography: { sx: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }
+                      }}
+                      control={
+                        <Radio
+                          sx={{
+                            '& .MuiSvgIcon-root': { 'font-size': '14px' }, // Adjust radio input size
+                            ...(errors.segment && { color: 'error.main' }) // Apply error color conditionally
+                          }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value='Email'
+                      label='Email'
+                      sx={errors.Client ? { color: 'error.main' } : null}
+                      componentsProps={{
+                        typography: { sx: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }
+                      }}
+                      control={
+                        <Radio
+                          sx={{
+                            '& .MuiSvgIcon-root': { 'font-size': '14px' }, // Adjust radio input size
+                            ...(errors.segment && { color: 'error.main' }) // Apply error color conditionally
+                          }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value='Mobile'
+                      label='Mobile'
+                      sx={errors.Client ? { color: 'error.main' } : null}
+                      componentsProps={{
+                        typography: { sx: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }
+                      }}
+                      control={
+                        <Radio
+                          sx={{
+                            '& .MuiSvgIcon-root': { 'font-size': '14px' }, // Adjust radio input size
+                            ...(errors.segment && { color: 'error.main' }) // Apply error color conditionally
+                          }}
+                        />
+                      }
+                    />
+                  </RadioGroup>
+                )}
+              />
+              {errors.Client && (
+                <FormHelperText sx={{ color: 'error.main' }} id='Client-helper-text'>
+                  This field is required
+                </FormHelperText>
+              )}
+            </FormControl>
+          </Grid>
+
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
               <Controller
-                name='PAN'
+                name='Search'
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    id='PAN'
+                    id='Search'
                     defaultValue=''
-                    label={'Enter Pan No'}
+                    label={'Search'}
                     size='small'
                     fullWidth
-                    error={!!errors?.PAN}
-                    helperText={errors?.PAN?.message}
+                    error={!!errors?.Search}
+                    helperText={errors?.Search?.message}
                     InputProps={{
                       style: { 'font-size': '10px' }
                     }}
@@ -212,7 +280,7 @@ const Container1 = () => {
             </FormControl>
           </Grid>
 
-          <Grid item lg={1.5} md={6} sm={12} xs={12}>
+          {/* <Grid item lg={1.5} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
               <Controller
                 name='Email'
@@ -264,7 +332,7 @@ const Container1 = () => {
                 )}
               />
             </FormControl>
-          </Grid>
+          </Grid> */}
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>
             <Button

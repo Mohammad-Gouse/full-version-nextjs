@@ -1,19 +1,14 @@
-
-
-import * as Yup from 'yup';
-import moment from 'moment';
-
+import * as Yup from 'yup'
+import moment from 'moment'
 
 const ClientSearchSchema = Yup.object().shape({
-                PAN: Yup.string(),
-                Email: Yup.string(),
-                Mobile: Yup.string(),
-});
+  Client: Yup.string(),
+  Search: Yup.string()
+})
 
 const defaultValues = {
-                PAN: "",
-                Email: "",
-                Mobile: "",
-};
+  Client: 'PAN',
+  Search: ''
+}
 
-export { ClientSearchSchema, defaultValues };
+export { ClientSearchSchema, defaultValues }
