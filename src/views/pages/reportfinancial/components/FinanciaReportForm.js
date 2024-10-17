@@ -19,7 +19,8 @@ import {
   Card,
   CircularProgress,
   Checkbox,
-  Tooltip
+  Tooltip,
+  Autocomplete
 } from '@mui/material'
 import DatePicker from 'react-datepicker'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
@@ -36,6 +37,7 @@ import { CustomLoader } from 'src/components/CustomLoader'
 import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
+import awsConfig from 'src/configs/awsConfig'
 
 const Container1 = () => {
   const {
@@ -157,7 +159,48 @@ const Container1 = () => {
     </div>
   )
 
-  undefined
+  const [FinancialYearOptions, setFinancialYearOptions] = useState([]) // Dynamic state for options
+  const [loadingFinancialYear, setloadingFinancialYear] = useState(true) // Dynamic state for loading
+
+  useEffect(() => {
+    const fetchFinancialYearOptions = async (segment = 'equity}') => {
+      // Dynamic fetch function
+      try {
+        const accessToken = window.localStorage.getItem('accessToken')
+        const response = await axios.post(
+          `${awsConfig.BASE_URL}/combo/values`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          }
+        )
+
+        const data = response.data?.data[0]?.FinancialYear
+
+        setFinancialYearOptions(data) // Set options for Autocomplete
+        setloadingFinancialYear(false) // Disable loading state
+        if (data.length > 0) {
+          const currentYear = new Date().getFullYear()
+          const currentMonth = new Date().getMonth()
+
+          // Assuming the financial year starts in April
+          const startYear = currentMonth >= 3 ? currentYear : currentYear - 1
+          const endYear = startYear + 1
+
+          const financialYear = `${startYear}-${endYear}`
+
+          setValue('FinancialYear', financialYear)
+        }
+      } catch (error) {
+        console.error('Error fetching options for FinancialYear:', error)
+        setloadingFinancialYear(false) // Disable loading state on error
+      }
+    }
+
+    fetchFinancialYearOptions('') // Fetch options
+  }, [])
 
   return (
     <div>
@@ -183,7 +226,7 @@ const Container1 = () => {
           <div className='card flex justify-content-center'>
             <Toast ref={toast} position='bottom-center' className='small-toast' />
           </div>
-
+          {/* 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
               <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='FinancialYear'>
@@ -220,6 +263,51 @@ const Container1 = () => {
               {errors.FinancialYear && (
                 <FormHelperText sx={{ color: 'error.main' }}>{errors.FinancialYear.message}</FormHelperText>
               )}
+            </FormControl>
+          </Grid> */}
+
+          <Grid item lg={1.5} md={6} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <Controller
+                name='FinancialYear'
+                control={control}
+                render={({ field }) => (
+                  <Autocomplete
+                    {...field}
+                    id='FinancialYear'
+                    options={FinancialYearOptions}
+                    loading={loadingFinancialYear}
+                    size='small'
+                    disableClearable
+                    disabled
+                    fullWidth
+                    getOptionLabel={option => option}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    onChange={(_, data) => field.onChange(data)}
+                    value={field.value || null}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        label='FinancialYear'
+                        error={!!errors?.FinancialYear}
+                        helperText={errors?.FinancialYear?.message}
+                        size='small'
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { fontSize: '10px' }
+                        }}
+                        InputLabelProps={{
+                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                        }}
+                      />
+                    )}
+                    ListboxProps={{
+                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+                    }}
+                    sx={{ fontSize: '10px' }}
+                  />
+                )}
+              />
             </FormControl>
           </Grid>
 
