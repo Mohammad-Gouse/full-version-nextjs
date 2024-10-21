@@ -33,13 +33,9 @@ const RealTimeTurnOver = () => {
       }
     }
 
-    // Store ZoneName and BranchName in temporary variables to prevent overwriting
-    const zoneName = formData.Region?.ZoneName ?? 'ALL' // Save ZoneName
-    const branchName = formData.Branch?.BranchName ?? '' // Save BranchName
-
     // Update formData
-    formData.Region = zoneName // Set Region as ZoneName
-    formData.Branch = branchName // Set Branch as BranchName
+    formData.Region = formData.Region?.Code ?? 'ALL'
+    formData.Branch = formData.Branch?.Code ?? '' // Save BranchName
     formData.Franchise = formData.Franchise?.Code ?? '' // Set Franchise Code
     formData.ClientCode = formData.ClientCode?.Code ?? '' // Set Client Code
 
