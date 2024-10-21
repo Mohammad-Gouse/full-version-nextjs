@@ -5,15 +5,15 @@ const createAxiosInstance = onError => {
   let axiosInstance
   if (typeof window !== 'undefined') {
     const accessToken = window.localStorage.getItem('accessToken')
- 
+
     axiosInstance = axios.create({
-      // baseURL: 'https://api.example.com',
       timeout: 15000, // Timeout after 15 seconds
       headers: {
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `${accessToken}`
       }
+      // withCredentials: true
     })
- 
+
     axiosInstance.interceptors.response.use(
       response => {
         return response
@@ -42,11 +42,9 @@ const createAxiosInstance = onError => {
   }
   return axiosInstance
 }
- 
+
 export const setGlobalErrorCallback = callback => {
   errorCallback = callback
 }
- 
+
 export default createAxiosInstance
- 
- 

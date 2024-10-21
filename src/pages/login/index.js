@@ -186,7 +186,7 @@ const LoginPage = () => {
                     alt='Company Logo'
                     style={{
                       width: '200px',
-                      height: '40px'
+                      height: 'auto'
                     }}
                   />
                 </Box>

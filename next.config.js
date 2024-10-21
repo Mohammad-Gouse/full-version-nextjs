@@ -16,8 +16,8 @@ module.exports = withTM({
   trailingSlash: true,
   reactStrictMode: false,
   eslint: {
-    ignoreDuringBuilds: true,
-},
+    ignoreDuringBuilds: true
+  },
   experimental: {
     esmExternals: false
   },
