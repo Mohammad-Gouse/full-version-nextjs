@@ -105,7 +105,6 @@ const AuthProvider = ({ children }) => {
         const decodedToken = jwtDecode(response?.data?.token)
 
         window.localStorage.setItem(authConfig.storageTokenKeyName, response?.data?.token)
-        window.localStorage.setItem('idToken', response?.data?.token)
 
         setUser({ ...response?.data?.data[0], role: 'admin' })
         const userDetailsString = JSON.stringify({ ...response?.data?.data[0], role: 'admin' })
@@ -126,7 +125,7 @@ const AuthProvider = ({ children }) => {
 
   const handleLogout = () => {
     setUser(null)
-    window.localStorage.removeItem('userData')
+    window.localStorage.removeItem(authConfig.userData)
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
     router.push('/login')
   }
