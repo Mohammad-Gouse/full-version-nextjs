@@ -38,6 +38,8 @@ import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
+import CustomHeader from 'src/components/customHeader/CustomHeader'
+import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
 
 const Container1 = () => {
   const {
@@ -158,70 +160,55 @@ const Container1 = () => {
     { field: 'ClosingPrice', header: 'ClosingPrice', width: '15rem' }
   ]) // Dynamic columns from JSON input
 
-  const uniqueValues = key => {
-    return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
-      label: val,
-      value: val
-    }))
-  }
+  // const uniqueValues = key => {
+  //   return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
+  //     label: val,
+  //     value: val
+  //   }))
+  // }
 
-  const onFilterChange = (e, field) => {
-    const value = e.value
-    let _filters = { ...filters }
-    _filters[field].value = value
-    setFilters(_filters)
-  }
+  // const onFilterChange = (e, field) => {
+  //   const value = e.value
+  //   let _filters = { ...filters }
+  //   _filters[field].value = value
+  //   setFilters(_filters)
+  // }
 
-  const multiSelectFilterTemplate = (options, field, headerName) => {
-    return (
-      <MultiSelect
-        value={options.value}
-        options={uniqueValues(field)}
-        onChange={e => onFilterChange(e, field)}
-        placeholder={'Select ' + headerName}
-        className='custom-multiselect custom-scrollbar'
-        style={{ minWidth: '12rem' }}
-        filter
-        maxSelectedLabels={1}
-      />
-    )
-  }
+  // const multiSelectFilterTemplate = (options, field, headerName) => {
+  //   return (
+  //     <MultiSelect
+  //       value={options.value}
+  //       options={uniqueValues(field)}
+  //       onChange={e => onFilterChange(e, field)}
+  //       placeholder={'Select ' + headerName}
+  //       className='custom-multiselect custom-scrollbar'
+  //       style={{ minWidth: '12rem' }}
+  //       filter
+  //       maxSelectedLabels={1}
+  //     />
+  //   )
+  // }
 
-  const headerStyle = { padding: '3px 6px', fontSize: '9px', height: '9px' }
+  // const headerStyle = { padding: '3px 6px', fontSize: '9px', height: '9px' }
 
-  const rowStyle = { padding: '5px 4px', fontSize: '10px', height: '4vh !important' }
+  // const rowStyle = { padding: '5px 4px', fontSize: '10px', height: '4vh !important' }
 
-  const emptyMessage = (
-    <div
-      style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}
-    >
-      <div className='w-[100%] text-center font-bold'>
-        <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
-        <div style={{ textAlign: 'center' }} className='w-[100%] text-center font-bold'>
-          No Data Available
-        </div>
-      </div>
-    </div>
-  )
+  // const emptyMessage = (
+  //   <div
+  //     style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}
+  //   >
+  //     <div className='w-[100%] text-center font-bold'>
+  //       <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+  //       <div style={{ textAlign: 'center' }} className='w-[100%] text-center font-bold'>
+  //         No Data Available
+  //       </div>
+  //     </div>
+  //   </div>
+  // )
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'start',
-          background: '#25335C',
-          fontSize: '0.7rem',
-          padding: '5px',
-          color: '#F5F5F5',
-          width: '100%',
-          minHeight: '4vh',
-          margin: '0px 0px 5px 0px'
-        }}
-      >
-        <div>Net position</div>
-      </div>
+      <CustomHeader title='Net position' />
 
       <Card id='NetpositionReportForm' sx={{ padding: '15px 5px 5px 5px', height: '81vh' }}>
         <Grid container spacing={5}>
@@ -450,35 +437,13 @@ const Container1 = () => {
           </Grid>
 
           <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px' }}>
-            <Box>
-              {loading && <DatatableLoader />}
-              <DataTable
-                size='small'
-                value={data ?? []}
-                rows={10}
-                filters={filters}
-                filterDisplay='row'
-                emptyMessage={loading ? <Skeleton /> : emptyMessage}
-                scrollable={true}
-                scrollHeight='1rem'
-              >
-                {/* Dynamically render columns based on the columns array */}
-                {columns.map((col, index) => (
-                  <Column
-                    key={index}
-                    field={col.field}
-                    header={col.header}
-                    style={{ minWidth: col.width || 'auto' }}
-                    filter
-                    showFilterMenu={false}
-                    filterElement={options => multiSelectFilterTemplate(options, col.field, col.header)}
-                    bodyStyle={rowStyle}
-                    headerStyle={headerStyle}
-                    body={loading ? <Skeleton /> : null} // Show skeleton while loading
-                  />
-                ))}
-              </DataTable>
-            </Box>
+            <CustomDataTable
+              loading={loading}
+              data={data}
+              filters={filters}
+              columns={columns}
+              setFilters={setFilters}
+            />
           </Grid>
         </Grid>
       </Card>

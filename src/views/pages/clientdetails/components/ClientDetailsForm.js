@@ -34,6 +34,8 @@ import { Skeleton } from 'primereact/skeleton'
 import { CustomLoader } from 'src/components/CustomLoader'
 import axios from 'axios'
 import { Toast } from 'primereact/toast'
+import CustomHeader from 'src/components/customHeader/CustomHeader'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const transformData = data => {
   const client = data ? data[0] : {}
@@ -108,13 +110,13 @@ const Container1 = () => {
 
   const headerStyle = {
     padding: '3px 6px',
-    fontSize: '9px',
+    fontSize: FontDetails.typographySize - 2,
     height: '9px'
   }
 
   const rowStyle = {
     padding: '5px 4px',
-    fontSize: '10px',
+    fontSize: FontDetails.typographySize - 2,
     height: '4vh !important'
   }
 
@@ -147,22 +149,7 @@ const Container1 = () => {
       <div className='card flex justify-content-center'>
         <Toast ref={toast} position='bottom-center' className='small-toast' />
       </div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'start',
-          background: '#25335C',
-          fontSize: '0.7rem',
-          padding: '5px',
-          color: '#F5F5F5',
-          width: '100%',
-          minHeight: '4vh',
-          margin: '0px 0px 5px 0px'
-        }}
-      >
-        <div>Client Details</div>
-      </div>
+      <CustomHeader title='Client Details' />
       <Card id='ClientDetailsForm' sx={{ padding: '15px 5px 5px 5px', minHeight: '87vh' }}>
         <Grid container spacing={5}>
           <Grid item xs={12} sm={6} lg={2.5} sx={{ marginLeft: '2px' }}>

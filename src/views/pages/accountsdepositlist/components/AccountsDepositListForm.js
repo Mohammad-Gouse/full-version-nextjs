@@ -45,6 +45,7 @@ import awsConfig from 'src/configs/awsConfig'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const Container1 = () => {
   const {
@@ -158,9 +159,9 @@ const Container1 = () => {
     )
   }
 
-  const headerStyle = { padding: '3px 6px', fontSize: '9px', height: '9px' }
+  const headerStyle = { padding: '3px 6px', fontSize: FontDetails.typographySize - 2, height: '9px' }
 
-  const rowStyle = { padding: '5px 4px', fontSize: '10px', height: '4vh !important' }
+  const rowStyle = { padding: '5px 4px', fontSize: FontDetails.typographySize - 2, height: '4vh !important' }
 
   const emptyMessage = (
     <div

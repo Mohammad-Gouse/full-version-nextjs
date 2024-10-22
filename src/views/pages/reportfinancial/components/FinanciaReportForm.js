@@ -19,7 +19,8 @@ import {
   Card,
   CircularProgress,
   Checkbox,
-  Tooltip
+  Tooltip,
+  Autocomplete
 } from '@mui/material'
 import DatePicker from 'react-datepicker'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
@@ -36,6 +37,10 @@ import { CustomLoader } from 'src/components/CustomLoader'
 import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
+import awsConfig from 'src/configs/awsConfig'
+import CustomHeader from 'src/components/customHeader/CustomHeader'
+import CustomFinancialYearSelect from 'src/components/customComponents/customInputComponents/CustomFinancialYearSelect'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const Container1 = () => {
   const {
@@ -140,9 +145,9 @@ const Container1 = () => {
     )
   }
 
-  const headerStyle = { padding: '3px 6px', fontSize: '9px', height: '9px' }
+  const headerStyle = { padding: '3px 6px', fontSize: FontDetails.typographySize - 2, height: '9px' }
 
-  const rowStyle = { padding: '5px 4px', fontSize: '10px', height: '4vh !important' }
+  const rowStyle = { padding: '5px 4px', fontSize: FontDetails.typographySize - 2, height: '4vh !important' }
 
   const emptyMessage = (
     <div
@@ -157,33 +162,59 @@ const Container1 = () => {
     </div>
   )
 
-  undefined
+  const [FinancialYearOptions, setFinancialYearOptions] = useState([]) // Dynamic state for options
+  const [loadingFinancialYear, setloadingFinancialYear] = useState(true) // Dynamic state for loading
+
+  // useEffect(() => {
+  //   const fetchFinancialYearOptions = async (segment = 'equity}') => {
+  //     // Dynamic fetch function
+  //     try {
+  //       const accessToken = window.localStorage.getItem('accessToken')
+  //       const response = await axios.post(
+  //         `${awsConfig.BASE_URL}/combo/values`,
+  //         {},
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`
+  //           }
+  //         }
+  //       )
+
+  //       const data = response.data?.data[0]?.FinancialYear
+
+  //       setFinancialYearOptions(data) // Set options for Autocomplete
+  //       setloadingFinancialYear(false) // Disable loading state
+  //       if (data.length > 0) {
+  //         const currentYear = new Date().getFullYear()
+  //         const currentMonth = new Date().getMonth()
+
+  //         // Assuming the financial year starts in April
+  //         const startYear = currentMonth >= 3 ? currentYear : currentYear - 1
+  //         const endYear = startYear + 1
+
+  //         const financialYear = `${startYear}-${endYear}`
+
+  //         setValue('FinancialYear', financialYear)
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching options for FinancialYear:', error)
+  //       setloadingFinancialYear(false) // Disable loading state on error
+  //     }
+  //   }
+
+  //   fetchFinancialYearOptions('') // Fetch options
+  // }, [])
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'start',
-          background: '#25335C',
-          fontSize: '0.7rem',
-          padding: '5px',
-          color: '#F5F5F5',
-          width: '100%',
-          minHeight: '4vh',
-          margin: '0px 0px 5px 0px'
-        }}
-      >
-        <div>Clientwise Financial Statement</div>
-      </div>
+      <CustomHeader title='Clientwise Financial Statement' />
 
       <Card id='FinanciaReportForm' sx={{ padding: '15px 5px 5px 5px', height: '81vh' }}>
         <Grid container spacing={5}>
           <div className='card flex justify-content-center'>
             <Toast ref={toast} position='bottom-center' className='small-toast' />
           </div>
-
+          {/* 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
               <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='FinancialYear'>
@@ -221,6 +252,10 @@ const Container1 = () => {
                 <FormHelperText sx={{ color: 'error.main' }}>{errors.FinancialYear.message}</FormHelperText>
               )}
             </FormControl>
+          </Grid> */}
+
+          <Grid item lg={1.5} md={6} sm={12} xs={12}>
+            <CustomFinancialYearSelect control={control} errors={errors} setValue={setValue} disabled={true} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
@@ -350,7 +385,23 @@ const Container1 = () => {
                     filterElement={options => multiSelectFilterTemplate(options, col.field, col.header)}
                     bodyStyle={rowStyle}
                     headerStyle={headerStyle}
-                    body={loading ? <Skeleton /> : null} // Show skeleton while loading
+                    body={rowData => {
+                      if (loading) return <Skeleton />
+
+                      if (col.field === 'NetAmount') {
+                        const amount = rowData[col.field]
+                        const backgroundColor = amount > 0 ? '#ff0000' : 'greenyellow'
+
+                        // Apply the background color to the entire cell
+                        return (
+                          <div style={{ backgroundColor, width: '50%', height: '100%', padding: '0.5rem' }}>
+                            {amount}
+                          </div>
+                        )
+                      }
+
+                      return rowData[col.field]
+                    }}
                   />
                 ))}
               </DataTable>

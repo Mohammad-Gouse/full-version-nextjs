@@ -38,6 +38,8 @@ import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
+import CustomHeader from 'src/components/customHeader/CustomHeader'
+import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
 
 const Container1 = () => {
   const {
@@ -351,22 +353,7 @@ const Container1 = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'start',
-          background: '#25335C',
-          fontSize: '0.7rem',
-          padding: '5px',
-          color: '#F5F5F5',
-          width: '100%',
-          minHeight: '4vh',
-          margin: '0px 0px 5px 0px'
-        }}
-      >
-        <div>Real Time Turnover</div>
-      </div>
+      <CustomHeader title='Real Time Turnover' />
 
       <Card id='ReadTimeTurnOverForm' sx={{ padding: '15px 5px 5px 5px', height: '81vh' }}>
         <Grid container spacing={5}>
@@ -733,35 +720,13 @@ const Container1 = () => {
           </Grid>
 
           <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px' }}>
-            <Box>
-              {loading && <DatatableLoader />}
-              <DataTable
-                size='small'
-                value={data ?? []}
-                rows={10}
-                filters={filters}
-                filterDisplay='row'
-                emptyMessage={loading ? <Skeleton /> : emptyMessage}
-                scrollable={true}
-                scrollHeight='1rem'
-              >
-                {/* Dynamically render columns based on the columns array */}
-                {columns.map((col, index) => (
-                  <Column
-                    key={index}
-                    field={col.field}
-                    header={col.header}
-                    style={{ minWidth: col.width || 'auto' }}
-                    filter
-                    showFilterMenu={false}
-                    filterElement={options => multiSelectFilterTemplate(options, col.field, col.header)}
-                    bodyStyle={rowStyle}
-                    headerStyle={headerStyle}
-                    body={loading ? <Skeleton /> : null} // Show skeleton while loading
-                  />
-                ))}
-              </DataTable>
-            </Box>
+            <CustomDataTable
+              loading={loading}
+              data={data}
+              filters={filters}
+              columns={columns}
+              setFilters={setFilters}
+            />
           </Grid>
         </Grid>
       </Card>

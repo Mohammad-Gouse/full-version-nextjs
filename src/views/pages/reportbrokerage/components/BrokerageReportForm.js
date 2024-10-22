@@ -38,6 +38,9 @@ import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
+import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
+import CustomHeader from 'src/components/customHeader/CustomHeader'
+import CustomFinancialYearSelect from 'src/components/customComponents/customInputComponents/CustomFinancialYearSelect'
 
 const Container1 = () => {
   const {
@@ -146,34 +149,34 @@ const Container1 = () => {
     { field: 'TransactionDate', header: 'Date', width: '15rem' }
   ]) // Dynamic columns from JSON input
 
-  const uniqueValues = key => {
-    return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
-      label: val,
-      value: val
-    }))
-  }
+  // const uniqueValues = key => {
+  //   return Array.from(new Set(data?.map(item => item[key]))).map(val => ({
+  //     label: val,
+  //     value: val
+  //   }))
+  // }
 
-  const onFilterChange = (e, field) => {
-    const value = e.value
-    let _filters = { ...filters }
-    _filters[field].value = value
-    setFilters(_filters)
-  }
+  // const onFilterChange = (e, field) => {
+  //   const value = e.value
+  //   let _filters = { ...filters }
+  //   _filters[field].value = value
+  //   setFilters(_filters)
+  // }
 
-  const multiSelectFilterTemplate = (options, field, headerName) => {
-    return (
-      <MultiSelect
-        value={options.value}
-        options={uniqueValues(field)}
-        onChange={e => onFilterChange(e, field)}
-        placeholder={'Select ' + headerName}
-        className='custom-multiselect custom-scrollbar'
-        style={{ minWidth: '12rem' }}
-        filter
-        maxSelectedLabels={1}
-      />
-    )
-  }
+  // const multiSelectFilterTemplate = (options, field, headerName) => {
+  //   return (
+  //     <MultiSelect
+  //       value={options.value}
+  //       options={uniqueValues(field)}
+  //       onChange={e => onFilterChange(e, field)}
+  //       placeholder={'Select ' + headerName}
+  //       className='custom-multiselect custom-scrollbar'
+  //       style={{ minWidth: '12rem' }}
+  //       filter
+  //       maxSelectedLabels={1}
+  //     />
+  //   )
+  // }
 
   const headerStyle = { padding: '3px 6px', fontSize: '9px', height: '9px' }
 
@@ -194,22 +197,7 @@ const Container1 = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'start',
-          background: '#25335C',
-          fontSize: '0.7rem',
-          padding: '5px',
-          color: '#F5F5F5',
-          width: '100%',
-          minHeight: '4vh',
-          margin: '0px 0px 5px 0px'
-        }}
-      >
-        <div>Client Brokerage</div>
-      </div>
+      <CustomHeader title='Client Brokerage' />
 
       <Card id='BrokerageReportForm' sx={{ padding: '15px 5px 5px 5px', height: '81vh' }}>
         <Grid container spacing={5}>
@@ -218,39 +206,7 @@ const Container1 = () => {
           </div>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='FinancialYear'>
-                Financial Year
-              </InputLabel>
-              <Controller
-                name='FinancialYear'
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    sx={{ 'font-size': '10px' }}
-                    onChange={e => {
-                      field.onChange(e)
-                    }}
-                    labelId='FinancialYear'
-                    label='Financial Year'
-                    defaultValue='2024'
-                    disabled={true}
-                    id='FinancialYear'
-                    size='small'
-                    fullWidth
-                    error={!!errors.FinancialYear}
-                  >
-                    <MenuItem sx={{ 'font-size': '10px' }} value='2024'>
-                      2024-2025
-                    </MenuItem>
-                  </Select>
-                )}
-              />
-              {errors.FinancialYear && (
-                <FormHelperText sx={{ color: 'error.main' }}>{errors.FinancialYear.message}</FormHelperText>
-              )}
-            </FormControl>
+            <CustomFinancialYearSelect control={control} errors={errors} setValue={setValue} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
@@ -456,35 +412,16 @@ const Container1 = () => {
           </Grid>
 
           <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px' }}>
-            <Box>
-              {loading && <DatatableLoader />}
-              <DataTable
-                size='small'
-                value={data ?? []}
-                rows={10}
-                filters={filters}
-                filterDisplay='row'
-                emptyMessage={loading ? <Skeleton /> : emptyMessage}
-                scrollable={true}
-                scrollHeight='1rem'
-              >
-                {/* Dynamically render columns based on the columns array */}
-                {columns.map((col, index) => (
-                  <Column
-                    key={index}
-                    field={col.field}
-                    header={col.header}
-                    style={{ minWidth: col.width || 'auto' }}
-                    filter
-                    showFilterMenu={false}
-                    filterElement={options => multiSelectFilterTemplate(options, col.field, col.header)}
-                    bodyStyle={rowStyle}
-                    headerStyle={headerStyle}
-                    body={loading ? <Skeleton /> : null} // Show skeleton while loading
-                  />
-                ))}
-              </DataTable>
-            </Box>
+            <CustomDataTable
+              loading={loading}
+              data={data}
+              filters={filters}
+              columns={columns}
+              emptyMessage={emptyMessage}
+              rowStyle={rowStyle}
+              headerStyle={headerStyle}
+              setFilters={setFilters}
+            />
           </Grid>
         </Grid>
       </Card>

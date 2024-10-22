@@ -57,6 +57,7 @@ import 'src/iconify-bundle/icons-bundle-react'
 // ** Global css styles
 import '../../styles/globals.css'
 import Marquee from 'src/components/Marquee'
+import { SegmentProvider } from 'src/context/SegmentContext'
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -111,27 +112,29 @@ const App = props => {
         </Head>
 
         <AuthProvider>
-          <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-            <SettingsConsumer>
-              {({ settings }) => {
-                return (
-                  <ThemeComponent settings={settings}>
-                    <WindowWrapper>
-                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                          {getLayout(<Component {...pageProps} />)}
-                        </AclGuard>
-                      </Guard>
-                      <Marquee/>
-                    </WindowWrapper>
-                    <ReactHotToast>
-                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                    </ReactHotToast>
-                  </ThemeComponent>
-                )
-              }}
-            </SettingsConsumer>
-          </SettingsProvider>
+          <SegmentProvider>
+            <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
+              <SettingsConsumer>
+                {({ settings }) => {
+                  return (
+                    <ThemeComponent settings={settings}>
+                      <WindowWrapper>
+                        <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                          <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                            {getLayout(<Component {...pageProps} />)}
+                          </AclGuard>
+                        </Guard>
+                        <Marquee />
+                      </WindowWrapper>
+                      <ReactHotToast>
+                        <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                      </ReactHotToast>
+                    </ThemeComponent>
+                  )
+                }}
+              </SettingsConsumer>
+            </SettingsProvider>
+          </SegmentProvider>
         </AuthProvider>
       </CacheProvider>
     </Provider>
