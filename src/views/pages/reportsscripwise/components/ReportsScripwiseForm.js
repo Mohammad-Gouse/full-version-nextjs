@@ -43,6 +43,7 @@ import { Toast } from 'primereact/toast'
 import CloseIcon from '@mui/icons-material/Close'
 import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
+import CustomHeader from 'src/components/customHeader/CustomHeader'
 
 const Container1 = () => {
   const {
@@ -226,22 +227,7 @@ const Container1 = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'start',
-          background: '#25335C',
-          fontSize: '0.7rem',
-          padding: '5px',
-          color: '#F5F5F5',
-          width: '100%',
-          minHeight: '4vh',
-          margin: '0px 0px 5px 0px'
-        }}
-      >
-        <div>Scripwise Holding</div>
-      </div>
+      <CustomHeader title='Scripwise Holding' />
 
       <Card id='ReportsScripwiseForm' sx={{ padding: '15px 5px 5px 5px', height: '81vh' }}>
         <Grid container spacing={5}>

@@ -38,6 +38,8 @@ import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import awsConfig from 'src/configs/awsConfig'
+import CustomHeader from 'src/components/customHeader/CustomHeader'
+import FinancialYearSelect from 'src/components/customComponents/customInputComponents/FinancialYearSelect'
 
 const Container1 = () => {
   const {
@@ -162,64 +164,49 @@ const Container1 = () => {
   const [FinancialYearOptions, setFinancialYearOptions] = useState([]) // Dynamic state for options
   const [loadingFinancialYear, setloadingFinancialYear] = useState(true) // Dynamic state for loading
 
-  useEffect(() => {
-    const fetchFinancialYearOptions = async (segment = 'equity}') => {
-      // Dynamic fetch function
-      try {
-        const accessToken = window.localStorage.getItem('accessToken')
-        const response = await axios.post(
-          `${awsConfig.BASE_URL}/combo/values`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`
-            }
-          }
-        )
+  // useEffect(() => {
+  //   const fetchFinancialYearOptions = async (segment = 'equity}') => {
+  //     // Dynamic fetch function
+  //     try {
+  //       const accessToken = window.localStorage.getItem('accessToken')
+  //       const response = await axios.post(
+  //         `${awsConfig.BASE_URL}/combo/values`,
+  //         {},
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`
+  //           }
+  //         }
+  //       )
 
-        const data = response.data?.data[0]?.FinancialYear
+  //       const data = response.data?.data[0]?.FinancialYear
 
-        setFinancialYearOptions(data) // Set options for Autocomplete
-        setloadingFinancialYear(false) // Disable loading state
-        if (data.length > 0) {
-          const currentYear = new Date().getFullYear()
-          const currentMonth = new Date().getMonth()
+  //       setFinancialYearOptions(data) // Set options for Autocomplete
+  //       setloadingFinancialYear(false) // Disable loading state
+  //       if (data.length > 0) {
+  //         const currentYear = new Date().getFullYear()
+  //         const currentMonth = new Date().getMonth()
 
-          // Assuming the financial year starts in April
-          const startYear = currentMonth >= 3 ? currentYear : currentYear - 1
-          const endYear = startYear + 1
+  //         // Assuming the financial year starts in April
+  //         const startYear = currentMonth >= 3 ? currentYear : currentYear - 1
+  //         const endYear = startYear + 1
 
-          const financialYear = `${startYear}-${endYear}`
+  //         const financialYear = `${startYear}-${endYear}`
 
-          setValue('FinancialYear', financialYear)
-        }
-      } catch (error) {
-        console.error('Error fetching options for FinancialYear:', error)
-        setloadingFinancialYear(false) // Disable loading state on error
-      }
-    }
+  //         setValue('FinancialYear', financialYear)
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching options for FinancialYear:', error)
+  //       setloadingFinancialYear(false) // Disable loading state on error
+  //     }
+  //   }
 
-    fetchFinancialYearOptions('') // Fetch options
-  }, [])
+  //   fetchFinancialYearOptions('') // Fetch options
+  // }, [])
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'start',
-          background: '#25335C',
-          fontSize: '0.7rem',
-          padding: '5px',
-          color: '#F5F5F5',
-          width: '100%',
-          minHeight: '4vh',
-          margin: '0px 0px 5px 0px'
-        }}
-      >
-        <div>Clientwise Financial Statement</div>
-      </div>
+      <CustomHeader title='Clientwise Financial Statement' />
 
       <Card id='FinanciaReportForm' sx={{ padding: '15px 5px 5px 5px', height: '81vh' }}>
         <Grid container spacing={5}>
@@ -267,48 +254,7 @@ const Container1 = () => {
           </Grid> */}
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Controller
-                name='FinancialYear'
-                control={control}
-                render={({ field }) => (
-                  <Autocomplete
-                    {...field}
-                    id='FinancialYear'
-                    options={FinancialYearOptions}
-                    loading={loadingFinancialYear}
-                    size='small'
-                    disableClearable
-                    disabled
-                    fullWidth
-                    getOptionLabel={option => option}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    onChange={(_, data) => field.onChange(data)}
-                    value={field.value || null}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label='FinancialYear'
-                        error={!!errors?.FinancialYear}
-                        helperText={errors?.FinancialYear?.message}
-                        size='small'
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { fontSize: '10px' }
-                        }}
-                        InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
-                        }}
-                      />
-                    )}
-                    ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
-                    }}
-                    sx={{ fontSize: '10px' }}
-                  />
-                )}
-              />
-            </FormControl>
+            <FinancialYearSelect control={control} errors={errors} setValue={setValue} disabled={true} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
@@ -438,7 +384,23 @@ const Container1 = () => {
                     filterElement={options => multiSelectFilterTemplate(options, col.field, col.header)}
                     bodyStyle={rowStyle}
                     headerStyle={headerStyle}
-                    body={loading ? <Skeleton /> : null} // Show skeleton while loading
+                    body={rowData => {
+                      if (loading) return <Skeleton />
+
+                      if (col.field === 'NetAmount') {
+                        const amount = rowData[col.field]
+                        const backgroundColor = amount > 0 ? 'red' : 'green'
+
+                        // Apply the background color to the entire cell
+                        return (
+                          <div style={{ backgroundColor, width: '50%', height: '100%', padding: '0.5rem' }}>
+                            {amount}
+                          </div>
+                        )
+                      }
+
+                      return rowData[col.field]
+                    }}
                   />
                 ))}
               </DataTable>

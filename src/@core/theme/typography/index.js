@@ -51,6 +51,7 @@ const Typography = theme => {
       fontFamily: FontDetails.fontStyle,
       letterSpacing: '0.15px',
       color: theme.palette.text.primary
+      // fontSize: 30 //left side titles and logout and footer basically layout size
     },
     body2: {
       fontFamily: FontDetails.fontStyle,
@@ -62,6 +63,7 @@ const Typography = theme => {
       fontFamily: FontDetails.fontStyle,
       letterSpacing: '0.4px',
       color: theme.palette.text.primary
+      // fontSize: 15 //button fontSize taking more than 17
     },
     caption: {
       fontFamily: FontDetails.fontStyle,

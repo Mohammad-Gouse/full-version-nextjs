@@ -1,6 +1,6 @@
 const FontDetails = {
-  fontStyle: 'Calibri',
-  typographySize: '12px'
+  fontStyle: '',
+  typographySize: 15
   //   paginationTotalCount: '12px',
   //   marginPaginationSelectIcon: '-3px',
   //   paginationSelectIcon: '8px',

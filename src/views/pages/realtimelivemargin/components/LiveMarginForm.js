@@ -34,6 +34,7 @@ import { Skeleton } from 'primereact/skeleton'
 import { CustomLoader } from 'src/components/CustomLoader'
 import axios from 'axios'
 import { Toast } from 'primereact/toast'
+import CustomHeader from 'src/components/customHeader/CustomHeader'
 
 const transformData = data => {
   const client = data || {} // Ensure client is an object, defaulting to empty if no data
@@ -109,22 +110,7 @@ const Container1 = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'start',
-          background: '#25335C',
-          fontSize: '0.7rem',
-          padding: '5px',
-          color: '#F5F5F5',
-          width: '100%',
-          minHeight: '4vh',
-          margin: '0px 0px 5px 0px'
-        }}
-      >
-        <div>Live Margin</div>
-      </div>
+      <CustomHeader title='Live Margin' />
 
       <Card id='LiveMarginForm' sx={{ padding: '15px 5px 5px 5px', height: '81vh' }}>
         <Grid container spacing={5}>
