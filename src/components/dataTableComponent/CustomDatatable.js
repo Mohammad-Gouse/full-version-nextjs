@@ -8,10 +8,23 @@ import Skeleton from '@mui/material/Skeleton' // Material-UI Skeleton or your ow
 import { MultiSelect } from 'primereact/multiselect'
 import FontDetails from '../Fonts/FontDetails'
 
-const CustomDataTable = ({ loading, data, filters, columns, emptyMessage, setFilters }) => {
+const CustomDataTable = ({ loading, data, filters, columns, setFilters }) => {
   const headerStyle = { padding: '3px 6px', fontSize: FontDetails.typographySize - 2, height: '9px' }
 
   const rowStyle = { padding: '5px 4px', fontSize: FontDetails.typographySize - 2, height: '4vh !important' }
+
+  const emptyMessage = (
+    <div
+      style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}
+    >
+      <div className='w-[100%] text-center font-bold'>
+        <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
+        <div style={{ textAlign: 'center' }} className='w-[100%] text-center font-bold'>
+          No Data Available
+        </div>
+      </div>
+    </div>
+  )
 
   const uniqueValues = key => {
     return Array.from(new Set(data?.map(item => item[key]))).map(val => ({

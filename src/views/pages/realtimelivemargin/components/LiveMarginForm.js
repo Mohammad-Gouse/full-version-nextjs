@@ -35,6 +35,7 @@ import { CustomLoader } from 'src/components/CustomLoader'
 import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const transformData = data => {
   const client = data || {} // Ensure client is an object, defaulting to empty if no data
@@ -98,13 +99,13 @@ const Container1 = () => {
 
   const headerStyle = {
     padding: '3px 6px',
-    fontSize: '9px',
+    fontSize: FontDetails.typographySize - 2,
     height: '9px'
   }
 
   const rowStyle = {
     padding: '5px 4px',
-    fontSize: '10px',
+    fontSize: FontDetails.typographySize - 2,
     height: '4vh !important'
   }
 

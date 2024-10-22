@@ -41,7 +41,10 @@ import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
-import FinancialYearSelect from 'src/components/customComponents/customInputComponents/FinancialYearSelect'
+import CustomFinancialYearSelect from 'src/components/customComponents/customInputComponents/CustomFinancialYearSelect'
+import CustomSegmentSelect from 'src/components/customComponents/customInputComponents/CustomSegmentSelect'
+import CustomExchangeSelect from 'src/components/customComponents/customInputComponents/CustomExchangeSelect'
+import CustomClientCodeTextField from 'src/components/customComponents/customInputComponents/CustomClientCodeTextField'
 
 const Container1 = () => {
   const {
@@ -179,23 +182,6 @@ const Container1 = () => {
   //   )
   // }
 
-  const headerStyle = { padding: '3px 6px', fontSize: '9px', height: '9px' }
-
-  const rowStyle = { padding: '5px 4px', fontSize: '10px', height: '4vh !important' }
-
-  const emptyMessage = (
-    <div
-      style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingLeft: '35vw', minHeight: '60vh' }}
-    >
-      <div className='w-[100%] text-center font-bold'>
-        <img src='/images/datagrid/nodata.gif' alt='No Data Available' style={{ width: '10rem', height: '10rem' }} />
-        <div style={{ textAlign: 'center' }} className='w-[100%] text-center font-bold'>
-          No Data Available
-        </div>
-      </div>
-    </div>
-  )
-
   return (
     <div>
       <CustomHeader title='Client Ledger' />
@@ -207,7 +193,7 @@ const Container1 = () => {
           </div>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FinancialYearSelect control={control} errors={errors} setValue={setValue} disabled={false} />
+            <CustomFinancialYearSelect control={control} errors={errors} setValue={setValue} disabled={false} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
@@ -420,9 +406,6 @@ const Container1 = () => {
               data={data}
               filters={filters}
               columns={columns}
-              emptyMessage={emptyMessage}
-              rowStyle={rowStyle}
-              headerStyle={headerStyle}
               setFilters={setFilters}
             />
           </Grid>

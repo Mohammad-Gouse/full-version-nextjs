@@ -40,7 +40,7 @@ import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
-import FinancialYearSelect from 'src/components/customComponents/customInputComponents/FinancialYearSelect'
+import CustomFinancialYearSelect from 'src/components/customComponents/customInputComponents/CustomFinancialYearSelect'
 
 const Container1 = () => {
   const {
@@ -206,7 +206,7 @@ const Container1 = () => {
           </div>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FinancialYearSelect control={control} errors={errors} setValue={setValue} />
+            <CustomFinancialYearSelect control={control} errors={errors} setValue={setValue} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>

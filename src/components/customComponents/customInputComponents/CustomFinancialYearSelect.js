@@ -4,7 +4,7 @@ import { Autocomplete, TextField, FormControl } from '@mui/material'
 import axios from 'axios'
 import awsConfig from 'src/configs/awsConfig'
 
-const FinancialYearSelect = ({ control, setValue, errors, disabled = true }) => {
+const CustomFinancialYearSelect = ({ control, setValue, errors, disabled = true }) => {
   const [financialYearOptions, setFinancialYearOptions] = useState([])
   const [loadingFinancialYear, setLoadingFinancialYear] = useState(true)
 
@@ -76,15 +76,15 @@ const FinancialYearSelect = ({ control, setValue, errors, disabled = true }) => 
                 size='small'
                 InputProps={{
                   ...params.InputProps,
-                  style: { fontSize: '10px' }
+                  style: { fontSize: '10px' /* typography*/ }
                 }}
                 InputLabelProps={{
-                  style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                  style: { fontSize: '10px' /* typography*/, fontWeight: '600', color: '#818589' }
                 }}
               />
             )}
             ListboxProps={{
-              sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+              sx: { fontSize: '10px' /* typography*/, whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
             }}
             sx={{ fontSize: '10px' }}
           />
@@ -94,4 +94,4 @@ const FinancialYearSelect = ({ control, setValue, errors, disabled = true }) => 
   )
 }
 
-export default FinancialYearSelect
+export default CustomFinancialYearSelect
