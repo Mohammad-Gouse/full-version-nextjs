@@ -65,10 +65,10 @@ const Container1 = () => {
   }
 
   const [selectedSegment, setSelectedSegment] = useState('Equity')
-  const [selectedExchange, setSelectedExchange] = useState('Equity')
-  const [selectedRegion, setSelectedRegion] = useState('Equity')
-  const [selectedBranch, setSelectedBranch] = useState('Equity')
-  const [selectedFranchise, setSelectedFranchise] = useState('Equity')
+  const [selectedExchange, setSelectedExchange] = useState('All')
+  const [selectedRegion, setSelectedRegion] = useState('All')
+  const [selectedBranch, setSelectedBranch] = useState('')
+  const [selectedFranchise, setSelectedFranchise] = useState('')
 
   const handleSegmentChange = event => {
     setSelectedSegment(event.target.value)
@@ -194,9 +194,12 @@ const Container1 = () => {
         const data = response.data.data // Extract specific field values
         setBranchOptions(data) // Set options for Autocomplete
         setloadingBranch(false) // Disable loading state
-        // if (data.length > 0) {
-        //     setValue('Branch', data[0]);
-        // }
+        console.log(selectedRegion)
+        if (selectedRegion.toLowerCase() === 'all' || selectedRegion === '') {
+          setValue('Branch', null) // Clear branch selection
+        } else if (data.length > 0) {
+          setValue('Branch', data[0]) // Set first option as selected
+        }
       } catch (error) {
         console.error('Error fetching options for Branch:', error)
         setloadingBranch(false) // Disable loading state on error
@@ -229,6 +232,12 @@ const Container1 = () => {
         // if (data.length > 0) {
         //     setValue('Franchise', data[0]);
         // }
+
+        if (selectedRegion.toLowerCase() === 'all' || selectedBranch.toLowerCase() === 'all') {
+          setValue('Franchise', null) // Clear branch selection
+        } else if (data.length > 0) {
+          setValue('Franchise', data[0]) // Set first option as selected
+        }
       } catch (error) {
         console.error('Error fetching options for Franchise:', error)
         setloadingFranchise(false) // Disable loading state on error
@@ -242,33 +251,41 @@ const Container1 = () => {
   const [loadingClientCode, setloadingClientCode] = useState(true) // Dynamic state for loading
 
   useEffect(() => {
-    const fetchClientCodeOptions = async (code = 'all}') => {
-      // Dynamic fetch function
-      try {
-        const accessToken = window.localStorage.getItem('accessToken')
-        const response = await axios.post(
-          `${awsConfig.BASE_URL}/masters/client`,
-          { Code: code },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`
-            }
-          }
-        )
-        const data = response.data.data // Extract specific field values
-        setClientCodeOptions(data) // Set options for Autocomplete
-        setloadingClientCode(false) // Disable loading state
-        // if (data.length > 0) {
-        //     setValue('ClientCode', data[0]);
-        // }
-      } catch (error) {
-        console.error('Error fetching options for ClientCode:', error)
-        setloadingClientCode(false) // Disable loading state on error
-      }
-    }
-
+    console.log(selectedExchange)
     fetchClientCodeOptions(selectedFranchise) // Fetch options
-  }, [selectedFranchise])
+  }, [selectedBranch, selectedFranchise])
+
+  const fetchClientCodeOptions = async (code = 'all}') => {
+    // Dynamic fetch function
+    try {
+      const accessToken = window.localStorage.getItem('accessToken')
+      const response = await axios.post(
+        `${awsConfig.BASE_URL}/masters/client`,
+        { Code: code ? code : 'All' },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+      const data = response.data.data // Extract specific field values
+      setClientCodeOptions(data) // Set options for Autocomplete
+      setloadingClientCode(false) // Disable loading state
+      console.log(data.length, data[0])
+      // if (data.length > 0) {
+      //   setValue('ClientCode', data[0])
+      // }
+      console.log(selectedRegion, selectedBranch)
+      if (selectedRegion.toLowerCase() === 'all' || selectedBranch.toLowerCase() === 'all') {
+        setValue('ClientCode', null) // Clear branch selection
+      } else if (data.length > 0) {
+        setValue('ClientCode', data[0]) // Set first option as selected
+      }
+    } catch (error) {
+      console.error('Error fetching options for ClientCode:', error)
+      setloadingClientCode(false) // Disable loading state on error
+    }
+  }
 
   const [filters, setFilters] = useState({
     Region: { value: null, matchMode: 'in' },

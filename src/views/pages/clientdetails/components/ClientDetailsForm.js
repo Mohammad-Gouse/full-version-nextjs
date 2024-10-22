@@ -213,7 +213,7 @@ const Container1 = () => {
                   <TextField
                     {...field}
                     id='ClientCode'
-                    label={'Client Code'}
+                    label={'Search'}
                     size='small'
                     fullWidth
                     error={!!errors?.ClientCode}
