@@ -37,6 +37,7 @@ import { Toast } from 'primereact/toast'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import FontDetails from 'src/components/Fonts/FontDetails'
 import CustomClientCodeTextField from 'src/components/customComponents/customInputComponents/CustomClientCodeTextField'
+import CommonSearchButton from 'src/components/customComponents/customInputComponents/CommonSearchButton'
 
 const transformData = data => {
   const client = data ? data[0] : {}
@@ -238,15 +239,7 @@ const Container1 = () => {
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>
-            <Button
-              fullWidth
-              sx={{ fontSize: '10px', padding: '7px 0px' }}
-              type='submit'
-              variant='contained'
-              color='primary'
-            >
-              search
-            </Button>
+            <CommonSearchButton />
           </Grid>
 
           <Grid item lg={3} md={6} sm={12} style={{ paddingTop: '', paddingBottom: '' }}>

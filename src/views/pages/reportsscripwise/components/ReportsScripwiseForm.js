@@ -45,6 +45,8 @@ import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import FontDetails from 'src/components/Fonts/FontDetails'
+import CommonSearchButton from 'src/components/customComponents/customInputComponents/CommonSearchButton'
+import CommonExportButton from 'src/components/customComponents/customInputComponents/CommonExportButton'
 
 const Container1 = () => {
   const {
@@ -296,30 +298,11 @@ const Container1 = () => {
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>
-            <Button
-              fullWidth
-              sx={{ fontSize: '10px', padding: '7px 0px' }}
-              type='submit'
-              variant='contained'
-              color='primary'
-            >
-              search
-            </Button>
+            <CommonSearchButton />
           </Grid>
 
           <Grid item lg={0.2} md={6} sm={12} xs={12}>
-            <Tooltip title='Export'>
-              <Button
-                fullWidth
-                sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
-                onClick={exportToExcel}
-                type='button'
-                variant='outlined'
-                color='secondary'
-              >
-                <img src='/images/logos/excel.png' alt='Excel' style={{ width: '20px', height: '20px' }} />
-              </Button>
-            </Tooltip>
+            <CommonExportButton onClick={exportToExcel} />
           </Grid>
 
           {/* <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px" }}>
