@@ -10,8 +10,8 @@ const createAxiosInstance = onError => {
       timeout: 15000, // Timeout after 15 seconds
       headers: {
         Authorization: `${accessToken}`
-      }
-      // withCredentials: true
+      },
+      withCredentials: true
     })
 
     axiosInstance.interceptors.response.use(

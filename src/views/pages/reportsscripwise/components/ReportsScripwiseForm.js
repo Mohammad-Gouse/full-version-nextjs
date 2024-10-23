@@ -189,21 +189,18 @@ const Container1 = () => {
   const [loadingDetails, setLoadingDetails] = useState(false)
 
   const handleClientCodeClick = async clientCode => {
+    const login_user = JSON.parse(window.localStorage.getItem('userdetails'))
+
     setLoadingDetails(true)
     setDialogOpen(true)
     try {
-      //   const response = await axios.post(`${awsConfig.BASE_URL}/client/bankdetails`, {
-      //     ClientCode: clientCode,
-      //     Branch: "HO",
-      //     Role: "11",
-      //   });
       const accessToken = window.localStorage.getItem('accessToken')
       const response = await axios.post(
         `${awsConfig.BASE_URL}/client/scripwise-postion`,
         {
           ClientCode: clientCode,
-          Branch: 'HO',
-          Role: '11'
+          Branch: login_user.Branch,
+          Role: login_user.Role
         },
         {
           headers: {

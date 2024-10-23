@@ -47,6 +47,7 @@ import { Toast } from 'primereact/toast'
 import { Autocomplete, Card, CardContent, Grid } from '@mui/material'
 import axios from 'axios'
 import awsConfig from 'src/configs/awsConfig'
+import cookie from 'cookie' // To parse the cookies
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)(({ theme }) => ({
@@ -99,15 +100,17 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
-  userId: yup.string().required('user id is required'),
-  password: yup.string().required('password  is required').min(5),
-  loginType: yup.object().nullable().required('login type is required')
+  userId: yup.string().required(''),
+  password: yup.string().required().min(5),
+  loginType: yup.object().nullable().required(),
+  BranchCode: yup.string().required()
 })
 
 const defaultValues = {
   password: '',
   userId: '',
-  loginType: null
+  loginType: null,
+  BranchCode: ''
 }
 
 const LoginPage = () => {
@@ -129,6 +132,8 @@ const LoginPage = () => {
     control,
     setError,
     handleSubmit,
+    setValue,
+    trigger,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -137,8 +142,8 @@ const LoginPage = () => {
   })
   const [loginTypeOptions, setLoginTypeOptions] = useState()
   const onSubmit = data => {
-    const { userId, password, loginType } = data
-    auth.login({ userId, password, loginType, rememberMe: false })
+    const { userId, password, loginType, BranchCode } = data
+    auth.login({ userId, password, loginType, BranchCode, rememberMe: false })
   }
   const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
   useEffect(() => {
@@ -165,6 +170,8 @@ const LoginPage = () => {
       }
     })
   }, [])
+
+  const [isBranchCodeDisabled, setIsBranchCodeDisabled] = useState(false)
   return (
     <Box className='content-center'>
       <Box
@@ -264,6 +271,7 @@ const LoginPage = () => {
                       )}
                     </FormControl>
                   </Grid>
+
                   <Grid item xs={12}>
                     <FormControl fullWidth sx={{ mb: 4 }}>
                       <Controller
@@ -281,6 +289,14 @@ const LoginPage = () => {
                             // isOptionEqualToValue={(option, value) => option === value}
                             onChange={(_, data) => {
                               field.onChange(data)
+                              if (data?.code === 11) {
+                                setValue('BranchCode', 'HO') // Set BranchCode to 'HO'
+                                trigger('BranchCode')
+                                setIsBranchCodeDisabled(true) // Disable BranchCode
+                              } else {
+                                setValue('BranchCode', '') // Clear BranchCode
+                                setIsBranchCodeDisabled(false) // Enable BranchCode
+                              }
                             }}
                             value={field.value || null}
                             renderInput={params => (
@@ -310,6 +326,30 @@ const LoginPage = () => {
                           {errors?.loginType?.message}
                         </FormHelperText>
                       )}
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item lg={1.5} md={6} sm={12} xs={12}>
+                    <FormControl fullWidth>
+                      <Controller
+                        name='BranchCode'
+                        control={control}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <TextField
+                            {...field}
+                            id='BranchCode'
+                            defaultValue=''
+                            label={'Branch Code'}
+                            size='small'
+                            fullWidth
+                            disabled={isBranchCodeDisabled}
+                            error={!!errors?.BranchCode}
+                            helperText={errors?.BranchCode?.message}
+                            value={value?.toUpperCase() || ''}
+                            onChange={e => onChange(e.target.value?.toUpperCase())}
+                          />
+                        )}
+                      />
                     </FormControl>
                   </Grid>
                 </Grid>

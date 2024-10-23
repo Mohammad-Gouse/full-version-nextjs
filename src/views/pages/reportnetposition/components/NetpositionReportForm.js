@@ -337,7 +337,7 @@ const Container1 = () => {
               <Controller
                 name='ClientCode'
                 control={control}
-                render={({ field }) => (
+                render={({ field: { onChange, value, ...field } }) => (
                   <TextField
                     {...field}
                     id='ClientCode'
@@ -347,6 +347,8 @@ const Container1 = () => {
                     fullWidth
                     error={!!errors?.ClientCode}
                     helperText={errors?.ClientCode?.message}
+                    value={value?.toUpperCase() || ''}
+                    onChange={e => onChange(e.target.value?.toUpperCase())}
                     InputProps={{
                       style: { 'font-size': '10px' }
                     }}
