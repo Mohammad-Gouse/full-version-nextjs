@@ -188,6 +188,20 @@ const Container1 = () => {
   const [bankDetails, setBankDetails] = useState([])
   const [loadingDetails, setLoadingDetails] = useState(false)
 
+  const exportToExcelDialog = () => {
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new()
+
+    // Convert the data to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(bankDetails)
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+
+    // Generate the Excel file and trigger the download
+    XLSX.writeFile(workbook, 'ClientReportsScripwise.xlsx')
+  }
+
   const handleClientCodeClick = async clientCode => {
     const login_user = JSON.parse(window.localStorage.getItem('userdetails'))
 
@@ -410,6 +424,17 @@ const Container1 = () => {
           >
             <DialogTitle style={{ fontSize: '12px' }}>
               Scripwise Position
+              <Tooltip title='Export' style={{ marginLeft: '10px' }}>
+                <Button
+                  sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
+                  onClick={exportToExcelDialog}
+                  type='button'
+                  variant='outlined'
+                  color='secondary'
+                >
+                  <img src='/images/logos/excel.png' alt='Excel' style={{ width: '20px', height: '20px' }} />
+                </Button>
+              </Tooltip>
               <IconButton
                 aria-label='close'
                 onClick={handleCloseDialog}

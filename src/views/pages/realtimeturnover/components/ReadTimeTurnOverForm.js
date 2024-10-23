@@ -2,6 +2,8 @@ import Autocomplete from '@mui/material/Autocomplete'
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid'
 import React, { useState, useEffect, useRef } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import FontDetails from 'src/components/Fonts/FontDetails'
+
 import {
   Box,
   Grid,
@@ -68,6 +70,20 @@ const Container1 = () => {
 
     // Generate the Excel file and trigger the download
     XLSX.writeFile(workbook, 'RealTimeTurnOver.xlsx')
+  }
+
+  const exportToExcelDialog = () => {
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new()
+
+    // Convert the data to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(bankDetails)
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+
+    // Generate the Excel file and trigger the download
+    XLSX.writeFile(workbook, 'ClientWiseTurnOver.xlsx')
   }
 
   const [selectedSegment, setSelectedSegment] = useState('Equity')
@@ -345,9 +361,9 @@ const Container1 = () => {
     )
   }
 
-  const headerStyle = { padding: '3px 6px', fontSize: '9px', height: '9px' }
+  const headerStyle = { padding: '3px 6px', fontSize: FontDetails.typographySize - 2, height: '9px' }
 
-  const rowStyle = { padding: '5px 4px', fontSize: '10px', height: '4vh !important' }
+  const rowStyle = { padding: '5px 4px', fontSize: FontDetails.typographySize - 2, height: '4vh !important' }
 
   const emptyMessage = (
     <div
@@ -858,7 +874,18 @@ const Container1 = () => {
             }}
           >
             <DialogTitle style={{ fontSize: '12px' }}>
-              RealTime Turnover
+              Client wise Total Turnover
+              <Tooltip title='Export' style={{ marginLeft: '10px' }}>
+                <Button
+                  sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
+                  onClick={exportToExcelDialog}
+                  type='button'
+                  variant='outlined'
+                  color='secondary'
+                >
+                  <img src='/images/logos/excel.png' alt='Excel' style={{ width: '20px', height: '20px' }} />
+                </Button>
+              </Tooltip>
               <IconButton
                 aria-label='close'
                 onClick={handleCloseDialog}
