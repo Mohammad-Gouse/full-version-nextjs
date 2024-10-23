@@ -4,8 +4,9 @@ import { Autocomplete, TextField, FormControl } from '@mui/material'
 import { useSegment } from 'src/hooks/SegmentHook'
 import axios from 'axios'
 import awsConfig from 'src/configs/awsConfig'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
-const CustomExchangeSelect = ({ control, errors }) => {
+const CustomExchangeSelect = ({ control, errors, disabled = false }) => {
   const [exchangeOptions, setExchangeOptions] = useState([])
   const [loadingExchange, setLoadingExchange] = useState(true)
   const { selectedSegment } = useSegment() // Get selectedSegment from context
@@ -50,6 +51,7 @@ const CustomExchangeSelect = ({ control, errors }) => {
             options={exchangeOptions}
             loading={loadingExchange}
             size='small'
+            disabled={disabled}
             fullWidth
             getOptionLabel={option => option}
             isOptionEqualToValue={(option, value) => option === value}
@@ -63,15 +65,15 @@ const CustomExchangeSelect = ({ control, errors }) => {
                 size='small'
                 InputProps={{
                   ...params.InputProps,
-                  style: { fontSize: '10px' }
+                  style: { fontSize: FontDetails.textfieldInput }
                 }}
                 InputLabelProps={{
-                  style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                  style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                 }}
               />
             )}
             ListboxProps={{
-              sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+              sx: { fontSize: FontDetails.textfieldInput, whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
             }}
             sx={{ fontSize: '10px' }}
           />

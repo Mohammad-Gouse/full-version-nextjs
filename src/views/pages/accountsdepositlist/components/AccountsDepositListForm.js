@@ -46,6 +46,7 @@ import awsConfig from 'src/configs/awsConfig'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import FontDetails from 'src/components/Fonts/FontDetails'
+import CustomClientCodeTextField from 'src/components/customComponents/customInputComponents/CustomClientCodeTextField'
 
 const Container1 = () => {
   const {
@@ -288,32 +289,7 @@ const Container1 = () => {
           </div>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Controller
-                name='ClientCode'
-                control={control}
-                render={({ field: { onChange, value, ...field } }) => (
-                  <TextField
-                    {...field}
-                    id='ClientCode'
-                    defaultValue=''
-                    label={'Client Code'}
-                    size='small'
-                    fullWidth
-                    error={!!errors?.ClientCode}
-                    helperText={errors?.ClientCode?.message}
-                    value={value?.toUpperCase() || ''}
-                    onChange={e => onChange(e.target.value?.toUpperCase())}
-                    InputProps={{
-                      style: { 'font-size': '10px' }
-                    }}
-                    InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
+            <CustomClientCodeTextField control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
@@ -331,7 +307,7 @@ const Container1 = () => {
                       customInput={
                         <CustomTimeInput
                           label='From Date'
-                          InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
+                          // InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
                         />
                       }
                     />
@@ -356,7 +332,7 @@ const Container1 = () => {
                       customInput={
                         <CustomTimeInput
                           label='To Date'
-                          InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
+                          // InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
                         />
                       }
                     />

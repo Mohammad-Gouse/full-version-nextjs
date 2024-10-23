@@ -38,6 +38,9 @@ import { Toast } from 'primereact/toast'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
+import CustomExchangeSelect from 'src/components/customComponents/customInputComponents/CustomExchangeSelect'
+import CustomSegmentSelect from 'src/components/customComponents/customInputComponents/CustomSegmentSelect'
+import CustomClientCodeTextField from 'src/components/customComponents/customInputComponents/CustomClientCodeTextField'
 
 const Container1 = () => {
   const {
@@ -190,106 +193,15 @@ const Container1 = () => {
           </div>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='Segment'>
-                Segment
-              </InputLabel>
-              <Controller
-                name='Segment'
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    sx={{ 'font-size': '10px' }}
-                    onChange={e => {
-                      field.onChange(e)
-                    }}
-                    labelId='Segment'
-                    label='Segment'
-                    defaultValue='Equity'
-                    disabled={false}
-                    id='Segment'
-                    size='small'
-                    fullWidth
-                    error={!!errors.Segment}
-                  >
-                    <MenuItem sx={{ 'font-size': '10px' }} value='equity'>
-                      Equity
-                    </MenuItem>
-                    <MenuItem sx={{ 'font-size': '10px' }} value='commodity'>
-                      Commodity
-                    </MenuItem>
-                  </Select>
-                )}
-              />
-              {errors.Segment && <FormHelperText sx={{ color: 'error.main' }}>{errors.Segment.message}</FormHelperText>}
-            </FormControl>
+            <CustomSegmentSelect control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='Exchange'>
-                Exchange
-              </InputLabel>
-              <Controller
-                name='Exchange'
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    sx={{ 'font-size': '10px' }}
-                    onChange={e => {
-                      field.onChange(e)
-                    }}
-                    labelId='Exchange'
-                    label='Exchange'
-                    defaultValue='ALL'
-                    disabled={true}
-                    id='Exchange'
-                    size='small'
-                    fullWidth
-                    error={!!errors.Exchange}
-                  >
-                    <MenuItem sx={{ 'font-size': '10px' }} value='ALL'>
-                      ALL
-                    </MenuItem>
-                    <MenuItem sx={{ 'font-size': '10px' }} value='BSE'>
-                      BSE
-                    </MenuItem>
-                  </Select>
-                )}
-              />
-              {errors.Exchange && (
-                <FormHelperText sx={{ color: 'error.main' }}>{errors.Exchange.message}</FormHelperText>
-              )}
-            </FormControl>
+            <CustomExchangeSelect control={control} errors={errors} disabled={true} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Controller
-                name='ClientCode'
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    id='ClientCode'
-                    defaultValue=''
-                    label={'Client Code'}
-                    size='small'
-                    fullWidth
-                    error={!!errors?.ClientCode}
-                    helperText={errors?.ClientCode?.message}
-                    InputProps={{
-                      style: { 'font-size': '10px' }
-                    }}
-                    InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
+            <CustomClientCodeTextField control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>

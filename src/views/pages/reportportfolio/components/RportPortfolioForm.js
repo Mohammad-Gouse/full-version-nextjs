@@ -38,6 +38,8 @@ import { Toast } from 'primereact/toast'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
+import CustomClientCodeTextField from 'src/components/customComponents/customInputComponents/CustomClientCodeTextField'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const Container1 = () => {
   const {
@@ -178,7 +180,7 @@ const Container1 = () => {
                       label='Cash'
                       sx={errors.segment ? { color: 'error.main' } : null}
                       componentsProps={{
-                        typography: { sx: { fontSize: '10px', fontWeight: '600', color: '#818589' } }
+                        typography: { sx: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' } }
                       }}
                       control={
                         <Radio
@@ -194,7 +196,7 @@ const Container1 = () => {
                       label='NSEF'
                       sx={errors.segment ? { color: 'error.main' } : null}
                       componentsProps={{
-                        typography: { sx: { fontSize: '10px', fontWeight: '600', color: '#818589' } }
+                        typography: { sx: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' } }
                       }}
                       control={
                         <Radio
@@ -217,32 +219,7 @@ const Container1 = () => {
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Controller
-                name='ClientCode'
-                control={control}
-                render={({ field: { onChange, value, ...field } }) => (
-                  <TextField
-                    {...field}
-                    id='ClientCode'
-                    defaultValue=''
-                    label={'Client Code'}
-                    size='small'
-                    fullWidth
-                    error={!!errors?.ClientCode}
-                    helperText={errors?.ClientCode?.message}
-                    value={value?.toUpperCase() || ''}
-                    onChange={e => onChange(e.target.value?.toUpperCase())}
-                    InputProps={{
-                      style: { 'font-size': '10px' }
-                    }}
-                    InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
+            <CustomClientCodeTextField control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>

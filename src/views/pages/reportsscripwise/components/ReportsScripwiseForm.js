@@ -262,21 +262,37 @@ const Container1 = () => {
                         size='small'
                         InputProps={{
                           ...params.InputProps,
-                          style: { fontSize: '10px' }
+                          style: { fontSize: FontDetails.textfieldInput }
                         }}
                         InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                          style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                         }}
                       />
                     )}
                     ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+                      sx: {
+                        fontSize: FontDetails.textfieldInput,
+                        whiteSpace: 'nowrap',
+                        minWidth: '100px',
+                        width: 'auto'
+                      }
                     }}
                     sx={{ fontSize: '10px' }}
                   />
                 )}
               />
             </FormControl>
+            {/* <CommonAutocomplete
+              name='Scrip'
+              control={control}
+              label='Select Scrip'
+              options={ScripOptions}
+              loading={loadingScrip}
+              errors={errors}
+              getOptionLabel={option => option}
+              valueKey='value' // Assuming 'value' as the key; adjust based on actual data structure
+              labelKey='value' // Assuming 'value' as the key; adjust based on actual data structure
+            /> */}
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>

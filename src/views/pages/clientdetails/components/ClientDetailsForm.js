@@ -36,6 +36,7 @@ import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import FontDetails from 'src/components/Fonts/FontDetails'
+import CustomClientCodeTextField from 'src/components/customComponents/customInputComponents/CustomClientCodeTextField'
 
 const transformData = data => {
   const client = data ? data[0] : {}
@@ -166,7 +167,9 @@ const Container1 = () => {
                       label='Client Code'
                       sx={errors.Client ? { color: 'error.main' } : null}
                       componentsProps={{
-                        typography: { sx: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }
+                        typography: {
+                          sx: { 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }
+                        }
                       }}
                       control={
                         <Radio
@@ -182,7 +185,9 @@ const Container1 = () => {
                       label='Pan Number'
                       sx={errors.Client ? { color: 'error.main' } : null}
                       componentsProps={{
-                        typography: { sx: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }
+                        typography: {
+                          sx: { 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }
+                        }
                       }}
                       control={
                         <Radio
@@ -221,10 +226,10 @@ const Container1 = () => {
                     value={value?.toUpperCase() || ''}
                     onChange={e => onChange(e.target.value?.toUpperCase())}
                     InputProps={{
-                      style: { 'font-size': '10px' }
+                      style: { 'font-size': FontDetails.textfieldInput }
                     }}
                     InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
+                      style: { 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }
                     }}
                   />
                 )}

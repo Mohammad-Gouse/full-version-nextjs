@@ -38,6 +38,7 @@ import { Toast } from 'primereact/toast'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const Container1 = () => {
   const {
@@ -172,7 +173,7 @@ const Container1 = () => {
             <Toast ref={toast} position='bottom-center' className='small-toast' />
           </div>
 
-          <Grid item xs={12} sm={6} lg={2} sx={{ marginLeft: '2px' }}>
+          <Grid item xs={12} sm={6} lg={2.5} sx={{ marginLeft: '2px' }}>
             <FormControl error={Boolean(errors.Client)}>
               <Controller
                 name='Client'
@@ -186,7 +187,9 @@ const Container1 = () => {
                       label='PAN'
                       sx={errors.Client ? { color: 'error.main' } : null}
                       componentsProps={{
-                        typography: { sx: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }
+                        typography: {
+                          sx: { 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }
+                        }
                       }}
                       control={
                         <Radio
@@ -202,7 +205,9 @@ const Container1 = () => {
                       label='Email'
                       sx={errors.Client ? { color: 'error.main' } : null}
                       componentsProps={{
-                        typography: { sx: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }
+                        typography: {
+                          sx: { 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }
+                        }
                       }}
                       control={
                         <Radio
@@ -218,7 +223,9 @@ const Container1 = () => {
                       label='Mobile'
                       sx={errors.Client ? { color: 'error.main' } : null}
                       componentsProps={{
-                        typography: { sx: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }
+                        typography: {
+                          sx: { 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }
+                        }
                       }}
                       control={
                         <Radio
@@ -256,10 +263,10 @@ const Container1 = () => {
                     error={!!errors?.Search}
                     helperText={errors?.Search?.message}
                     InputProps={{
-                      style: { 'font-size': '10px' }
+                      style: { 'font-size': FontDetails.selectLabel }
                     }}
                     InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
+                      style: { 'font-size': FontDetails.textfieldInput, 'font-weight': '600', color: '#818589' }
                     }}
                   />
                 )}

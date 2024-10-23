@@ -1,14 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Controller } from 'react-hook-form'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { useSegment } from 'src/hooks/SegmentHook'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const CustomSegmentSelect = ({ control, errors }) => {
-  const { selectedSegment, setSelectedSegment } = useSegment()
+  const { selectedSegment, setSelectedSegment, resetSegment } = useSegment()
+
+  useEffect(() => {
+    resetSegment()
+  }, [])
 
   return (
     <FormControl fullWidth>
-      <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='Segment'>
+      <InputLabel sx={{ 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }} id='Segment'>
         Segment
       </InputLabel>
       <Controller
@@ -17,7 +22,7 @@ const CustomSegmentSelect = ({ control, errors }) => {
         render={({ field }) => (
           <Select
             {...field}
-            sx={{ fontSize: '10px' }}
+            sx={{ fontSize: FontDetails.textfieldInput }}
             value={selectedSegment}
             onChange={e => {
               field.onChange(e)
@@ -25,17 +30,17 @@ const CustomSegmentSelect = ({ control, errors }) => {
             }}
             labelId='Segment'
             label='Segment'
-            defaultValue='Equity'
+            // defaultValue='Equity'
             disabled={false}
             id='Segment'
             size='small'
             fullWidth
             error={!!errors.Segment}
           >
-            <MenuItem sx={{ 'font-size': '10px' }} value='Equity'>
+            <MenuItem sx={{ 'font-size': FontDetails.textfieldInput }} value='Equity'>
               Equity
             </MenuItem>
-            <MenuItem sx={{ 'font-size': '10px' }} value='Commodity'>
+            <MenuItem sx={{ 'font-size': FontDetails.textfieldInput }} value='Commodity'>
               Commodity
             </MenuItem>
           </Select>

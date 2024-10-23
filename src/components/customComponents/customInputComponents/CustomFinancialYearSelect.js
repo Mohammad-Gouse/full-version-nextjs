@@ -3,6 +3,7 @@ import { Controller } from 'react-hook-form'
 import { Autocomplete, TextField, FormControl } from '@mui/material'
 import axios from 'axios'
 import awsConfig from 'src/configs/awsConfig'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const CustomFinancialYearSelect = ({ control, setValue, errors, disabled = true }) => {
   const [financialYearOptions, setFinancialYearOptions] = useState([])
@@ -76,15 +77,20 @@ const CustomFinancialYearSelect = ({ control, setValue, errors, disabled = true 
                 size='small'
                 InputProps={{
                   ...params.InputProps,
-                  style: { fontSize: '10px' /* typography*/ }
+                  style: { fontSize: FontDetails.textfieldInput }
                 }}
                 InputLabelProps={{
-                  style: { fontSize: '10px' /* typography*/, fontWeight: '600', color: '#818589' }
+                  style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                 }}
               />
             )}
             ListboxProps={{
-              sx: { fontSize: '10px' /* typography*/, whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+              sx: {
+                fontSize: FontDetails.textfieldInput /* typography*/,
+                whiteSpace: 'nowrap',
+                minWidth: '100px',
+                width: 'auto'
+              }
             }}
             sx={{ fontSize: '10px' }}
           />
