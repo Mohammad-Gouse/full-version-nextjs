@@ -47,6 +47,7 @@ import CustomHeader from 'src/components/customHeader/CustomHeader'
 import FontDetails from 'src/components/Fonts/FontDetails'
 import CommonSearchButton from 'src/components/customComponents/customInputComponents/CommonSearchButton'
 import CommonExportButton from 'src/components/customComponents/customInputComponents/CommonExportButton'
+import { Margin } from '@mui/icons-material'
 
 const Container1 = () => {
   const {
@@ -423,17 +424,11 @@ const Container1 = () => {
           >
             <DialogTitle style={{ fontSize: '12px' }}>
               Scripwise Position
-              <Tooltip title='Export' style={{ marginLeft: '10px' }}>
-                <Button
-                  sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
-                  onClick={exportToExcelDialog}
-                  type='button'
-                  variant='outlined'
-                  color='secondary'
-                >
-                  <img src='/images/logos/excel.png' alt='Excel' style={{ width: '20px', height: '20px' }} />
-                </Button>
-              </Tooltip>
+              <CommonExportButton
+                fullWidth={false}
+                tooltipStyle={{ marginLeft: '10px' }}
+                onClick={exportToExcelDialog}
+              />
               <IconButton
                 aria-label='close'
                 onClick={handleCloseDialog}

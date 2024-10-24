@@ -1,11 +1,11 @@
 import React from 'react'
 import { Button, Tooltip, Grid } from '@mui/material'
 
-const CommonExportButton = ({ onClick, title = 'Export' }) => {
+const CommonExportButton = ({ fullWidth = true, tooltipStyle, onClick, title = 'Export' }) => {
   return (
-    <Tooltip title={title}>
+    <Tooltip title={title} style={tooltipStyle}>
       <Button
-        fullWidth
+        fullWidth={fullWidth}
         sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
         onClick={onClick}
         type='button'
