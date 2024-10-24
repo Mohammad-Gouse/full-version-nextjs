@@ -737,6 +737,7 @@ const Container1 = () => {
                     bodyStyle={rowStyle}
                     headerStyle={headerStyle}
                     body={rowData => {
+                      if (loading) return <Skeleton />
                       if (col.field === 'FamilyCode') {
                         return rowData.FamilyCode ? (
                           <Button

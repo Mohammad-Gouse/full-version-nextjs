@@ -317,52 +317,6 @@ const Container1 = () => {
             <CommonExportButton onClick={exportToExcel} />
           </Grid>
 
-          {/* <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px" }}>
-            <Box>
-              {loading && <DatatableLoader />}
-              <DataTable
-                size='small'
-                value={data ?? []}
-                rows={10}
-                filters={filters}
-                filterDisplay='row'
-                emptyMessage={loading ? <Skeleton /> : emptyMessage}
-                scrollable={true}
-                // virtualScrollerOptions={{ itemSize: 50 }}
-                scrollHeight="1rem"
-              >
-                {columns.map((col, index) => (
-                  <Column
-                    key={index}
-                    field={col.field}
-                    header={col.header}
-                    style={{ minWidth: col.width || 'auto' }}
-                    body={(rowData) => {
-                      if (col.field === 'ClientCode') {
-                        return (
-                          <Button
-                            onClick={() => handleClientCodeClick(rowData.ClientCode)}
-                            variant='outlined'
-                            size='small'
-                            style={{ fontSize: '10px' }}
-                          >
-                            {rowData.ClientCode}
-                          </Button>
-                        )
-                      }
-                      return rowData[col.field]
-                    }}
-                    filter
-                    showFilterMenu={false}
-                    filterElement={options => multiSelectFilterTemplate(options, col.field, col.header)}
-                    bodyStyle={rowStyle}
-                    headerStyle={headerStyle}
-                  />
-                ))}
-              </DataTable>
-            </Box>
-          </Grid> */}
-
           <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px' }}>
             <Box>
               {loading && <DatatableLoader />}
@@ -387,6 +341,7 @@ const Container1 = () => {
                     bodyStyle={rowStyle}
                     headerStyle={headerStyle}
                     body={rowData => {
+                      if (loading) return <Skeleton />
                       if (col.field === 'ClientCode') {
                         return (
                           <Button
