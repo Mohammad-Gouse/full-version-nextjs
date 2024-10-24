@@ -555,7 +555,7 @@ const Container1 = () => {
                     ListboxProps={{
                       sx: {
                         fontSize: FontDetails.textfieldInput,
-                        whiteSpace: 'nowrap',
+                        // whiteSpace: 'nowrap',
                         minWidth: '100px',
                         width: 'auto'
                       }
