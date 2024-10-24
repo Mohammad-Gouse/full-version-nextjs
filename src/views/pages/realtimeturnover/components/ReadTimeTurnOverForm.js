@@ -48,6 +48,12 @@ import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
+import CustomFinancialYearSelect from 'src/components/customComponents/customInputComponents/CustomFinancialYearSelect'
+import CustomSegmentSelect from 'src/components/customComponents/customInputComponents/CustomSegmentSelect'
+import CustomExchangeSelect from 'src/components/customComponents/customInputComponents/CustomExchangeSelect'
+import FontDetails from 'src/components/Fonts/FontDetails'
+import CommonSearchButton from 'src/components/customComponents/customInputComponents/CommonSearchButton'
+import CommonExportButton from 'src/components/customComponents/customInputComponents/CommonExportButton'
 
 const Container1 = () => {
   const {
@@ -445,120 +451,15 @@ const Container1 = () => {
           </div>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='FinancialYear'>
-                Financial Year
-              </InputLabel>
-              <Controller
-                name='FinancialYear'
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    sx={{ 'font-size': '10px' }}
-                    onChange={e => {
-                      field.onChange(e)
-                    }}
-                    labelId='FinancialYear'
-                    label='Financial Year'
-                    defaultValue='2024'
-                    disabled={true}
-                    id='FinancialYear'
-                    size='small'
-                    fullWidth
-                    error={!!errors.FinancialYear}
-                  >
-                    <MenuItem sx={{ 'font-size': '10px' }} value='2024'>
-                      2024-2025
-                    </MenuItem>
-                  </Select>
-                )}
-              />
-              {errors.FinancialYear && (
-                <FormHelperText sx={{ color: 'error.main' }}>{errors.FinancialYear.message}</FormHelperText>
-              )}
-            </FormControl>
+            <CustomFinancialYearSelect control={control} errors={errors} setValue={setValue} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='Segment'>
-                Segment
-              </InputLabel>
-              <Controller
-                name='Segment'
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    sx={{ 'font-size': '10px' }}
-                    onChange={e => {
-                      field.onChange(e)
-                      handleSegmentChange(e)
-                    }}
-                    labelId='Segment'
-                    label='Segment'
-                    defaultValue='equity'
-                    disabled={false}
-                    id='Segment'
-                    size='small'
-                    fullWidth
-                    error={!!errors.Segment}
-                  >
-                    <MenuItem sx={{ 'font-size': '10px' }} value='equity'>
-                      Equity
-                    </MenuItem>
-                    <MenuItem sx={{ 'font-size': '10px' }} value='commodity'>
-                      Commodity
-                    </MenuItem>
-                  </Select>
-                )}
-              />
-              {errors.Segment && <FormHelperText sx={{ color: 'error.main' }}>{errors.Segment.message}</FormHelperText>}
-            </FormControl>
+            <CustomSegmentSelect control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Controller
-                name='Exchange'
-                control={control}
-                render={({ field }) => (
-                  <Autocomplete
-                    {...field}
-                    id='Exchange'
-                    options={ExchangeOptions}
-                    loading={loadingExchange}
-                    size='small'
-                    fullWidth
-                    getOptionLabel={option => option}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    onChange={(_, data) => field.onChange(data)}
-                    value={field.value || null}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label='Exchange'
-                        error={!!errors?.Exchange}
-                        helperText={errors?.Exchange?.message}
-                        size='small'
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { fontSize: '10px' }
-                        }}
-                        InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
-                        }}
-                      />
-                    )}
-                    ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
-                    }}
-                    sx={{ fontSize: '10px' }}
-                  />
-                )}
-              />
-            </FormControl>
+            <CustomExchangeSelect control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
@@ -592,15 +493,20 @@ const Container1 = () => {
                         size='small'
                         InputProps={{
                           ...params.InputProps,
-                          style: { fontSize: '10px' }
+                          style: { fontSize: FontDetails.textfieldInput }
                         }}
                         InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                          style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                         }}
                       />
                     )}
                     ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+                      sx: {
+                        fontSize: FontDetails.textfieldInput,
+                        whiteSpace: 'nowrap',
+                        minWidth: '100px',
+                        width: 'auto'
+                      }
                     }}
                     sx={{ fontSize: '10px' }}
                   />
@@ -640,15 +546,20 @@ const Container1 = () => {
                         size='small'
                         InputProps={{
                           ...params.InputProps,
-                          style: { fontSize: '10px' }
+                          style: { fontSize: FontDetails.textfieldInput }
                         }}
                         InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                          style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                         }}
                       />
                     )}
                     ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+                      sx: {
+                        fontSize: FontDetails.textfieldInput,
+                        whiteSpace: 'nowrap',
+                        minWidth: '100px',
+                        width: 'auto'
+                      }
                     }}
                     sx={{ fontSize: '10px' }}
                   />
@@ -688,15 +599,20 @@ const Container1 = () => {
                         size='small'
                         InputProps={{
                           ...params.InputProps,
-                          style: { fontSize: '10px' }
+                          style: { fontSize: FontDetails.textfieldInput }
                         }}
                         InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                          style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                         }}
                       />
                     )}
                     ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+                      sx: {
+                        fontSize: FontDetails.textfieldInput,
+                        whiteSpace: 'nowrap',
+                        minWidth: '100px',
+                        width: 'auto'
+                      }
                     }}
                     sx={{ fontSize: '10px' }}
                   />
@@ -736,15 +652,20 @@ const Container1 = () => {
                         size='small'
                         InputProps={{
                           ...params.InputProps,
-                          style: { fontSize: '10px' }
+                          style: { fontSize: FontDetails.textfieldInput }
                         }}
                         InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                          style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                         }}
                       />
                     )}
                     ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+                      sx: {
+                        fontSize: FontDetails.textfieldInput,
+                        whiteSpace: 'nowrap',
+                        minWidth: '100px',
+                        width: 'auto'
+                      }
                     }}
                     sx={{ fontSize: '10px' }}
                   />
@@ -754,30 +675,11 @@ const Container1 = () => {
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>
-            <Button
-              fullWidth
-              sx={{ fontSize: '10px', padding: '7px 0px' }}
-              type='submit'
-              variant='contained'
-              color='primary'
-            >
-              search
-            </Button>
+            <CommonSearchButton />
           </Grid>
 
           <Grid item lg={0.2} md={6} sm={12} xs={12}>
-            <Tooltip title='Export'>
-              <Button
-                fullWidth
-                sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
-                onClick={exportToExcel}
-                type='button'
-                variant='outlined'
-                color='secondary'
-              >
-                <img src='/images/logos/excel.png' alt='Excel' style={{ width: '20px', height: '20px' }} />
-              </Button>
-            </Tooltip>
+            <CommonExportButton onClick={exportToExcel} />
           </Grid>
 
           <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px', paddingBottom: '0' }}>

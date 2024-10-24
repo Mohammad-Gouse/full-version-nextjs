@@ -45,6 +45,8 @@ import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import FontDetails from 'src/components/Fonts/FontDetails'
+import CommonSearchButton from 'src/components/customComponents/customInputComponents/CommonSearchButton'
+import CommonExportButton from 'src/components/customComponents/customInputComponents/CommonExportButton'
 
 const Container1 = () => {
   const {
@@ -273,48 +275,45 @@ const Container1 = () => {
                         size='small'
                         InputProps={{
                           ...params.InputProps,
-                          style: { fontSize: '10px' }
+                          style: { fontSize: FontDetails.textfieldInput }
                         }}
                         InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                          style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                         }}
                       />
                     )}
                     ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+                      sx: {
+                        fontSize: FontDetails.textfieldInput,
+                        whiteSpace: 'nowrap',
+                        minWidth: '100px',
+                        width: 'auto'
+                      }
                     }}
                     sx={{ fontSize: '10px' }}
                   />
                 )}
               />
             </FormControl>
+            {/* <CommonAutocomplete
+              name='Scrip'
+              control={control}
+              label='Select Scrip'
+              options={ScripOptions}
+              loading={loadingScrip}
+              errors={errors}
+              getOptionLabel={option => option}
+              valueKey='value' // Assuming 'value' as the key; adjust based on actual data structure
+              labelKey='value' // Assuming 'value' as the key; adjust based on actual data structure
+            /> */}
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>
-            <Button
-              fullWidth
-              sx={{ fontSize: '10px', padding: '7px 0px' }}
-              type='submit'
-              variant='contained'
-              color='primary'
-            >
-              search
-            </Button>
+            <CommonSearchButton />
           </Grid>
 
           <Grid item lg={0.2} md={6} sm={12} xs={12}>
-            <Tooltip title='Export'>
-              <Button
-                fullWidth
-                sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
-                onClick={exportToExcel}
-                type='button'
-                variant='outlined'
-                color='secondary'
-              >
-                <img src='/images/logos/excel.png' alt='Excel' style={{ width: '20px', height: '20px' }} />
-              </Button>
-            </Tooltip>
+            <CommonExportButton onClick={exportToExcel} />
           </Grid>
 
           {/* <Grid item lg={12} md={12} sm={12} style={{ paddingTop: "5px" }}>

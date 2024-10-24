@@ -7,7 +7,15 @@ const SegmentContext = createContext()
 const SegmentProvider = ({ children }) => {
   const [selectedSegment, setSelectedSegment] = useState('Equity')
 
-  return <SegmentContext.Provider value={{ selectedSegment, setSelectedSegment }}>{children}</SegmentContext.Provider>
+  const resetSegment = () => {
+    setSelectedSegment('Equity')
+  }
+
+  return (
+    <SegmentContext.Provider value={{ selectedSegment, setSelectedSegment, resetSegment }}>
+      {children}
+    </SegmentContext.Provider>
+  )
 }
 
 export { SegmentContext, SegmentProvider }

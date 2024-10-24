@@ -45,6 +45,9 @@ import CustomFinancialYearSelect from 'src/components/customComponents/customInp
 import CustomSegmentSelect from 'src/components/customComponents/customInputComponents/CustomSegmentSelect'
 import CustomExchangeSelect from 'src/components/customComponents/customInputComponents/CustomExchangeSelect'
 import CustomClientCodeTextField from 'src/components/customComponents/customInputComponents/CustomClientCodeTextField'
+import CommonDatePicker from 'src/components/customComponents/customInputComponents/CommonDatePicker'
+import CommonSearchButton from 'src/components/customComponents/customInputComponents/CommonSearchButton'
+import CommonExportButton from 'src/components/customComponents/customInputComponents/CommonExportButton'
 
 const Container1 = () => {
   const {
@@ -197,116 +200,19 @@ const Container1 = () => {
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='Segment'>
-                Segment
-              </InputLabel>
-              <Controller
-                name='Segment'
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    sx={{ 'font-size': '10px' }}
-                    onChange={e => {
-                      field.onChange(e)
-                      handleSegmentChange(e)
-                    }}
-                    labelId='Segment'
-                    label='Segment'
-                    defaultValue='Equity'
-                    disabled={false}
-                    id='Segment'
-                    size='small'
-                    fullWidth
-                    error={!!errors.Segment}
-                  >
-                    <MenuItem sx={{ 'font-size': '10px' }} value='Equity'>
-                      Equity
-                    </MenuItem>
-                    <MenuItem sx={{ 'font-size': '10px' }} value='NBFC'>
-                      NBFC
-                    </MenuItem>
-                  </Select>
-                )}
-              />
-              {errors.Segment && <FormHelperText sx={{ color: 'error.main' }}>{errors.Segment.message}</FormHelperText>}
-            </FormControl>
+            <CustomSegmentSelect control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Controller
-                name='Exchange'
-                control={control}
-                render={({ field }) => (
-                  <Autocomplete
-                    {...field}
-                    id='Exchange'
-                    options={ExchangeOptions}
-                    loading={loadingExchange}
-                    size='small'
-                    fullWidth
-                    getOptionLabel={option => option}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    onChange={(_, data) => field.onChange(data)} // Handle onChange
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label='Exchange'
-                        error={!!errors?.Exchange}
-                        helperText={errors?.Exchange?.message}
-                        size='small'
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { fontSize: '10px' }
-                        }}
-                        InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
-                        }}
-                      />
-                    )}
-                    ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
-                    }}
-                    sx={{ fontSize: '10px' }}
-                  />
-                )}
-              />
-            </FormControl>
+            <CustomExchangeSelect control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Controller
-                name='ClientCode'
-                control={control}
-                render={({ field: { onChange, value, ...field } }) => (
-                  <TextField
-                    {...field}
-                    id='ClientCode'
-                    defaultValue=''
-                    label={'Client Code'}
-                    size='small'
-                    fullWidth
-                    error={!!errors?.ClientCode}
-                    helperText={errors?.ClientCode?.message}
-                    value={value?.toUpperCase() || ''}
-                    onChange={e => onChange(e.target.value?.toUpperCase())}
-                    InputProps={{
-                      style: { 'font-size': '10px' }
-                    }}
-                    InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
+            <CustomClientCodeTextField control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
+            {/* <FormControl fullWidth>
               <Controller
                 name='StartDate'
                 control={control}
@@ -320,18 +226,26 @@ const Container1 = () => {
                       customInput={
                         <CustomTimeInput
                           label='From Date'
-                          InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
+                          // InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
                         />
                       }
                     />
                   </DatePickerWrapper>
                 )}
               />
-            </FormControl>
+            </FormControl> */}
+
+            <CommonDatePicker
+              name='StartDate'
+              control={control}
+              label='From Date'
+              placeholder='Select From Date'
+              errors={errors}
+            />
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
+            {/* <FormControl fullWidth>
               <Controller
                 name='EndDate'
                 control={control}
@@ -345,41 +259,29 @@ const Container1 = () => {
                       customInput={
                         <CustomTimeInput
                           label='To Date'
-                          InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
+                          // InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
                         />
                       }
                     />
                   </DatePickerWrapper>
                 )}
               />
-            </FormControl>
+            </FormControl> */}
+            <CommonDatePicker
+              name='EndDate'
+              control={control}
+              label='To Date'
+              placeholder='Select To Date'
+              errors={errors}
+            />
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>
-            <Button
-              fullWidth
-              sx={{ fontSize: '10px', padding: '7px 0px' }}
-              type='submit'
-              variant='contained'
-              color='primary'
-            >
-              search
-            </Button>
+            <CommonSearchButton />
           </Grid>
 
           <Grid item lg={0.2} md={6} sm={12} xs={12}>
-            <Tooltip title='Export'>
-              <Button
-                fullWidth
-                sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
-                onClick={exportToExcel}
-                type='button'
-                variant='outlined'
-                color='secondary'
-              >
-                <img src='/images/logos/excel.png' alt='Excel' style={{ width: '20px', height: '20px' }} />
-              </Button>
-            </Tooltip>
+            <CommonExportButton onClick={exportToExcel} />
           </Grid>
 
           <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px', paddingBottom: '0' }}>

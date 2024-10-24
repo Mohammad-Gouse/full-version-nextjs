@@ -36,6 +36,8 @@ import axios from 'axios'
 import { Toast } from 'primereact/toast'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import FontDetails from 'src/components/Fonts/FontDetails'
+import CustomClientCodeTextField from 'src/components/customComponents/customInputComponents/CustomClientCodeTextField'
+import CommonSearchButton from 'src/components/customComponents/customInputComponents/CommonSearchButton'
 
 const transformData = data => {
   const client = data || {} // Ensure client is an object, defaulting to empty if no data
@@ -120,44 +122,11 @@ const Container1 = () => {
           </div>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Controller
-                name='ClientCode'
-                control={control}
-                render={({ field: { onChange, value, ...field } }) => (
-                  <TextField
-                    {...field}
-                    id='ClientCode'
-                    defaultValue=''
-                    label={'Client Code'}
-                    size='small'
-                    fullWidth
-                    error={!!errors?.ClientCode}
-                    helperText={errors?.ClientCode?.message}
-                    value={value?.toUpperCase() || ''}
-                    onChange={e => onChange(e.target.value?.toUpperCase())}
-                    InputProps={{
-                      style: { 'font-size': '10px' }
-                    }}
-                    InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
+            <CustomClientCodeTextField control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>
-            <Button
-              fullWidth
-              sx={{ fontSize: '10px', padding: '7px 0px' }}
-              type='submit'
-              variant='contained'
-              color='primary'
-            >
-              search
-            </Button>
+            <CommonSearchButton />
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>

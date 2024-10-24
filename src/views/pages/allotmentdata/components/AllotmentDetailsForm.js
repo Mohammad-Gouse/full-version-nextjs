@@ -41,6 +41,10 @@ import awsConfig from 'src/configs/awsConfig'
 import DatatableLoader from 'src/components/dataTableComponent/DatatableLoader'
 import CustomHeader from 'src/components/customHeader/CustomHeader'
 import CustomDataTable from 'src/components/dataTableComponent/CustomDatatable'
+import CustomClientCodeTextField from 'src/components/customComponents/customInputComponents/CustomClientCodeTextField'
+import FontDetails from 'src/components/Fonts/FontDetails'
+import CommonSearchButton from 'src/components/customComponents/customInputComponents/CommonSearchButton'
+import CommonExportButton from 'src/components/customComponents/customInputComponents/CommonExportButton'
 
 const Container1 = () => {
   const {
@@ -220,15 +224,15 @@ const Container1 = () => {
                         size='small'
                         InputProps={{
                           ...params.InputProps,
-                          style: { fontSize: '10px' }
+                          style: { fontSize: FontDetails.textfieldInput }
                         }}
                         InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                          style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                         }}
                       />
                     )}
                     ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', width: 'auto' }
+                      sx: { fontSize: FontDetails.textfieldInput, whiteSpace: 'nowrap', width: 'auto' }
                     }}
                     sx={{ fontSize: '10px' }}
                     PaperComponent={props => (
@@ -248,59 +252,15 @@ const Container1 = () => {
           </Grid>
 
           <Grid item lg={1.5} md={6} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Controller
-                name='ClientCode'
-                control={control}
-                render={({ field: { onChange, value, ...field } }) => (
-                  <TextField
-                    {...field}
-                    id='ClientCode'
-                    defaultValue=''
-                    label={'Client Code'}
-                    size='small'
-                    fullWidth
-                    error={!!errors?.ClientCode}
-                    helperText={errors?.ClientCode?.message}
-                    value={value?.toUpperCase() || ''}
-                    onChange={e => onChange(e.target.value?.toUpperCase())}
-                    InputProps={{
-                      style: { 'font-size': '10px' }
-                    }}
-                    InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
+            <CustomClientCodeTextField control={control} errors={errors} />
           </Grid>
 
           <Grid item lg={0.8} md={6} sm={12} xs={12}>
-            <Button
-              fullWidth
-              sx={{ fontSize: '10px', padding: '7px 0px' }}
-              type='submit'
-              variant='contained'
-              color='primary'
-            >
-              search
-            </Button>
+            <CommonSearchButton />
           </Grid>
 
           <Grid item lg={0.2} md={6} sm={12} xs={12}>
-            <Tooltip title='Export'>
-              <Button
-                fullWidth
-                sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
-                onClick={exportToExcel}
-                type='button'
-                variant='outlined'
-                color='secondary'
-              >
-                <img src='/images/logos/excel.png' alt='Excel' style={{ width: '20px', height: '20px' }} />
-              </Button>
-            </Tooltip>
+            <CommonExportButton onClick={exportToExcel} />
           </Grid>
 
           <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px' }}>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Controller } from 'react-hook-form'
 import { TextField, FormControl } from '@mui/material'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const CustomClientCodeTextField = ({ control, errors }) => {
   return (
@@ -20,10 +21,10 @@ const CustomClientCodeTextField = ({ control, errors }) => {
             value={value?.toUpperCase() || ''}
             onChange={e => onChange(e.target.value?.toUpperCase())}
             InputProps={{
-              style: { fontSize: '10px' }
+              style: { fontSize: FontDetails.textfieldInput }
             }}
             InputLabelProps={{
-              style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+              style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
             }}
           />
         )}

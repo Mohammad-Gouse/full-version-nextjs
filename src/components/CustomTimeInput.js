@@ -1,4 +1,5 @@
 import IconifyIcon from 'src/@core/components/icon'
+import FontDetails from './Fonts/FontDetails'
 
 const { TextField } = require('@mui/material')
 const { forwardRef } = require('react')
@@ -10,7 +11,7 @@ export const CustomTimeInput = forwardRef(({ ...props }, ref) => {
     readOnly,
     InputProps,
     InputLabelProps = {
-      style: { 'font-size': '10px', fontWeight: 'bold', color: '#818589' }
+      style: { 'font-size': FontDetails.selectLabel, fontWeight: 'bold', color: '#818589' }
     }
   } = props
 
@@ -24,8 +25,8 @@ export const CustomTimeInput = forwardRef(({ ...props }, ref) => {
       {...(readOnly && { inputProps: { readOnly: true } })}
       InputProps={{
         style: {
-          fontSize: '10px'
-          // fontSize: FontDetails.typographySize
+          // fontSize: '10px'
+          fontSize: FontDetails.textfieldInput
         },
         readOnly: true,
         endAdornment: <IconifyIcon icon='mdi-calendar' style={{ cursor: 'pointer' }} />

@@ -45,6 +45,7 @@ import { lightBlue } from '@mui/material/colors'
 import UploadIcon from '@mui/icons-material/Upload'
 import FileUploadField from 'src/components/FileUploadField'
 import awsConfig from 'src/configs/awsConfig'
+import FontDetails from 'src/components/Fonts/FontDetails'
 
 const Container1 = () => {
   const {
@@ -312,7 +313,9 @@ const Container1 = () => {
 
           <Grid item lg={12} md={12} sm={12}>
             <Typography component='div'>
-              <Box sx={{ 'font-size': '10px', 'font-weight': 'bold', marginTop: '5px' }}>Check Deposit Details</Box>
+              <Box sx={{ 'font-size': FontDetails.typographySize - 2, 'font-weight': 'bold', marginTop: '5px' }}>
+                Check Deposit Details
+              </Box>
             </Typography>
           </Grid>
 
@@ -354,7 +357,7 @@ const Container1 = () => {
 
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <FormControl size='small' fullWidth>
-              <InputLabel sx={{ fontSize: '10px', fontWeight: '600', color: '#818589' }} id='Segment'>
+              <InputLabel sx={{ fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }} id='Segment'>
                 Segment
               </InputLabel>
               <Controller
@@ -363,7 +366,7 @@ const Container1 = () => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    sx={{ fontSize: '10px' }}
+                    sx={{ fontSize: FontDetails.textfieldInput }}
                     onChange={e => {
                       field.onChange(e)
                       handleSegmentChange(e)
@@ -377,7 +380,7 @@ const Container1 = () => {
                     error={!!errors.Segment}
                   >
                     {segmentOptions.map((segment, index) => (
-                      <MenuItem key={index} sx={{ fontSize: '10px' }} value={segment}>
+                      <MenuItem key={index} sx={{ fontSize: FontDetails.textfieldInput }} value={segment}>
                         {segment}
                       </MenuItem>
                     ))}
@@ -437,7 +440,7 @@ const Container1 = () => {
                     value={value?.toUpperCase() || ''}
                     onChange={e => onChange(e.target.value?.toUpperCase())}
                     InputProps={{
-                      style: { fontSize: '10px' },
+                      style: { fontSize: FontDetails.textfieldInput },
                       endAdornment: (
                         <InputAdornment position='end'>
                           <IconButton
@@ -459,7 +462,7 @@ const Container1 = () => {
                       )
                     }}
                     InputLabelProps={{
-                      style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                      style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                     }}
                   />
                 )}
@@ -489,10 +492,10 @@ const Container1 = () => {
                     error={!!errors?.ClientName}
                     helperText={errors?.ClientName?.message}
                     InputProps={{
-                      style: { 'font-size': '10px' }
+                      style: { 'font-size': FontDetails.textfieldInput }
                     }}
                     InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
+                      style: { 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }
                     }}
                   />
                 )}
@@ -528,15 +531,20 @@ const Container1 = () => {
                         size='small'
                         InputProps={{
                           ...params.InputProps,
-                          style: { fontSize: '10px' }
+                          style: { fontSize: FontDetails.textfieldInput }
                         }}
                         InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                          style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                         }}
                       />
                     )}
                     ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+                      sx: {
+                        fontSize: FontDetails.textfieldInput,
+                        whiteSpace: 'nowrap',
+                        minWidth: '100px',
+                        width: 'auto'
+                      }
                     }}
                     sx={{ fontSize: '10px' }}
                   />
@@ -571,15 +579,20 @@ const Container1 = () => {
                         size='small'
                         InputProps={{
                           ...params.InputProps,
-                          style: { fontSize: '10px' }
+                          style: { fontSize: FontDetails.textfieldInput }
                         }}
                         InputLabelProps={{
-                          style: { fontSize: '10px', fontWeight: '600', color: '#818589' }
+                          style: { fontSize: FontDetails.selectLabel, fontWeight: '600', color: '#818589' }
                         }}
                       />
                     )}
                     ListboxProps={{
-                      sx: { fontSize: '10px', whiteSpace: 'nowrap', minWidth: '100px', width: 'auto' }
+                      sx: {
+                        fontSize: FontDetails.textfieldInput,
+                        whiteSpace: 'nowrap',
+                        minWidth: '100px',
+                        width: 'auto'
+                      }
                     }}
                     sx={{ fontSize: '10px' }}
                   />
@@ -590,7 +603,10 @@ const Container1 = () => {
 
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <FormControl size='small' fullWidth>
-              <InputLabel sx={{ 'font-size': '10px', 'font-weight': '600', color: '#818589' }} id='ModeofDeposit'>
+              <InputLabel
+                sx={{ 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }}
+                id='ModeofDeposit'
+              >
                 Mode of Payment
               </InputLabel>
               <Controller
@@ -599,7 +615,7 @@ const Container1 = () => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    sx={{ 'font-size': '10px' }}
+                    sx={{ 'font-size': FontDetails.textfieldInput }}
                     onChange={e => {
                       field.onChange(e)
                       // handleModeChange(e)
@@ -614,7 +630,7 @@ const Container1 = () => {
                     error={!!errors.ModeofDeposit}
                   >
                     {modeOptions.map((mode, index) => (
-                      <MenuItem key={index} sx={{ fontSize: '10px' }} value={mode}>
+                      <MenuItem key={index} sx={{ fontSize: FontDetails.textfieldInput }} value={mode}>
                         {mode}
                       </MenuItem>
                     ))}
@@ -644,10 +660,10 @@ const Container1 = () => {
                     error={!!errors?.DepositChequeNo}
                     helperText={errors?.DepositChequeNo?.message}
                     InputProps={{
-                      style: { 'font-size': '10px' }
+                      style: { 'font-size': FontDetails.textfieldInput }
                     }}
                     InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
+                      style: { 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }
                     }}
                   />
                 )}
@@ -671,10 +687,10 @@ const Container1 = () => {
                     error={!!errors?.DepositAmount}
                     helperText={errors?.DepositAmount?.message}
                     InputProps={{
-                      style: { 'font-size': '10px' }
+                      style: { 'font-size': FontDetails.textfieldInput }
                     }}
                     InputLabelProps={{
-                      style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' }
+                      style: { 'font-size': FontDetails.selectLabel, 'font-weight': '600', color: '#818589' }
                     }}
                   />
                 )}
@@ -697,7 +713,7 @@ const Container1 = () => {
                       customInput={
                         <CustomTimeInput
                           label='Deposit Date'
-                          InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
+                          // InputLabelProps={{ style: { 'font-size': '10px', 'font-weight': '600', color: '#818589' } }}
                         />
                       }
                     />
