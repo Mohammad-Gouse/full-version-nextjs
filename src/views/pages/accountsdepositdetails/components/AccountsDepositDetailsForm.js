@@ -178,6 +178,8 @@ const Container1 = () => {
 
   const fetchBankDetails = async () => {
     console.log('fech band details')
+    const login_user = JSON.parse(window.localStorage.getItem('userdetails'))
+
     setloadingIssuingBankName(true)
     const accessToken = window.localStorage.getItem('accessToken')
     try {
@@ -185,8 +187,8 @@ const Container1 = () => {
         `${awsConfig.BASE_URL}/client/bankdetails`,
         {
           ClientCode: control._formValues.ClientCode,
-          Branch: 'HO',
-          Role: '11'
+          Branch: login_user.Branch,
+          Role: login_user.Role
         },
         {
           headers: {

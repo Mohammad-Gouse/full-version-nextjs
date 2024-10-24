@@ -13,6 +13,7 @@ import awsConfig from 'src/configs/awsConfig'
 import jwt from 'jsonwebtoken'
 import { jwtDecode } from 'jwt-decode'
 import moment from 'moment'
+import createAxiosInstance from 'src/configs/axiosConfig'
 
 // ** Defaults
 const defaultProvider = {
@@ -27,6 +28,7 @@ const defaultProvider = {
   register: () => Promise.resolve()
 }
 const AuthContext = createContext(defaultProvider)
+const axiosInstance = createAxiosInstance()
 
 const AuthProvider = ({ children }) => {
   // ** States
@@ -96,13 +98,14 @@ const AuthProvider = ({ children }) => {
       Type: 1,
       Token: params?.password,
       ClientCode: params?.userId,
-      BranchCode: params?.loginType?.branchCode,
+      BranchCode: params?.BranchCode,
       Code: params?.loginType?.code
     }
-    axios
+    axiosInstance
       .post(`${awsConfig.BASE_URL}/auth/login`, body)
       .then(async response => {
         const decodedToken = jwtDecode(response?.data?.token)
+        console.log(response)
 
         window.localStorage.setItem(authConfig.storageTokenKeyName, response?.data?.token)
 

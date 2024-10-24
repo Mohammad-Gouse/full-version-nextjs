@@ -2,6 +2,8 @@ import Autocomplete from '@mui/material/Autocomplete'
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid'
 import React, { useState, useEffect, useRef } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import FontDetails from 'src/components/Fonts/FontDetails'
+
 import {
   Box,
   Grid,
@@ -20,8 +22,14 @@ import {
   Card,
   CircularProgress,
   Checkbox,
-  Tooltip
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  IconButton,
+  DialogContent
 } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+
 import DatePicker from 'react-datepicker'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import { CustomTimeInput } from 'src/components/CustomTimeInput'
@@ -68,6 +76,20 @@ const Container1 = () => {
 
     // Generate the Excel file and trigger the download
     XLSX.writeFile(workbook, 'RealTimeTurnOver.xlsx')
+  }
+
+  const exportToExcelDialog = () => {
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new()
+
+    // Convert the data to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(bankDetails)
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+
+    // Generate the Excel file and trigger the download
+    XLSX.writeFile(workbook, 'ClientWiseTurnOver.xlsx')
   }
 
   const [selectedSegment, setSelectedSegment] = useState('Equity')
@@ -345,9 +367,9 @@ const Container1 = () => {
     )
   }
 
-  const headerStyle = { padding: '3px 6px', fontSize: '9px', height: '9px' }
+  const headerStyle = { padding: '3px 6px', fontSize: FontDetails.typographySize - 2, height: '9px' }
 
-  const rowStyle = { padding: '5px 4px', fontSize: '10px', height: '4vh !important' }
+  const rowStyle = { padding: '5px 4px', fontSize: FontDetails.typographySize - 2, height: '4vh !important' }
 
   const emptyMessage = (
     <div
@@ -373,6 +395,50 @@ const Container1 = () => {
     second: '2-digit', // 2-digit second (e.g., "29")
     hour12: true // Use 12-hour format with AM/PM
   })
+
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [bankDetails, setBankDetails] = useState([])
+  const [loadingDetails, setLoadingDetails] = useState(false)
+
+  const handleClientCodeClick = async franchiseCode => {
+    const login_user = JSON.parse(window.localStorage.getItem('userdetails'))
+
+    console.log(control._formValues)
+    setLoadingDetails(true)
+    setDialogOpen(true)
+    try {
+      const accessToken = window.localStorage.getItem('accessToken')
+      const response = await axios.post(
+        `${awsConfig.BASE_URL}/realtime/clients/turnover`,
+        {
+          FinancialYear: control._formValues.FinancialYear,
+          Segment: control._formValues.Segment,
+          Exchange: control._formValues.Exchange,
+          Region: control._formValues.Region.Code,
+          Branch: control._formValues.Branch.Code,
+          Franchise: franchiseCode,
+          Role: login_user.Role
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      )
+
+      setBankDetails(response.data.data) // Assuming response.data contains the bank details
+    } catch (error) {
+      console.error('Error fetching bank details:', error)
+    } finally {
+      setLoadingDetails(false)
+    }
+  }
+
+  // Close the dialog
+  const handleCloseDialog = () => {
+    setDialogOpen(false)
+    setBankDetails([])
+  }
 
   return (
     <div>
@@ -638,7 +704,7 @@ const Container1 = () => {
             </Typography>
           </Grid>
 
-          <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px' }}>
+          {/* <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px' }}>
             <CustomDataTable
               loading={loading}
               data={data}
@@ -646,7 +712,115 @@ const Container1 = () => {
               columns={columns}
               setFilters={setFilters}
             />
+          </Grid> */}
+
+          <Grid item lg={12} md={12} sm={12} style={{ paddingTop: '5px' }}>
+            <Box>
+              {loading && <DatatableLoader />}
+              <DataTable
+                size='small'
+                value={data ?? []}
+                scrollable={true}
+                virtualScrollerOptions={{
+                  itemSize: 20
+                }}
+                // scrollHeight="400px"  // Set a fixed scrollable area height
+                emptyMessage={loading ? <Skeleton /> : emptyMessage}
+                filters={filters}
+                filterDisplay='row'
+              >
+                {columns.map((col, index) => (
+                  <Column
+                    key={index}
+                    field={col.field}
+                    header={col.header}
+                    style={{ minWidth: col.width || 'auto' }}
+                    bodyStyle={rowStyle}
+                    headerStyle={headerStyle}
+                    body={rowData => {
+                      if (col.field === 'FamilyCode') {
+                        return rowData.FamilyCode ? (
+                          <Button
+                            onClick={() => handleClientCodeClick(rowData.FamilyCode)}
+                            variant='outlined'
+                            size='small'
+                            style={{ fontSize: '10px' }}
+                          >
+                            {rowData.FamilyCode}
+                          </Button>
+                        ) : (
+                          '-'
+                        )
+                      }
+                      return rowData[col.field]
+                    }}
+                    filter
+                    showFilterMenu={false}
+                    filterElement={options => multiSelectFilterTemplate(options, col.field, col.header)}
+                  />
+                ))}
+              </DataTable>
+            </Box>
           </Grid>
+
+          {/* Dialog to display bank details */}
+          <Dialog
+            open={dialogOpen}
+            onClose={handleCloseDialog}
+            maxWidth='md'
+            fullWidth
+            BackdropProps={{
+              sx: {
+                backgroundColor: 'transparent' // Remove the backdrop
+              }
+            }}
+          >
+            <DialogTitle style={{ fontSize: '12px' }}>
+              Client wise Total Turnover
+              <Tooltip title='Export' style={{ marginLeft: '10px' }}>
+                <Button
+                  sx={{ fontSize: '10px', fontWeight: '700', padding: '5px 10px' }}
+                  onClick={exportToExcelDialog}
+                  type='button'
+                  variant='outlined'
+                  color='secondary'
+                >
+                  <img src='/images/logos/excel.png' alt='Excel' style={{ width: '20px', height: '20px' }} />
+                </Button>
+              </Tooltip>
+              <IconButton
+                aria-label='close'
+                onClick={handleCloseDialog}
+                sx={{ position: 'absolute', right: 8, top: 8 }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent>
+              {loadingDetails ? (
+                <Skeleton />
+              ) : (
+                <DataTable size='small' value={bankDetails} rows={10} scrollable={true} scrollHeight='15rem'>
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field='ClientCode' header='Client Code' />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field='BuyVolume' header='Buy Volume' />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field='SellVolume' header='Sell Volume' />
+                  <Column
+                    headerStyle={headerStyle}
+                    bodyStyle={rowStyle}
+                    field='TotalTurnOver'
+                    header='Total Turnover'
+                  />
+                  <Column headerStyle={headerStyle} bodyStyle={rowStyle} field='NoOfTrades' header='Number of Trades' />
+                  <Column
+                    headerStyle={headerStyle}
+                    bodyStyle={rowStyle}
+                    field='NoOfClientsTraded'
+                    header='Number of Clients Traded'
+                  />
+                </DataTable>
+              )}
+            </DialogContent>
+          </Dialog>
         </Grid>
       </Card>
     </div>
