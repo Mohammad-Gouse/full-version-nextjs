@@ -337,7 +337,7 @@ const Container1 = () => {
           <Grid item lg={0.8} md={6} sm={12} xs={12}>
             <Button
               fullWidth
-              sx={{ fontSize: '10px', padding: '7px 0px' }}
+              sx={{ fontSize: FontDetails.buttonFontSize, padding: '7px 0px' }}
               type='button'
               variant='outlined'
               color='primary'
