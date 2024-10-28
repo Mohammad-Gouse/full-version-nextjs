@@ -10,7 +10,6 @@ import axios from 'axios'
 // ** Config
 import authConfig from 'src/configs/auth'
 import awsConfig from 'src/configs/awsConfig'
-import jwt from 'jsonwebtoken'
 import { jwtDecode } from 'jwt-decode'
 import moment from 'moment'
 import createAxiosInstance from 'src/configs/axiosConfig'
@@ -81,17 +80,6 @@ const AuthProvider = ({ children }) => {
     initAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const isTokenValid = (token, publicKey) => {
-    if (!token) return false
-
-    try {
-      jwt.verify(token, publicKey)
-      return true
-    } catch (error) {
-      return false
-    }
-  }
 
   const handleLogin = (params, errorCallback) => {
     const body = {

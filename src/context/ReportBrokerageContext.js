@@ -3,7 +3,6 @@ import awsConfig from 'src/configs/awsConfig'
 import createAxiosInstance from 'src/configs/axiosConfig'
 
 const ReportBrokerageContext = createContext()
-import Cookies from 'js-cookie'
 
 const ReportBrokerageProvider = ({ children }) => {
   const [data, setData] = useState(null)
@@ -15,8 +14,6 @@ const ReportBrokerageProvider = ({ children }) => {
   const axiosInstance = createAxiosInstance()
 
   const fetchData = async payload => {
-    const token = Cookies.get('vtsToken')
-    console.log(token)
     setLoading(true)
     try {
       const response = await axiosInstance.post(`${awsConfig.BASE_URL}/reports/brokerage`, payload)

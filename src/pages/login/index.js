@@ -37,6 +37,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
+import createAxiosInstance from 'src/configs/axiosConfig'
 
 // ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
@@ -47,7 +48,6 @@ import { Toast } from 'primereact/toast'
 import { Autocomplete, Card, CardContent, Grid } from '@mui/material'
 import axios from 'axios'
 import awsConfig from 'src/configs/awsConfig'
-import cookie from 'cookie' // To parse the cookies
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)(({ theme }) => ({
@@ -116,6 +116,7 @@ const defaultValues = {
 const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
+  const axiosInstance = createAxiosInstance()
 
   // ** Hooks
   const auth = useAuth()
@@ -158,7 +159,7 @@ const LoginPage = () => {
     }
   }, [auth.failureMessage])
   useEffect(() => {
-    axios.post(`${awsConfig.BASE_URL}/auth/login-type`).then(async response => {
+    axiosInstance.post(`${awsConfig.BASE_URL}/auth/login-type`).then(async response => {
       if (response?.data?.data?.length > 0) {
         const dataArray = response?.data?.data?.map(item => {
           return {
